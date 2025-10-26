@@ -3,327 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة العملاء والمكالمات</title>
+    <title>مجموعة رسول الرحمة    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            padding: 80px 60px;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            max-width: 1200px;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* تأثيرات الجسيمات في الخلفية */
+        body::before {
+            content: '';
+            position: fixed;
             width: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .login-form {
-            max-width: 400px;
+        .main-container {
+            max-width: 1600px;
             margin: 0 auto;
-            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 
+                        0 0 100px rgba(102, 126, 234, 0.15);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.6s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
 
-        .main-interface {
-            display: none;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            padding: 25px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .header::before {
+        .header-section::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+            top: -50%;
+            right: -50%;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-section h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+        
+        .header-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            opacity: 0.98;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            letter-spacing: 0.4px;
+        }
+
+        .header-section p {
+            font-size: 1rem;
+            opacity: 0.98;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .header-section .bi {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .content-section {
+            padding: 50px 40px;
+        }
+
+        .card-custom {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%);
+            border-top: 3px solid transparent;
+            position: relative;
+        }
+
+        .card-custom::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 3s infinite;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s;
         }
 
-        @keyframes shimmer {
-            0%, 100% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
+        .card-custom:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
         }
 
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        .card-custom:hover::before {
+            transform: scaleX(1);
         }
 
-        .tab {
-            flex: 1;
-            padding: 15px;
-            background: #f8f9fa;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            color: #495057;
-        }
-
-        .tab.active {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .card-header-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #d1d5db;
+            padding: 10px 14px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: #ffffff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.2), 0 0 20px rgba(102, 126, 234, 0.1);
             transform: translateY(-2px);
+            background-color: #ffffff;
         }
 
-        .tab:hover:not(.active) {
-            background: #e9ecef;
-            transform: translateY(-1px);
+        .form-control:hover, .form-select:hover {
+            border-color: #9ca3af;
         }
 
-        .tab-content {
-            display: none;
-            background: white;
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body .row {
+            margin-bottom: 8px;
+        }
+
+        .text-muted {
+            font-size: 0.75rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .col-md-3.mb-3 {
+            margin-bottom: 0.8rem !important;
+        }
+
+        .col-md-2.mb-3 {
+            margin-bottom: 0.8rem !important;
+        }
+
+        /* إطار خاص لحقول إدخال بيانات الطالب */
+        #addStudentForm .form-control,
+        #addStudentForm .form-select {
+            border: 3px solid #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        #addStudentForm .form-control:focus,
+        #addStudentForm .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.25), 0 4px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        #editStudentForm .form-control,
+        #editStudentForm .form-select {
+            border: 3px solid #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        #editStudentForm .form-control:focus,
+        #editStudentForm .form-select:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 0.3rem rgba(245, 158, 11, 0.25), 0 4px 20px rgba(245, 158, 11, 0.15);
+        }
+
+        .btn-custom {
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-custom::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-custom:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 5px 20px rgba(86, 171, 47, 0.3);
+        }
+
+        .btn-success-custom:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(86, 171, 47, 0.5);
+        }
+
+        .btn-info-custom {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-info-custom:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .btn-danger-custom {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-danger-custom:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.5);
+        }
+
+        .table-responsive {
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            overflow: hidden;
         }
 
-        .tab-content.active {
-            display: block;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
+        .table {
             margin-bottom: 0;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #495057;
-            font-size: 14px;
+        .table {
+            font-size: 0.8rem;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 14px;
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table thead th {
+            padding: 10px 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .table tbody tr {
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
+        .table tbody td {
+            padding: 5px 8px;
+            font-size: 0.75rem;
+            vertical-align: middle;
+            line-height: 1.3;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
+        .table tbody tr:hover {
+            background: linear-gradient(to right, #f8f9ff 0%, #ffffff 100%);
+            transform: scale(1.002);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #667eea;
         }
 
-        .btn {
-            padding: 12px 25px;
-            border: none;
+        .table tbody td strong {
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .table td.no-print {
+            white-space: nowrap;
+        }
+
+        .table td.no-print .btn {
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            margin: 0 2px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .table td.no-print .btn i {
+            font-size: 0.75rem;
+            margin: 0;
+        }
+
+        .badge-custom {
+            padding: 4px 10px;
             border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0;
+        }
+
+        .badge-custom:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 18px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .btn::before {
+        .stats-box::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
+            top: -50%;
+            right: -50%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
         }
 
-        .btn:hover::before {
-            left: 100%;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
+        .stats-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .stats-box h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
 
-        .btn-secondary {
-            background: linear-gradient(45deg, #6c757d, #495057);
-            color: white;
+        .stats-box p {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(45deg, #dc3545, #c82333);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .search-results {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .result-item {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            cursor: pointer;
+        .installment-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
             transition: all 0.3s ease;
-            background: white;
+            letter-spacing: 0;
         }
 
-        .result-item:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
+        .installment-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .clock {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-        }
-
-        .employee-info {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-        }
-
-        .success-message {
-            background: linear-gradient(45deg, #28a745, #20c997);
+        .installment-paid {
+            background: #10b981;
             color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            text-align: center;
-            display: none;
-            animation: slideDown 0.5s ease-out;
         }
 
-        .error-message {
-            background: linear-gradient(45deg, #dc3545, #c82333);
+        .installment-unpaid {
+            background: #ef4444;
             color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            text-align: center;
-            display: none;
-            animation: slideDown 0.5s ease-out;
         }
 
-        @keyframes slideDown {
+        .installment-partial {
+            background: #f59e0b;
+            color: white;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .main-container {
+                box-shadow: none;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-section {
+                page-break-after: always;
+            }
+        }
+
+        .payment-modal .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideInDown 0.4s ease-out;
+        }
+
+        @keyframes slideInDown {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(-50px);
             }
             to {
                 opacity: 1;
@@ -331,570 +536,2102 @@
             }
         }
 
-        .form-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #495057;
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        .form-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 2px;
-        }
-
-        .switch-user-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #ffc107, #ff8f00);
+        .payment-modal .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
+            border-radius: 0;
+            padding: 25px;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
         }
 
-        .switch-user-btn:hover {
-            transform: scale(1.1) rotate(180deg);
+        .installments-section {
+            margin-top: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .btn-group {
-                justify-content: center;
-            }
-            
-            .clock, .employee-info {
-                position: static;
-                margin: 10px 0;
-                text-align: center;
-            }
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 50%;
+        .installment-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .installment-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .installment-item.paid {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .installment-item.partial {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .installment-item.unpaid {
+            border-color: #ef4444;
+            background: #fef2f2;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- نموذج تسجيل الدخول -->
-        <div id="loginForm" class="login-form">
-            <div class="logo">📞</div>
-            <h2 class="form-title">تسجيل الدخول</h2>
-            <div class="form-group">
-                <label for="username">اسم المستخدم:</label>
-                <input type="text" id="username" placeholder="أدخل اسم المستخدم">
-            </div>
-            <div class="form-group">
-                <label for="password">كلمة المرور:</label>
-                <input type="password" id="password" placeholder="أدخل كلمة المرور">
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="login()">دخول</button>
-                <button class="btn btn-secondary" onclick="closeApp()">إغلاق</button>
-            </div>
-            <div id="loginError" class="error-message"></div>
-        </div>
-
-        <!-- الواجهة الرئيسية -->
-        <div id="mainInterface" class="main-interface">
-            <div class="header">
-                <h1>🏢 نظام إدارة العملاء والمكالمات</h1>
-                <p>مرحباً بك في نظام إدارة خدمة العملاء المتطور</p>
-            </div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('customer-tab')">إدارة العملاء</button>
-                <button class="tab" onclick="showTab('call-tab')">إدارة المكالمات</button>
-                <button class="tab" onclick="showTab('search-tab')">البحث</button>
-            </div>
-
-            <!-- تبويب إدارة العملاء -->
-            <div id="customer-tab" class="tab-content active">
-                <h3 class="form-title">📋 إضافة عميل جديد</h3>
-                <form id="customerForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customerName">اسم العميل:</label>
-                            <input type="text" id="customerName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerRegion">المنطقة:</label>
-                            <input type="text" id="customerRegion" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nearestPoint">أقرب نقطة دالة:</label>
-                            <input type="text" id="nearestPoint" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerPhone">رقم الهاتف:</label>
-                            <input type="tel" id="customerPhone" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customerDate">التاريخ:</label>
-                            <input type="date" id="customerDate" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="shiftInfo">معلومات الشيفت:</label>
-                            <input type="text" id="shiftInfo" readonly>
-                        </div>
-                    </div>
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-success">💾 حفظ البيانات</button>
-                        <button type="button" class="btn btn-danger" onclick="clearCustomerForm()">🗑️ مسح الحقول</button>
-                    </div>
-                </form>
-                <div id="customerSuccess" class="success-message"></div>
-                <div id="customerError" class="error-message"></div>
-            </div>
-
-            <!-- تبويب إدارة المكالمات -->
-            <div id="call-tab" class="tab-content">
-                <h3 class="form-title">📞 تسجيل مكالمة</h3>
-                <form id="callForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="callType">نوع المكالمة:</label>
-                            <select id="callType" required>
-                                <option value="">اختر نوع المكالمة</option>
-                                <option value="استفسار">استفسار</option>
-                                <option value="شكوى">شكوى</option>
-                                <option value="ضعف بالخدمة">ضعف بالخدمة</option>
-                                <option value="طلب اشتراك">طلب اشتراك</option>
-                                <option value="أخرى">أخرى</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="callPhone">رقم الهاتف:</label>
-                            <input type="tel" id="callPhone" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="callerName">اسم المتصل:</label>
-                            <input type="text" id="callerName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="callShift">الشيفت والوقت:</label>
-                            <input type="text" id="callShift" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="callDetails">تفاصيل المكالمة:</label>
-                        <textarea id="callDetails" required placeholder="أدخل تفاصيل المكالمة..."></textarea>
-                    </div>
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-success">💾 حفظ المكالمة</button>
-                        <button type="button" class="btn btn-danger" onclick="clearCallForm()">🗑️ مسح الحقول</button>
-                    </div>
-                </form>
-                <div id="callSuccess" class="success-message"></div>
-                <div id="callError" class="error-message"></div>
-            </div>
-
-            <!-- تبويب البحث -->
-            <div id="search-tab" class="tab-content">
-                <h3 class="form-title">🔍 البحث في قاعدة البيانات</h3>
-                <div class="form-group">
-                    <label for="searchQuery">البحث:</label>
-                    <input type="text" id="searchQuery" placeholder="ابحث بالاسم، رقم الهاتف، أو المنطقة...">
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px 15px 0 0; color: white; border: none; padding: 15px 20px;">
+                    <h5 class="modal-title" style="width: 100%; text-align: center; font-size: 1.2rem; margin: 0;">
+                        <i class="bi bi-person-circle"></i> تسجيل الدخول
+                    </h5>
                 </div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="searchData()">🔍 بحث</button>
-                </div>
-                <div id="searchResults" class="search-results"></div>
-                
-                <!-- عرض تفاصيل النتيجة المحددة -->
-                <div id="selectedResult" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-                    <h4>تفاصيل العميل المحدد:</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>الاسم:</label>
-                            <input type="text" id="selectedName" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>المنطقة:</label>
-                            <input type="text" id="selectedRegion" readonly>
-                        </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="mb-3">
+                        <label class="form-label">اسم المستخدم</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="أدخل اسم المستخدم">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>أقرب نقطة دالة:</label>
-                            <input type="text" id="selectedPoint" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>الهاتف:</label>
-                            <input type="text" id="selectedPhone" readonly>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="أدخل كلمة المرور">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>التاريخ:</label>
-                            <input type="text" id="selectedDate" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>الموظف:</label>
-                            <input type="text" id="selectedEmployee" readonly>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">اختر المدرسة</label>
+                        <select id="loginSchool" class="form-select">
+                            <option value="">-- اختر المدرسة --</option>
+                            <option value="admin">مدير النظام (عرض جميع المدارس)</option>
+                            <option value="rawda">روضة رسول الرحمة</option>
+                            <option value="rasoul">مدرسة رسول الرحمة</option>
+                            <option value="noor">مدرسة نور الرحمة</option>
+                            <option value="nabi">مدرسة نبي الرحمة</option>
+                            <option value="thanawiya">ثانوية رسول الرحمة</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label>الملاحظات:</label>
-                        <textarea id="selectedNotes" readonly></textarea>
+                    <div id="loginError" class="alert alert-danger" style="display: none;"></div>
+                    <button onclick="authenticateUser()" class="btn btn-primary-custom btn-custom w-100">
+                        <i class="bi bi-box-arrow-in-right"></i> دخول
+                    </button>
+                    
+                    <div class="mt-3 p-2" style="background: #f8f9fa; border-radius: 8px; font-size: 0.8rem;">
+                        <strong class="mb-1" style="font-size: 0.85rem;">معلومات الدخول:</strong>
+                        <small class="text-muted" style="display: block; font-size: 0.75rem;">
+                            <strong>المدير:</strong> admin / master123<br>
+                            <strong>روضة رسول الرحمة:</strong> admin / rawda123<br>
+                            <strong>مدرسة رسول الرحمة:</strong> admin / rasoul123<br>
+                            <strong>مدرسة نور الرحمة:</strong> admin / noor123<br>
+                            <strong>مدرسة نبي الرحمة:</strong> admin / nabi123<br>
+                            <strong>ثانوية رسول الرحمة:</strong> admin / thanawiya123
+                        </small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- عناصر الواجهة الثابتة -->
-    <div id="clock" class="clock">⏰ جاري التحميل...</div>
-    <div id="employeeInfo" class="employee-info">👤 مرحباً</div>
-    <button id="switchUserBtn" class="switch-user-btn" onclick="switchUser()" title="تبديل المستخدم">🔄</button>
+    <div class="main-container" id="mainContent" style="display: none;">
+        <div class="header-section" style="position: relative;">
+            <button onclick="logout()" class="btn btn-light no-print" style="position: absolute; left: 20px; top: 20px; border: none; border-radius: 10px; padding: 10px 20px; font-weight: bold;">
+                <i class="bi bi-box-arrow-right"></i> تسجيل خروج
+            </button>
+            <h1><i class="bi bi-mortarboard"></i> مجموعة رسول الرحمة التعليمية</h1>
+            <h3 id="schoolName">مدرسة رسول الرحمة</h3>
+            <p>إدارة الأقساط المدرسية</p>
+        </div>
 
+        <div class="content-section">
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="stats-box">
+                        <h3><i class="bi bi-people"></i> عدد الطلاب</h3>
+                        <p id="totalStudents">0</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-box" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);">
+                        <h3><i class="bi bi-cash-stack"></i> إجمالي المطلوب</h3>
+                        <p id="totalFees">0 د.ع</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-box" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                        <h3><i class="bi bi-check-circle"></i> إجمالي المدفوع</h3>
+                        <p id="totalPaid">0 د.ع</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-box" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                        <h3><i class="bi bi-clock"></i> المتبقي</h3>
+                        <p id="totalRemaining">0 د.ع</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إضافة طالب جديد -->
+            <div class="card-custom no-print">
+                <div class="card-header-custom">
+                    <i class="bi bi-plus-circle"></i> إضافة طالب جديد
+                </div>
+                <div class="card-body">
+                    <form id="addStudentForm">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">اسم الطالب <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="studentName" required>
+                                <small class="text-muted">الاسم الكامل للطالب</small>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">اسم ولي الأمر <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="guardianName" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">اسم الأم <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="motherName" required>
+                                <small class="text-muted">للتحقق من الاخوة</small>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">الصف <span class="text-danger">*</span></label>
+                                <select class="form-select" id="grade" required>
+                                    <option value="">-- اختر الصف --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" id="adminSchoolRow" style="display: none;">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">المدرسة <span class="text-danger">*</span></label>
+                                <select class="form-select" id="adminSchoolSelect">
+                                    <option value="rawda">روضة رسول الرحمة</option>
+                                    <option value="rasoul">مدرسة رسول الرحمة</option>
+                                    <option value="noor">مدرسة نور الرحمة</option>
+                                    <option value="nabi">مدرسة نبي الرحمة</option>
+                                    <option value="thanawiya">ثانوية رسول الرحمة</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">المبلغ السنوي</label>
+                                <input type="number" class="form-control" id="annualFee" value="1200000" min="0" required>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">إخوة (خصم 5%)</label>
+                                <select class="form-select" id="hasSibling" onchange="checkSiblingDiscount()">
+                                    <option value="no">لا</option>
+                                    <option value="yes">نعم</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="phone" required>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">تاريخ التسجيل</label>
+                                <input type="date" class="form-control" id="registrationDate" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">ملاحظات</label>
+                                <input type="text" class="form-control" id="notes">
+                            </div>
+                        </div>
+                        <div id="siblingAlert" class="alert alert-warning mt-3" style="display: none;">
+                            <i class="bi bi-exclamation-triangle"></i> <strong>تنبيه:</strong> تم العثور على إخوة من عدة مدارس:<br><br>
+                            <div id="siblingNames" style="margin-right: 30px;"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom btn-custom">
+                            <i class="bi bi-plus-circle"></i> إضافة طالب
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- بحث -->
+            <div class="card-custom no-print">
+                <div class="card-header-custom">
+                    <i class="bi bi-search"></i> البحث
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" id="searchInput" placeholder="ابحث باسم الطالب، ولي الأمر، أو رقم الوصل..." onkeyup="filterStudents()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- جدول الطلاب -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="bi bi-list-ul"></i> قائمة الطلاب
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>م</th>
+                                    <th>رقم الوصل</th>
+                                    <th>اسم الطالب</th>
+                                    <th id="schoolNameHeader" style="display: none;">المدرسة</th>
+                                    <th>ولي الأمر</th>
+                                    <th>الصف</th>
+                                    <th>المبلغ السنوي</th>
+                                    <th>الدُفعات</th>
+                                    <th>المتبقي</th>
+                                    <th>خصم 5%</th>
+                                    <th>الحالة</th>
+                                    <th class="no-print">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable">
+                                <!-- سيتم ملء الجدول بـ JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار إضافية -->
+            <div class="text-center no-print mt-4">
+                <button onclick="printList()" class="btn btn-info-custom btn-custom me-2">
+                    <i class="bi bi-printer"></i> طباعة القائمة
+                </button>
+                <button onclick="exportData()" class="btn btn-success-custom btn-custom me-2">
+                    <i class="bi bi-download"></i> تصدير البيانات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal للدفع -->
+    <div class="modal fade payment-modal" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-cash-coin"></i> تسجيل دفعة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm">
+                        <input type="hidden" id="studentIdForPayment">
+                        <input type="hidden" id="installmentIndex">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">اسم الطالب</label>
+                            <input type="text" class="form-control" id="modalStudentName" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">اختر الدفعة</label>
+                            <select class="form-select" id="selectedInstallment" onchange="updatePaymentDetails()">
+                                <option value="-1">اختر الدفعة...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">المبلغ المراد دفعه</label>
+                            <input type="number" class="form-control" id="paymentAmount" min="0" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="paymentDate" required>
+                        </div>
+                            <div class="col-md-6 mb-3">
+                            <label class="form-label">طريقة الدفع</label>
+                            <select class="form-select" id="paymentMethod" required>
+                                <option value="نقد">نقد</option>
+                                <option value="تحويل بنكي">تحويل بنكي</option>
+                                <option value="شيك">شيك</option>
+                            </select>
+                        </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="paymentNotes" rows="3"></textarea>
+                        </div>
+                        
+                        <!-- تفاصيل الدفعات -->
+                        <div class="installments-section">
+                            <h6 class="mb-3"><strong>حالة الدفعات:</strong></h6>
+                            <div id="installmentsList"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary-custom btn-custom" onclick="processPayment()">
+                        <i class="bi bi-check-circle"></i> تأكيد الدفع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal لعرض التفاصيل -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white;">
+                    <h5 class="modal-title"><i class="bi bi-info-circle"></i> تفاصيل الطالب</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="studentDetailsContent">
+                    <!-- سيتم ملء المحتوى بـ JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal للتعديل -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white;">
+                    <h5 class="modal-title"><i class="bi bi-pencil"></i> تعديل بيانات الطالب</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStudentForm">
+                        <input type="hidden" id="editStudentId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">اسم الطالب</label>
+                                <input type="text" class="form-control" id="editStudentName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">اسم ولي الأمر</label>
+                                <input type="text" class="form-control" id="editGuardianName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">اسم الأم</label>
+                                <input type="text" class="form-control" id="editMotherName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">الصف</label>
+                                <select class="form-select" id="editGrade" required>
+                                    <option value="الاول ابتدائي">الاول ابتدائي</option>
+                                    <option value="الثاني ابتدائي">الثاني ابتدائي</option>
+                                    <option value="الثالث ابتدائي">الثالث ابتدائي</option>
+                                    <option value="الرابع ابتدائي">الرابع ابتدائي</option>
+                                    <option value="الخامس ابتدائي">الخامس ابتدائي</option>
+                                    <option value="السادس ابتدائي">السادس ابتدائي</option>
+                                    <option value="الاول متوسط">الاول متوسط</option>
+                                    <option value="الثاني متوسط">الثاني متوسط</option>
+                                    <option value="الثالث متوسط">الثالث متوسط</option>
+                                    <option value="الرابع متوسط">الرابع متوسط</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">المبلغ السنوي</label>
+                                <input type="number" class="form-control" id="editAnnualFee" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">إخوة (خصم 5%)</label>
+                                <select class="form-select" id="editHasSibling">
+                                    <option value="no">لا</option>
+                                    <option value="yes">نعم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">رقم الهاتف</label>
+                                <input type="text" class="form-control" id="editPhone" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">ملاحظات</label>
+                                <input type="text" class="form-control" id="editNotes">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-warning" onclick="saveEditedStudent()">
+                        <i class="bi bi-check"></i> حفظ التعديلات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // متغيرات عامة
-        let loggedInUser = '';
-        let clockInterval;
+        // إعداد Supabase
+        window.initSupabase = function() {
+            if (typeof supabase !== 'undefined') {
+                const supabaseUrl = 'https://vpvvjascwgivdjyyhzwp.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwdnZqYXNjd2dpdmRqeXloendwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDYxMjYsImV4cCI6MjA2NTM4MjEyNn0.6AR2-MG4x9ugNTXe9jUqx-IwGEtj1m6MCYwQkTsSbUQ';
+                const { createClient } = supabase;
+                window.supabaseClient = createClient(supabaseUrl, supabaseKey);
+                console.log('Supabase initialized successfully');
+            } else {
+                console.error('Supabase failed to load');
+                // Retry after a delay
+                setTimeout(function() {
+                    if (typeof supabase !== 'undefined') {
+                        const supabaseUrl = 'https://vpvvjascwgivdjyyhzwp.supabase.co';
+                        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwdnZqYXNjd2dpdmRqeXloendwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDYxMjYsImV4cCI6MjA2NTM4MjEyNn0.6AR2-MG4x9ugNTXe9jUqx-IwGEtj1m6MCYwQkTsSbUQ';
+                        const { createClient } = supabase;
+                        window.supabaseClient = createClient(supabaseUrl, supabaseKey);
+                        console.log('Supabase initialized successfully (retry)');
+                    }
+                }, 500);
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js" onload="initSupabase()"></script>
+    <script>
+        
+        // ثوابت النظام
+        const ANNUAL_FEE = 1200000; // المبلغ السنوي
+        const QUARTERLY_INSTALLMENT = 300000; // كل دفعة ربع سنوية
+        const INSTALLMENT_COUNT = 4; // عدد الدفعات
+        const SIBLING_DISCOUNT_RATE = 0.05; // خصم 5% للأخوة
 
-        // بيانات المستخدمين (يمكن استبدالها بقاعدة بيانات حقيقية)
+        // معلومات المدارس
+        const schools = {
+            rawda: { name: 'روضة رسول الرحمة', id: 'rawda' },
+            rasoul: { name: 'مدرسة رسول الرحمة', id: 'rasoul' },
+            noor: { name: 'مدرسة نور الرحمة', id: 'noor' },
+            nabi: { name: 'مدرسة نبي الرحمة', id: 'nabi' },
+            thanawiya: { name: 'ثانوية رسول الرحمة', id: 'thanawiya' }
+        };
+
+        // بيانات المستخدمين لكل مدرسة
         const users = {
-            'حسين حيدر': '1',
-            'علي محمود': '1',
-            'علي فاهم': '1',
-            'مصطفى سعد': '1',
-            'يوسف عباس': '1',
-            'كرار كريم': '1',
-            'تميم حسان': '1'
+            rawda: [
+                { username: 'admin', password: 'rawda123' },
+                { username: 'user', password: 'user123' }
+            ],
+            rasoul: [
+                { username: 'admin', password: 'rasoul123' },
+                { username: 'user', password: 'user123' }
+            ],
+            noor: [
+                { username: 'admin', password: 'noor123' },
+                { username: 'user', password: 'user123' }
+            ],
+            nabi: [
+                { username: 'admin', password: 'nabi123' },
+                { username: 'user', password: 'user123' }
+            ],
+            thanawiya: [
+                { username: 'admin', password: 'thanawiya123' },
+                { username: 'user', password: 'user123' }
+            ]
         };
 
-        // روابط Google Apps Script
-        const CUSTOMER_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSLbtvvOds77qpByrLiCIhDk4W0lJg-M3nlZjo9TnNKx4PJgp94inO35g4q2FBZbAp5w/exec';
-        const CALL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzR2R0gxIwa5jnlpdY_FrIS6tmsBDPLRm4Akgd5feqOlFjZbVC1CXwxQh5e9bM0Lp2ong/exec';
-        const SEARCH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIXpdM3fJqQIiWJp3o65b5ypXYGoFqOJlb_5x7uyuB/dev';
+        // حساب المدير
+        const adminUser = { username: 'admin', password: 'master123' };
 
-        // تشغيل التطبيق عند تحميل الصفحة
-        window.onload = function() {
-            initializeApp();
-        };
+        // قائمة الطلاب
+        let students = [];
+        let receiptCounter = 1;
+        let currentSchool = null;
+        let isAdmin = false;
 
-        function initializeApp() {
-            updateDateTime();
-            startClock();
-            
-            // إضافة مستمع لنموذج العملاء
-            document.getElementById('customerForm').addEventListener('submit', handleCustomerSubmit);
-            
-            // إضافة مستمع لنموذج المكالمات
-            document.getElementById('callForm').addEventListener('submit', handleCallSubmit);
-
-            // إضافة مستمع للبحث عند الضغط على Enter
-            document.getElementById('searchQuery').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchData();
-                }
-            });
-        }
-
-        // تسجيل الدخول
-        function login() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+        // دالة المصادقة
+        function authenticateUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const schoolId = document.getElementById('loginSchool').value;
             const errorDiv = document.getElementById('loginError');
 
-            if (!username || !password) {
-                showMessage(errorDiv, 'يرجى إدخال اسم المستخدم وكلمة المرور', false);
+            // التحقق من المدير
+            if (schoolId === 'admin') {
+                if (username === adminUser.username && password === adminUser.password) {
+                    isAdmin = true;
+                    currentSchool = null;
+                    document.getElementById('schoolName').textContent = 'مدير النظام';
+                    
+                    // إخفاء modal تسجيل الدخول وإظهار المحتوى
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    loginModal.hide();
+                    
+                    document.getElementById('mainContent').style.display = 'block';
+                    
+                    // إظهار حقل اختيار المدرسة وعمود المدرسة
+                    document.getElementById('adminSchoolRow').style.display = 'block';
+                    document.getElementById('schoolNameHeader').style.display = 'table-cell';
+                    
+                    // تعيين التاريخ الحالي
+                    document.getElementById('registrationDate').valueAsDate = new Date();
+                    document.getElementById('paymentDate').valueAsDate = new Date();
+                    
+                    // تحديث الصفوف حسب المدرسة
+                    updateGradesForCurrentSchool();
+                    
+                    // تحميل بيانات جميع المدارس
+                    loadData().then(() => {
+            renderTable();
+                        updateStats();
+                    });
+                    
+                    return;
+                } else {
+                    errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة للمدير';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+            }
+
+            // التحقق من المدرسة العادية
+            if (!schoolId || schoolId === 'admin') {
+                errorDiv.textContent = 'الرجاء اختيار المدرسة';
+                errorDiv.style.display = 'block';
                 return;
             }
 
-            if (users[username] && users[username] === password) {
-                loggedInUser = username;
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('mainInterface').style.display = 'block';
-                document.getElementById('employeeInfo').innerHTML = `👤 ${loggedInUser}`;
-                showMessage(errorDiv, 'تم تسجيل الدخول بنجاح!', true);
-                setTimeout(() => {
-                    errorDiv.style.display = 'none';
-                }, 2000);
-            } else {
-                showMessage(errorDiv, 'اسم المستخدم أو كلمة المرور غير صحيحة', false);
+            if (!username || !password) {
+                errorDiv.textContent = 'الرجاء إدخال اسم المستخدم وكلمة المرور';
+                errorDiv.style.display = 'block';
+                return;
             }
-        }
 
-        // تبديل المستخدم
-        function switchUser() {
-            if (confirm('هل تريد تسجيل الخروج وتبديل المستخدم؟')) {
-                loggedInUser = '';
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('mainInterface').style.display = 'none';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                clearAllForms();
+            // التحقق من بيانات المستخدم
+            const schoolUsers = users[schoolId];
+            if (!schoolUsers) {
+                errorDiv.textContent = 'مدرسة غير موجودة';
+                errorDiv.style.display = 'block';
+                return;
             }
-        }
 
-        // إغلاق التطبيق
-        function closeApp() {
-            if (confirm('هل تريد إغلاق التطبيق؟ جميع التغييرات غير المحفوظة ستفقد.')) {
-                window.close();
+            const user = schoolUsers.find(u => u.username === username && u.password === password);
+            if (!user) {
+                errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                errorDiv.style.display = 'block';
+                return;
             }
-        }
 
-        // عرض التبويبات
-        function showTab(tabId) {
-            // إخفاء جميع التبويبات
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.tab-content');
+            // تسجيل الدخول ناجح
+            currentSchool = schools[schoolId];
+            isAdmin = false;
             
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-
-            // إظهار التبويب المحدد
-            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-
-        // تحديث الوقت والتاريخ
-        function updateDateTime() {
-            const now = new Date();
-            const date = now.toLocaleDateString('ar-SA');
-            const time = now.toLocaleTimeString('ar-SA', { 
-                hour12: true, 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
+            // تحديث عنوان المدرسة
+            const schoolNameElement = document.getElementById('schoolName');
+            if (schoolNameElement) {
+                schoolNameElement.textContent = currentSchool.name;
+            }
+            
+            // إخفاء modal تسجيل الدخول وإظهار المحتوى
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            loginModal.hide();
+            
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // تحميل بيانات المدرسة الحالية
+            loadData().then(() => {
+                renderTable();
+                updateStats();
             });
             
-            const shift = getCurrentShift();
+            // تعيين التاريخ الحالي
+            document.getElementById('registrationDate').valueAsDate = new Date();
+            document.getElementById('paymentDate').valueAsDate = new Date();
             
-            document.getElementById('customerDate').value = now.toISOString().split('T')[0];
-            document.getElementById('shiftInfo').value = `${shift} - ${loggedInUser} - ${time}`;
-            document.getElementById('callShift').value = `${shift} - ${time}`;
-            document.getElementById('clock').innerHTML = `⏰ ${time}`;
+            // تحديث الصفوف حسب المدرسة
+            updateGradesForCurrentSchool();
         }
 
-        // بدء ساعة التحديث
-        function startClock() {
-            updateDateTime();
-            clockInterval = setInterval(updateDateTime, 1000);
+
+        // تحميل البيانات عند بدء الصفحة
+        window.addEventListener('DOMContentLoaded', function() {
+            // عرض modal تسجيل الدخول
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'), { backdrop: 'static', keyboard: false });
+            loginModal.show();
+            
+            // إضافة حدث عند إغلاق الصفحة لإعادة إظهار تسجيل الدخول
+            document.getElementById('loginModal').addEventListener('hidden.bs.modal', function() {
+                if (!currentSchool && !isAdmin) {
+                    location.reload();
+                }
+            });
+            
+            // إضافة حدث لحقل اسم الأم
+            document.getElementById('motherName').addEventListener('input', function() {
+                checkSiblingDiscount();
+            });
+            
+            // إضافة حدث لحقل اسم ولي الأمر
+            document.getElementById('guardianName').addEventListener('input', function() {
+                checkSiblingDiscount();
+            });
+            
+            // إضافة حدث لتحديث الصفوف حسب المدرسة
+            document.getElementById('adminSchoolSelect').addEventListener('change', function() {
+                updateGradesForSchool(this.value);
+            });
+        });
+        
+        // تحديث الصفوف حسب المدرسة
+        function updateGradesForSchool(schoolId) {
+            const gradeSelect = document.getElementById('grade');
+            gradeSelect.innerHTML = '';
+            
+            const grades = {
+                'rawda': ['روضة'],
+                'rasoul': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                'noor': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                'nabi': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                'thanawiya': ['الاول متوسط', 'الثاني متوسط', 'الثالث متوسط']
+            };
+            
+            const schoolGrades = grades[schoolId] || grades['rasoul'];
+            
+            schoolGrades.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.textContent = grade;
+                gradeSelect.appendChild(option);
+            });
+        }
+        
+        // تحديث الصفوف حسب المدرسة الحالية عند تحميل الصفحة
+        function updateGradesForCurrentSchool() {
+            if (isAdmin) {
+                // إذا كان المدير، استخدم القيمة الافتراضية
+                const adminSelect = document.getElementById('adminSchoolSelect');
+                if (adminSelect && adminSelect.value) {
+                    updateGradesForSchool(adminSelect.value);
+                } else if (adminSelect) {
+                    // إذا لم يكن هناك قيمة محددة، استخدم الأول
+                    updateGradesForSchool('rasoul');
+                }
+            } else if (currentSchool) {
+                updateGradesForSchool(currentSchool.id);
+            }
         }
 
-        // تحديد الشيفت الحالي
-        function getCurrentShift() {
-            const hour = new Date().getHours();
-            if (hour >= 6 && hour < 15) {
-                return 'الشيفت الصباحي';
-            } else if (hour >= 15 && hour < 22) {
-                return 'الشيفت المسائي';
+        // إضافة طالب جديد إلى قاعدة البيانات
+        document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const annualFee = parseFloat(document.getElementById('annualFee').value);
+                const hasSibling = document.getElementById('hasSibling').value === 'yes';
+                
+                // تحديد المدرسة للطالب
+                let selectedSchoolId = null;
+                if (isAdmin) {
+                    selectedSchoolId = document.getElementById('adminSchoolSelect').value;
+                } else if (currentSchool) {
+                    selectedSchoolId = currentSchool.id;
+                }
+                
+                if (!selectedSchoolId) {
+                    alert('الرجاء اختيار المدرسة');
+                    return;
+                }
+                
+                // الحصول على school_id من قاعدة البيانات
+                const { data: schoolData, error: schoolError } = await window.supabaseClient
+                    .from('schools')
+                    .select('id')
+                    .eq('code', selectedSchoolId)
+                    .single();
+                
+                if (schoolError) throw schoolError;
+                if (!schoolData) {
+                    alert('المدرسة غير موجودة في قاعدة البيانات');
+                    return;
+                }
+                
+                // حساب المبلغ بعد الخصم
+                let finalFee = annualFee;
+                let discountAmount = 0;
+                
+                if (hasSibling) {
+                    discountAmount = annualFee * SIBLING_DISCOUNT_RATE;
+                    finalFee = annualFee - discountAmount;
+                }
+                
+                // إدراج الطالب في قاعدة البيانات
+                const { data: studentData, error: studentError } = await window.supabaseClient
+                    .from('students')
+                    .insert({
+                        school_id: schoolData.id,
+                        receipt_number: String(receiptCounter++).padStart(6, '0'),
+                name: document.getElementById('studentName').value,
+                        mother_name: document.getElementById('motherName').value,
+                guardian: document.getElementById('guardianName').value,
+                grade: document.getElementById('grade').value,
+                phone: document.getElementById('phone').value,
+                        annual_fee: annualFee,
+                        final_fee: finalFee,
+                        discount: discountAmount,
+                        has_sibling: hasSibling,
+                        registration_date: document.getElementById('registrationDate').value,
+                        notes: document.getElementById('notes').value
+                    })
+                    .select()
+                    .single();
+                
+                if (studentError) throw studentError;
+                
+                // إدراج الأقساط الأربعة
+                const installments = [];
+                for (let i = 1; i <= 4; i++) {
+                    const { data: instData, error: instError } = await window.supabaseClient
+                        .from('installments')
+                        .insert({
+                            student_id: studentData.id,
+                            installment_number: i,
+                            amount_paid: 0,
+                            status: 'unpaid'
+                        })
+                        .select()
+                        .single();
+                    
+                    if (instError) throw instError;
+                    installments.push(instData);
+                }
+                
+                studentData.installments = installments;
+                students.push(studentData);
+                
+            renderTable();
+            updateStats();
+            
+            // إعادة تعيين النموذج
+            document.getElementById('addStudentForm').reset();
+                document.getElementById('annualFee').value = ANNUAL_FEE;
+            document.getElementById('registrationDate').valueAsDate = new Date();
+            
+            alert('تم إضافة الطالب بنجاح');
+            } catch (error) {
+                console.error('خطأ في إضافة الطالب:', error);
+                alert('حدث خطأ في إضافة الطالب: ' + error.message);
+            }
+        });
+
+        // دوال مساعدة لتحويل أسماء الحقول
+        function getField(student, camelName, snakeName) {
+            return student[camelName] || student[snakeName];
+        }
+        
+        function getStudentField(student, field) {
+            const snakeField = field.replace(/([A-Z])/g, '_$1').toLowerCase();
+            return getField(student, field, snakeField);
+        }
+        
+        // حساب المبلغ المستحق لكل دفعة
+        function calculateInstallmentAmount(student) {
+            const finalFee = getStudentField(student, 'finalFee') || getStudentField(student, 'annualFee') || 1200000;
+            return finalFee / INSTALLMENT_COUNT;
+        }
+
+        // التحقق من وجود إخوة عند إضافة طالب جديد - من قاعدة البيانات
+        async function checkSiblingDiscount() {
+            // انتظار تحميل Supabase
+            if (!window.supabaseClient) {
+                await new Promise((resolve) => {
+                    const checkInterval = setInterval(() => {
+                        if (window.supabaseClient) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 100);
+                    setTimeout(() => clearInterval(checkInterval), 5000);
+                });
+            }
+            
+            const motherName = document.getElementById('motherName').value.trim();
+            const guardianName = document.getElementById('guardianName').value.trim();
+            const alertDiv = document.getElementById('siblingAlert');
+            const siblingNamesSpan = document.getElementById('siblingNames');
+            
+            if (!motherName || !guardianName) {
+                alertDiv.style.display = 'none';
+                return;
+            }
+            
+            try {
+                // البحث في قاعدة البيانات عن طلاب لديهم نفس اسم الأم وولي الأمر
+                const { data: siblingsData, error } = await window.supabaseClient
+                    .from('students')
+                    .select(`
+                        id, 
+                        name, 
+                        mother_name, 
+                        grade, 
+                        guardian,
+                        schools!inner(name)
+                    `)
+                    .ilike('mother_name', motherName)
+                    .ilike('guardian', guardianName)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('خطأ في استعلام Supabase:', error);
+                    throw error;
+                }
+                
+                if (siblingsData && siblingsData.length > 0) {
+                    console.log('تم العثور على إخوة من قاعدة البيانات:', siblingsData); // للتأكد من البيانات
+                    
+                    // إنشاء قائمة بالأخوة مع المدرسة والصف بشكل منسق
+                    const siblingsList = siblingsData.map(s => {
+                        const schoolName = s.schools?.name || 'غير محدد';
+                        const grade = s.grade || 'غير محدد';
+                        return `<div style="margin-bottom: 10px; padding: 8px; background: #fff3cd; border-right: 4px solid #f59e0b; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <div style="font-weight: bold; color: #856404; margin-bottom: 5px; font-size: 1.1em;">
+                                        👤 ${s.name}
+                                    </div>
+                                    <div style="font-size: 0.9em; color: #666; line-height: 1.6;">
+                                        <span>🏫 المدرسة: <strong>${schoolName}</strong></span><br>
+                                        <span>📚 الصف: <strong>${grade}</strong></span><br>
+                                        <span>👨‍👩‍👧 ولي الأمر: ${s.guardian || 'غير محدد'}</span>
+                                    </div>
+                                </div>`;
+                    }).join('');
+                    
+                    siblingNamesSpan.innerHTML = siblingsList;
+                    alertDiv.style.display = 'block';
+                    
+                    // إنشاء رسالة التأكيد مع تفاصيل الأخوة
+                    const confirmationMessage = `تم العثور على ${siblingsData.length} أخ/أخت موجودين مسبقاً في النظام:\n\n` +
+                        siblingsData.map(s => {
+                            const schoolName = s.schools?.name || 'غير محدد';
+                            const grade = s.grade || 'غير محدد';
+                            return `📌 الاسم: ${s.name}\n   🏫 المدرسة: ${schoolName}\n   📚 الصف: ${grade}\n   👨‍👩‍👧 ولي الأمر: ${s.guardian || 'غير محدد'}`;
+                        }).join('\n\n') +
+                        `\n\nسيتم تفعيل خصم 5% لجميع الإخوة (الطلاب الحاليون + الطالب الجديد)!\nهل تريد المتابعة؟`;
+                    
+                    // تحديد أنهم إخوة تلقائياً وتفعيل الخصم لجميع الإخوة
+                    if (document.getElementById('hasSibling').value === 'no') {
+                        if (confirm(confirmationMessage)) {
+                            document.getElementById('hasSibling').value = 'yes';
+                            
+                            // تفعيل الخصم لجميع الإخوة الموجودين
+                            const updatePromises = siblingsData.map(async (sibling) => {
+                                // حساب الخصم والمبلغ النهائي
+                                const siblingAnnualFee = sibling.annual_fee || sibling.annualFee || 1200000;
+                                const discount = siblingAnnualFee * SIBLING_DISCOUNT_RATE;
+                                const finalFee = siblingAnnualFee - discount;
+                                
+                                // تحديث الأخ في قاعدة البيانات
+                                const { error: updateError } = await window.supabaseClient
+                                    .from('students')
+                                    .update({
+                                        has_sibling: true,
+                                        discount: discount,
+                                        final_fee: finalFee
+                                    })
+                                    .eq('id', sibling.id);
+                                
+                                if (updateError) {
+                                    console.error('خطأ في تحديث الأخ:', sibling.name, updateError);
             } else {
-                return 'الشيفت الليلي';
+                                    // تحديث البيانات المحلية
+                                    const localSibling = students.find(s => s.id === sibling.id);
+                                    if (localSibling) {
+                                        localSibling.has_sibling = true;
+                                        localSibling.hasSibling = true;
+                                        localSibling.discount = discount;
+                                        localSibling.final_fee = finalFee;
+                                        localSibling.finalFee = finalFee;
+                                    }
+                                }
+                            });
+                            
+                            // انتظار تحديث جميع الإخوة
+                            await Promise.all(updatePromises);
+                            
+                            // إعادة عرض القائمة والإحصائيات
+                            renderTable();
+                            updateStats();
+                            
+                            alert(`تم تفعيل خصم 5% لجميع الإخوة (${siblingsData.length} أخ/أخت)`);
+                        }
+                    }
+            } else {
+                    alertDiv.style.display = 'none';
+            }
+            } catch (error) {
+                console.error('خطأ في التحقق من الأخوة:', error);
+                alertDiv.style.display = 'none';
             }
         }
 
-        // معالجة إرسال نموذج العملاء
-        async function handleCustomerSubmit(e) {
-            e.preventDefault();
+        // حساب الحالة المالية
+        function getFinancialStatus(student) {
+            if (!student.installments || !Array.isArray(student.installments)) {
+                return { status: 'غير مسدد', class: 'danger' };
+            }
             
-            const formData = {
-                username: document.getElementById('customerName').value.trim(),
-                region: document.getElementById('customerRegion').value.trim(),
-                closestPoint: document.getElementById('nearestPoint').value.trim(),
-                phone: document.getElementById('customerPhone').value.trim(),
-                date: document.getElementById('customerDate').value,
-                notes: document.getElementById('shiftInfo').value,
-                employee: loggedInUser
-            };
-
-            // التحقق من البيانات
-            if (!formData.username || !formData.region || !formData.closestPoint || !formData.phone) {
-                showMessage(document.getElementById('customerError'), 'يرجى تعبئة جميع الحقول المطلوبة', false);
-                return;
-            }
-
-            try {
-                const response = await fetch(CUSTOMER_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    showMessage(document.getElementById('customerSuccess'), 'تم إرسال البيانات إلى Google Sheet بنجاح', true);
-                    clearCustomerForm();
-                } else {
-                    throw new Error(`خطأ في الإرسال: ${response.status}`);
-                }
-            } catch (error) {
-                showMessage(document.getElementById('customerError'), `خطأ أثناء الحفظ: ${error.message}`, false);
-            }
-        }
-
-        // معالجة إرسال نموذج المكالمات
-        async function handleCallSubmit(e) {
-            e.preventDefault();
+            const totalPaid = student.installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+            const finalFee = getStudentField(student, 'finalFee');
+            const annualFee = getStudentField(student, 'annualFee');
+            const remaining = (finalFee || annualFee || 1200000) - totalPaid;
             
-            const formData = {
-                call_type: document.getElementById("callType").value,
-                phone: document.getElementById("callPhone").value.trim(),
-                caller_name: document.getElementById("callerName").value.trim(),
-                shift_time: document.getElementById("callShift").value,
-                details: document.getElementById("callDetails").value.trim(),
-                employee: loggedInUser
-            };
+            if (remaining <= 0) {
+                return { status: 'مسدد', class: 'success' };
+            } else if (totalPaid > 0) {
+                return { status: 'جزئي', class: 'warning' };
+            } else {
+                return { status: 'غير مسدد', class: 'danger' };
+            }
+        }
 
-            // التحقق من البيانات
-            if (!formData.call_type || !formData.phone || !formData.caller_name || !formData.details) {
-                showMessage(document.getElementById("callError"), "يرجى تعبئة جميع الحقول المطلوبة", false);
+        // عرض الجدول
+        function renderTable() {
+            const tbody = document.getElementById('studentsTable');
+            tbody.innerHTML = '';
+
+            students.forEach((student, index) => {
+                // التأكد من وجود installments
+                if (!student.installments || !Array.isArray(student.installments)) {
+                    if (!student.installments) {
+                        student.installments = [
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' }
+                        ];
+                    }
+                }
+                
+                const totalPaid = student.installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                const finalFee = getStudentField(student, 'finalFee');
+                const annualFee = getStudentField(student, 'annualFee');
+                const remaining = (finalFee || annualFee || 1200000) - totalPaid;
+                const statusInfo = getFinancialStatus(student);
+                const installmentAmount = calculateInstallmentAmount(student);
+                
+                const receiptNumber = getStudentField(student, 'receiptNumber');
+                const annualFeeValue = Number(annualFee || finalFee || 1200000);
+                const discountValue = Number(getStudentField(student, 'discount') || 0);
+
+                // إنشاء شارات الدفعات
+                const installmentsHtml = student.installments.map((inst, i) => {
+                    const paidAmount = inst.amount_paid || inst.amount || 0;
+                    const requiredAmount = installmentAmount;
+                    let status = 'unpaid';
+                    let badgeClass = 'installment-unpaid';
+                    
+                    if (paidAmount >= requiredAmount) {
+                        status = 'paid';
+                        badgeClass = 'installment-paid';
+                    } else if (paidAmount > 0) {
+                        status = 'partial';
+                        badgeClass = 'installment-partial';
+                    }
+                    
+                    return `<span class="installment-badge ${badgeClass}">الدفعة ${i + 1}</span>`;
+                }).join('');
+
+                const row = document.createElement('tr');
+                const schoolNameCell = isAdmin && student.schoolName ? `<td>${student.schoolName}</td>` : '';
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${receiptNumber || '---'}</strong></td>
+                    <td><strong style="cursor: pointer; color: #667eea;" onclick="showStudentDetails('${student.id}')" title="انقر لعرض التفاصيل">${student.name}</strong></td>
+                    ${schoolNameCell}
+                    <td>${student.guardian}</td>
+                    <td>${student.grade}</td>
+                    <td>${annualFeeValue.toLocaleString('en-US')} د.ع</td>
+                    <td>${installmentsHtml}</td>
+                    <td><strong>${remaining.toLocaleString('en-US')} د.ع</strong></td>
+                    <td>${discountValue.toLocaleString('en-US')} د.ع</td>
+                    <td><span class="badge bg-${statusInfo.class} badge-custom">${statusInfo.status}</span></td>
+                    <td class="no-print">
+                        <button onclick="openPaymentModal('${student.id}')" class="btn btn-success-custom btn-sm">
+                            <i class="bi bi-cash-coin"></i> دفعة
+                        </button>
+                        <button onclick="editStudent('${student.id}')" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> تعديل
+                        </button>
+                        <button onclick="printReceipt('${student.id}')" class="btn btn-info-custom btn-sm">
+                            <i class="bi bi-printer"></i> وصل
+                        </button>
+                        <button onclick="deleteStudent('${student.id}')" class="btn btn-danger-custom btn-sm">
+                            <i class="bi bi-trash"></i> حذف
+                        </button>
+                    </td>
+                `;
+                row.setAttribute('data-search', `${student.name} ${student.guardian} ${receiptNumber || ''}`);
+                tbody.appendChild(row);
+            });
+        }
+
+        // البحث عن الطلاب
+        function filterStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsTable tr');
+            
+            rows.forEach(row => {
+                const searchText = row.getAttribute('data-search') || '';
+                if (searchText.toLowerCase().includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            document.getElementById('totalStudents').textContent = students.length;
+            
+            let totalFees = 0;
+            let totalPaid = 0;
+            
+            students.forEach(student => {
+                const finalFee = getStudentField(student, 'finalFee');
+                const annualFee = getStudentField(student, 'annualFee');
+                const fee = finalFee || annualFee || 1200000;
+                totalFees += fee;
+                
+                // حساب المدفوع
+                if (student.installments && Array.isArray(student.installments)) {
+                    totalPaid += student.installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                } else if (student.paid) {
+                totalPaid += student.paid;
+                }
+            });
+            
+            document.getElementById('totalFees').textContent = totalFees.toLocaleString('en-US') + ' د.ع';
+            document.getElementById('totalPaid').textContent = totalPaid.toLocaleString('en-US') + ' د.ع';
+            document.getElementById('totalRemaining').textContent = (totalFees - totalPaid).toLocaleString('en-US') + ' د.ع';
+        }
+
+        // فتح Modal الدفع
+        function openPaymentModal(studentId) {
+            console.log('openPaymentModal called with studentId:', studentId);
+            const student = students.find(s => s.id === studentId);
+            if (!student) {
+                console.log('Student not found for ID:', studentId);
                 return;
             }
+            
+            // التأكد من وجود installments
+            if (!student.installments || !Array.isArray(student.installments)) {
+                alert('البيانات غير صحيحة. الرجاء تحديث البيانات.');
+                return;
+            }
+            
+            document.getElementById('studentIdForPayment').value = studentId;
+            document.getElementById('modalStudentName').value = student.name;
+            document.getElementById('paymentDate').valueAsDate = new Date();
+            
+            // ملء قائمة الدفعات
+            const selectInstallment = document.getElementById('selectedInstallment');
+            selectInstallment.innerHTML = '<option value="-1">اختر الدفعة...</option>';
+            
+            const installmentAmount = calculateInstallmentAmount(student);
+            
+            // عرض جميع الدفعات حتى لو كانت مدفوعة بالكامل
+            student.installments.forEach((inst, i) => {
+                const paidAmount = inst.amount_paid || inst.amount || 0;
+                const remainingForInstallment = installmentAmount - paidAmount;
+                const option = document.createElement('option');
+                option.value = i;
+                
+                if (remainingForInstallment > 0) {
+                    option.textContent = `الدفعة ${i + 1} - المتبقي: ${remainingForInstallment.toLocaleString('en-US')} د.ع`;
+                } else {
+                    option.textContent = `الدفعة ${i + 1} - مكتملة (يمكن إضافة مبلغ إضافي)`;
+                }
+                
+                selectInstallment.appendChild(option);
+            });
+            
+            // عرض حالة الدفعات
+            updateInstallmentsList(student);
+            
+            // إزالة أي قيود على حقل المبلغ
+            document.getElementById('paymentAmount').max = '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            modal.show();
+        }
 
+        function updatePaymentDetails() {
+            const studentId = parseInt(document.getElementById('studentIdForPayment').value);
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // التأكد من وجود installments
+            if (!student.installments || !Array.isArray(student.installments)) {
+                alert('البيانات غير صحيحة.');
+                return;
+            }
+            
+            const selectedIndex = parseInt(document.getElementById('selectedInstallment').value);
+            if (selectedIndex === -1) {
+                document.getElementById('paymentAmount').value = '';
+                document.getElementById('paymentAmount').max = '';
+                return;
+            }
+            
+            // إزالة أي قيود على المبلغ - يمكن دفع أي مبلغ
+            document.getElementById('paymentAmount').max = '';
+        }
+
+        function updateInstallmentsList(student) {
+            const listDiv = document.getElementById('installmentsList');
+            
+            // التأكد من وجود installments
+            if (!student.installments || !Array.isArray(student.installments)) {
+                listDiv.innerHTML = '<p class="text-danger">لا توجد بيانات متاحة</p>';
+                return;
+            }
+            
+            const installmentAmount = calculateInstallmentAmount(student);
+            
+            let html = '';
+            student.installments.forEach((inst, i) => {
+                const paid = inst.amount_paid || inst.amount || 0;
+                const remaining = installmentAmount - paid;
+                let statusClass = 'unpaid';
+                
+                if (paid >= installmentAmount) {
+                    statusClass = 'paid';
+                } else if (paid > 0) {
+                    statusClass = 'partial';
+                }
+                
+                html += `
+                    <div class="installment-item ${statusClass}">
+                        <div>
+                            <strong>الدفعة ${i + 1}:</strong> ${paid.toLocaleString('en-US')} / ${installmentAmount.toLocaleString('en-US')} د.ع
+                            ${remaining > 0 ? `(متبقي: ${remaining.toLocaleString('en-US')} د.ع)` : '<span class="text-success">✓ مكتملة</span>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listDiv.innerHTML = html;
+        }
+
+        // معالجة الدفعة
+        async function processPayment() {
             try {
-                const response = await fetch(CALL_SCRIPT_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData)
+                const studentId = document.getElementById('studentIdForPayment').value;
+            const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
+            const paymentDate = document.getElementById('paymentDate').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const paymentNotes = document.getElementById('paymentNotes').value;
+                const selectedIndex = parseInt(document.getElementById('selectedInstallment').value);
+                
+                if (!paymentAmount || paymentAmount <= 0) {
+                    alert('الرجاء إدخال مبلغ صحيح');
+                    return;
+                }
+                
+                const student = students.find(s => s.id === studentId || s.id === parseInt(studentId));
+                if (!student) {
+                    alert('الطالب غير موجود');
+                    return;
+                }
+                
+                // التأكد من وجود installments
+                if (!student.installments || !Array.isArray(student.installments)) {
+                    alert('البيانات غير صحيحة.');
+                return;
+            }
+            
+                if (selectedIndex === -1 || selectedIndex >= student.installments.length) {
+                    alert('الرجاء اختيار دفعة صحيحة');
+                    return;
+                }
+                
+                const installment = student.installments[selectedIndex];
+                const installmentId = installment.id;
+                
+                if (!installmentId) {
+                    alert('خطأ: معرف القسط غير موجود');
+                    return;
+                }
+                
+                const installmentAmount = calculateInstallmentAmount(student);
+                const currentAmount = installment.amount_paid || installment.amount || 0;
+                const newAmount = currentAmount + paymentAmount;
+                
+                // تحديث القسط في قاعدة البيانات
+                const newStatus = newAmount >= installmentAmount ? 'paid' : 'partial';
+                
+                const { error: updateError } = await window.supabaseClient
+                    .from('installments')
+                    .update({
+                        amount_paid: newAmount,
+                        payment_date: paymentDate,
+                        status: newStatus
+                    })
+                    .eq('id', installmentId);
+                
+                if (updateError) throw updateError;
+                
+                // إضافة سجل في payment_history
+                const { error: historyError } = await window.supabaseClient
+                    .from('payment_history')
+                    .insert({
+                        student_id: studentId,
+                        installment_id: installmentId,
+                amount: paymentAmount,
+                        payment_date: paymentDate,
+                        receipt_number: student.receipt_number || '',
+                notes: paymentNotes
+            });
+            
+                if (historyError) console.error('خطأ في حفظ سجل الدفع:', historyError);
+                
+                // تحديث القائمة المحلية
+                installment.amount = newAmount;
+                installment.amount_paid = newAmount;
+                installment.status = newStatus;
+                
+                // حفظ معلومات الدفعة الأخيرة للوصل
+                student.lastPayment = {
+                    amount: paymentAmount,
+                    installmentIndex: selectedIndex,
+                    paymentDate: paymentDate,
+                    paymentMethod: paymentMethod,
+                    notes: paymentNotes
+                };
+                
+            renderTable();
+            updateStats();
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+            modal.hide();
+            
+            document.getElementById('paymentForm').reset();
+            
+                alert(`تم تسجيل الدفعة بنجاح!\nالمبلغ: ${paymentAmount.toLocaleString('en-US')} د.ع`);
+            } catch (error) {
+                console.error('خطأ في تسجيل الدفعة:', error);
+                alert('حدث خطأ في تسجيل الدفعة: ' + error.message);
+            }
+        }
+
+        // طباعة الوصل
+        function printReceipt(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // التأكد من وجود installments
+            if (!student.installments || !Array.isArray(student.installments)) {
+                alert('البيانات غير صحيحة. الرجاء تحديث البيانات.');
+                return;
+            }
+            
+            // استخدام معلومات الدفعة الأخيرة إذا كانت موجودة
+            let paymentAmount, installmentIndex, paymentDateValue, paymentMethodValue, notesValue;
+            
+            if (student.lastPayment) {
+                paymentAmount = student.lastPayment.amount;
+                installmentIndex = student.lastPayment.installmentIndex;
+                paymentDateValue = student.lastPayment.paymentDate;
+                paymentMethodValue = student.lastPayment.paymentMethod;
+                notesValue = student.lastPayment.notes || '';
+            } else {
+                // البحث عن أول دفعة بها مبلغ
+                installmentIndex = student.installments.findIndex((inst, i) => (inst.amount_paid || inst.amount || 0) > 0);
+                if (installmentIndex === -1) installmentIndex = 0;
+                paymentAmount = student.installments[installmentIndex].amount_paid || student.installments[installmentIndex].amount || 0;
+                paymentDateValue = new Date().toISOString().split('T')[0];
+                paymentMethodValue = 'نقد';
+                notesValue = '';
+            }
+            
+            const installmentNames = ['الاول', 'الثاني', 'الثالث', 'الرابع'];
+            const installmentName = installmentNames[installmentIndex] || 'الاول';
+            const installmentDates = ['08/01', '10/01', '12/01', '02/01'];
+            const installmentDate = installmentDates[installmentIndex] || '08/01';
+            
+            // استخدام رقم الوصل الخاص بالطالب
+            const receiptNumber = getStudentField(student, 'receiptNumber');
+            
+            // تحويل تاريخ الدفع لنفس تنسيق الوصل
+            let formattedDate = paymentDateValue;
+            if (paymentDateValue.includes('-')) {
+                const dateParts = paymentDateValue.split('-');
+                formattedDate = `${dateParts[2]} / ${dateParts[1]} / ${dateParts[0]}`;
+            } else {
+                const today = new Date();
+                formattedDate = `${today.getDate()} / ${today.getMonth() + 1} / ${today.getFullYear()}`;
+            }
+            
+            const receiptHTML = `
+                <!DOCTYPE html>
+                <html lang="ar" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>وصل قبض - ${student.name}</title>
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body { font-family: 'Arial', 'Segoe UI', sans-serif; padding: 15px; direction: rtl; background: #e5e7eb; }
+                        .receipt { background: white; max-width: 750px; margin: 0 auto; padding: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+                        
+                        /* Header with gradient */
+                        .header-gradient { background: linear-gradient(135deg, #7dd3fc 0%, #38d9a9 100%); padding: 15px; text-align: center; }
+                        .logo-container { margin-bottom: 8px; }
+                        .logo { width: 60px; height: 60px; background: #0f766e; border-radius: 50%; margin: 0 auto; position: relative; display: flex; align-items: center; justify-content: center; font-size: 30px; color: white; }
+                        .institution-name { background: white; border: 2px solid #0f766e; padding: 8px 30px; display: inline-block; border-radius: 20px; font-weight: bold; color: #0f766e; font-size: 16px; margin-top: 5px; }
+                        
+                        /* Receipt info section */
+                        .receipt-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-bottom: 2px solid #0f766e; }
+                        .receipt-number { font-size: 18px; font-weight: bold; color: #1f2937; }
+                        .receipt-title { background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); padding: 6px 15px; border-radius: 15px; font-weight: bold; font-size: 15px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+                        .receipt-date { font-size: 13px; font-weight: bold; color: #374151; }
+                        
+                        /* Main content */
+                        .content { padding: 15px 20px; }
+                        .info-row { margin: 10px 0; display: grid; grid-template-columns: 160px 1fr; gap: 15px; align-items: center; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
+                        .info-row:last-of-type { border-bottom: none; }
+                        .info-row label { font-weight: bold; font-size: 14px; color: #374151; }
+                        .info-value { font-size: 15px; font-weight: 600; color: #1f2937; padding: 6px 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; }
+                        
+                        /* Installment dates */
+                        .installment-dates { margin: 15px 0; padding: 12px; background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border-radius: 10px; border: 2px solid #10b981; }
+                        .installment-dates-title { font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #065f46; }
+                        .date-boxes { display: flex; gap: 10px; }
+                        .date-box { width: 70px; height: 50px; background: white; border: 2px solid #10b981; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #065f46; box-shadow: 0 3px 6px rgba(16, 185, 129, 0.2); }
+                        
+                        /* Important notes */
+                        .notes-section { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); padding: 12px; margin: 15px 0; border-radius: 10px; border-right: 4px solid #f59e0b; box-shadow: 0 3px 8px rgba(245, 158, 11, 0.1); }
+                        .notes-section ul { list-style: none; padding-right: 0; }
+                        .notes-section li { margin: 6px 0; font-size: 12px; color: #78350f; font-weight: 500; padding-right: 20px; position: relative; }
+                        .notes-section li::before { content: '✓'; position: absolute; right: 0; top: 0; color: #f59e0b; font-weight: bold; font-size: 15px; }
+                        
+                        /* Signature section */
+                        .signature-section { display: flex; justify-content: space-around; margin: 20px 0 15px 0; padding-top: 15px; border-top: 2px solid #e5e7eb; }
+                        .signature-box { text-align: center; min-width: 180px; }
+                        .signature-box label { font-weight: bold; display: block; margin-bottom: 10px; font-size: 14px; color: #374151; }
+                        .signature-line { border-bottom: 2px solid #1f2937; height: 40px; width: 180px; margin: 0 auto; position: relative; border-radius: 4px; }
+                        
+                        /* Separator */
+                        .separator { height: 2px; background: linear-gradient(90deg, transparent, #0f766e, transparent); margin: 12px 0; }
+                        
+                        @media print {
+                            body { background: white; padding: 0; }
+                            .receipt { border: none; box-shadow: none; max-width: 100%; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt">
+                        <!-- Header with gradient -->
+                        <div class="header-gradient">
+                            <div class="logo-container">
+                                <div class="logo">📖🕌</div>
+                        </div>
+                            <div class="institution-name">مجموعة رسول الرحمة التعليمية</div>
+                        </div>
+                        
+                        <!-- Receipt Number and Title -->
+                        <div class="receipt-header">
+                            <div class="receipt-number">${receiptNumber}</div>
+                            <div class="receipt-title">وصل قبض</div>
+                            <div class="receipt-date">التاريخ: ${formattedDate}</div>
+                        </div>
+                        
+                        <!-- Main Content -->
+                        <div class="content">
+                            <div class="info-row">
+                                <label>استلمت من السيد ولي أمر الطالب:</label>
+                                <span class="info-value">${student.guardian}</span>
+                            </div>
+                            
+                            <div class="info-row">
+                                <label>في الصف:</label>
+                                <span class="info-value">${student.grade}</span>
+                            </div>
+                            
+                            <div class="info-row">
+                                <label>مبلغاً قدره:</label>
+                                <span class="info-value">${paymentAmount.toLocaleString('en-US')} دينار عراقي</span>
+                            </div>
+                            
+                            <div class="info-row">
+                                <label>وهو القسط:</label>
+                                <span class="info-value">${installmentName}</span>
+                            </div>
+                            
+                            <div class="info-row">
+                                <label>الملاحظات:</label>
+                                <span class="info-value">${notesValue || '---'}</span>
+                            </div>
+                            
+                            <div class="separator"></div>
+                            
+                            <!-- Important Notes -->
+                            <div class="notes-section">
+                                <ul>
+                                    <li>يسقط حق المطالبة بالمبلغ بعد توقيع الوصل.</li>
+                                    <li>يرجى الاحتفاظ بهذا الوصل حتى نهاية العام الدراسي.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Signature Section -->
+                        <div class="signature-section">
+                            <div class="signature-box">
+                                <label>اسم المستلم:</label>
+                                <div class="signature-line"></div>
+                            </div>
+                            <div class="signature-box">
+                                <label>التوقيع:</label>
+                                <div class="signature-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(receiptHTML);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // حذف طالب
+        async function deleteStudent(studentId) {
+            if (!confirm('هل أنت متأكد من حذف هذا الطالب؟')) return;
+            
+            try {
+                // حذف من قاعدة البيانات
+                const { error } = await window.supabaseClient
+                    .from('students')
+                    .delete()
+                    .eq('id', studentId);
+                
+                if (error) throw error;
+                
+                // تحديث القائمة المحلية
+            students = students.filter(s => s.id !== studentId);
+            renderTable();
+            updateStats();
+                
+                alert('تم حذف الطالب بنجاح');
+            } catch (error) {
+                console.error('خطأ في حذف الطالب:', error);
+                alert('حدث خطأ في حذف الطالب: ' + error.message);
+            }
+        }
+
+        // حفظ البيانات في قاعدة البيانات (تم استبداله بعمليات مباشرة)
+        async function saveData() {
+            // البيانات تُحفظ تلقائياً عند الإضافة والتعديل
+            // هذه الدالة موجودة للتوافق مع الكود القديم
+            console.log('تم حفظ البيانات في قاعدة البيانات');
+        }
+
+        // تحويل البيانات القديمة للبنية الجديدة
+        function migrateOldData(studentsData) {
+            let counter = 1;
+            return studentsData.map((student, index) => {
+                // إضافة رقم الوصل إذا لم يكن موجوداً
+                if (!student.receiptNumber) {
+                    student.receiptNumber = String(counter++).padStart(6, '0');
+                }
+                
+                // إذا كان الطالب يستخدم البنية القديمة
+                if (!student.installments && student.paid !== undefined) {
+                    const annualFee = student.annualFee || student.monthlyFee * 12 || 1200000;
+                    const hasSibling = student.hasSibling || false;
+                    
+                    // حساب المبلغ بعد الخصم
+                    let finalFee = annualFee;
+                    let discountAmount = 0;
+                    
+                    if (hasSibling) {
+                        discountAmount = annualFee * SIBLING_DISCOUNT_RATE;
+                        finalFee = annualFee - discountAmount;
+                    }
+                    
+                    // توزيع المبلغ المدفوع على الدفعات
+                    const installmentAmount = finalFee / INSTALLMENT_COUNT;
+                    const paidAmount = student.paid || 0;
+                    const installments = [];
+                    
+                    let remainingPaid = paidAmount;
+                    
+                    for (let i = 0; i < INSTALLMENT_COUNT; i++) {
+                        if (remainingPaid >= installmentAmount) {
+                            installments.push({ amount: installmentAmount, status: 'paid' });
+                            remainingPaid -= installmentAmount;
+                        } else if (remainingPaid > 0) {
+                            installments.push({ amount: remainingPaid, status: 'partial' });
+                            remainingPaid = 0;
+                        } else {
+                            installments.push({ amount: 0, status: 'unpaid' });
+                        }
+                    }
+                    
+                    return {
+                        ...student,
+                        annualFee: annualFee,
+                        finalFee: finalFee,
+                        hasSibling: hasSibling,
+                        discount: discountAmount,
+                        installments: installments
+                    };
+                }
+                
+                // التأكد من وجود installments للبيانات الجديدة
+                if (!student.installments) {
+                    const installmentAmount = calculateInstallmentAmount(student);
+                    student.installments = [
+                        { amount: 0, status: 'unpaid' },
+                        { amount: 0, status: 'unpaid' },
+                        { amount: 0, status: 'unpaid' },
+                        { amount: 0, status: 'unpaid' }
+                    ];
+                }
+                
+                return student;
+            });
+        }
+
+        // تحميل البيانات من قاعدة البيانات
+        async function loadData() {
+            if (!currentSchool && !isAdmin) return;
+            
+            // انتظار تحميل Supabase
+            if (!window.supabaseClient) {
+                console.log('انتظار تحميل Supabase...');
+                await new Promise((resolve) => {
+                    const checkInterval = setInterval(() => {
+                        if (window.supabaseClient) {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 100);
+                    setTimeout(() => clearInterval(checkInterval), 10000);
                 });
-
-                if (response.ok) {
-                    showMessage(document.getElementById("callSuccess"), "تم إرسال بيانات المكالمة إلى Google Sheet بنجاح", true);
-                    clearCallForm();
-                } else {
-                    throw new Error(`خطأ في الإرسال: ${response.status}`);
-                }
-            } catch (error) {
-                showMessage(document.getElementById("callError"), `خطأ أثناء الحفظ: ${error.message}`, false);
             }
-        }
-
-        // مسح حقول نموذج العملاء
-        function clearCustomerForm() {
-            document.getElementById("customerName").value = "";
-            document.getElementById("customerRegion").value = "";
-            document.getElementById("nearestPoint").value = "";
-            document.getElementById("customerPhone").value = "";
-            updateDateTime(); // لتحديث التاريخ والشيفت
-        }
-
-        // مسح حقول نموذج المكالمات
-        function clearCallForm() {
-            document.getElementById("callType").value = "";
-            document.getElementById("callPhone").value = "";
-            document.getElementById("callerName").value = "";
-            document.getElementById("callDetails").value = "";
-            updateDateTime(); // لتحديث الشيفت والوقت
-        }
-
-        // مسح جميع النماذج
-        function clearAllForms() {
-            clearCustomerForm();
-            clearCallForm();
-            document.getElementById("searchQuery").value = "";
-            document.getElementById("searchResults").innerHTML = "";
-            document.getElementById("selectedResult").style.display = "none";
-        }
-
-        // عرض رسائل النجاح/الخطأ
-        function showMessage(element, message, isSuccess) {
-            element.textContent = message;
-            element.className = isSuccess ? "success-message" : "error-message";
-            element.style.display = "block";
-            setTimeout(() => {
-                element.style.display = "none";
-            }, 3000);
-        }
-
-        // دالة البحث (تحتاج إلى إكمال)
-        async function searchData() {
-            const query = document.getElementById("searchQuery").value.trim();
-            const searchResultsDiv = document.getElementById("searchResults");
-            searchResultsDiv.innerHTML = ""; // مسح النتائج السابقة
-            document.getElementById("selectedResult").style.display = "none";
-
-            if (!query) {
-                searchResultsDiv.innerHTML = "<p style=\"text-align: center; color: #dc3545;\">الرجاء إدخال كلمة للبحث.</p>";
-                return;
-            }
-
-            searchResultsDiv.innerHTML = "<p style=\"text-align: center; color: #6c757d;\">جاري البحث...</p>";
-
+            
             try {
-                const response = await fetch(`${SEARCH_SCRIPT_URL}?query=${encodeURIComponent(query)}`);
-                const data = await response.json();
-
-                if (data.length > 0) {
-                    data.forEach(item => {
-                        const resultItem = document.createElement("div");
-                        resultItem.classList.add("result-item");
-                        resultItem.innerHTML = `<strong>${item.Name}</strong> - ${item.Phone} - ${item.Region}`;
-                        resultItem.onclick = () => displaySelectedResult(item);
-                        searchResultsDiv.appendChild(resultItem);
-                    });
-                } else {
-                    searchResultsDiv.innerHTML = "<p style=\"text-align: center; color: #6c757d;\">لا توجد نتائج مطابقة.</p>";
+                // الحصول على school_id للمدرسة الحالية
+                if (currentSchool) {
+                    console.log('البحث عن المدرسة:', currentSchool.id);
+                    const { data: schoolData, error: schoolError } = await window.supabaseClient
+                        .from('schools')
+                        .select('id')
+                        .eq('code', currentSchool.id)
+                        .single();
+                    
+                    if (schoolError) {
+                        console.error('خطأ في جلب بيانات المدرسة:', schoolError);
+                        alert('خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات قاعدة البيانات.');
+                        return;
+                    }
+                    
+                    if (!schoolData) {
+                        console.log('المدرسة غير موجودة، سيتم إنشاؤها:', currentSchool.name);
+                        
+                        // محاولة إنشاء المدرسة
+                        const { data: newSchool, error: insertError } = await window.supabaseClient
+                            .from('schools')
+                            .insert({
+                                name: currentSchool.name,
+                                code: currentSchool.id,
+                                description: `${currentSchool.name} - مدرسة في مجموعة رسول الرحمة التعليمية`
+                            })
+                            .select()
+                            .single();
+                        
+                        if (insertError) {
+                            console.error('خطأ في إنشاء المدرسة:', insertError);
+                            alert('حدث خطأ في إنشاء المدرسة في قاعدة البيانات. يرجى تشغيل ملف database_schema.sql أولاً.');
+                            return;
+                        }
+                        
+                        schoolData = { id: newSchool.id };
+                    }
+                    
+                    // جلب الطلاب
+                    const { data, error } = await window.supabaseClient
+                        .from('students')
+                        .select('*')
+                        .eq('school_id', schoolData.id)
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) throw error;
+                    
+                    students = data || [];
+                    
+                    // جلب الأقساط لكل طالب
+                    for (let student of students) {
+                        const { data: installmentsData } = await window.supabaseClient
+                            .from('installments')
+                            .select('*')
+                            .eq('student_id', student.id)
+                            .order('installment_number', { ascending: true });
+                        
+                        student.installments = installmentsData || [
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' }
+                        ];
+                    }
+                } else if (isAdmin) {
+                    // جلب جميع الطلاب للمدير
+                    const { data, error } = await window.supabaseClient
+                        .from('students')
+                        .select('*, schools(code, name)')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) throw error;
+                    
+                    students = data || [];
+                    
+                    // جلب الأقساط لكل طالب
+                    for (let student of students) {
+                        const { data: installmentsData } = await window.supabaseClient
+                            .from('installments')
+                            .select('*')
+                            .eq('student_id', student.id)
+                            .order('installment_number', { ascending: true });
+                        
+                        student.installments = installmentsData || [
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' },
+                            { amount: 0, status: 'unpaid' }
+                        ];
+                        
+                        // إضافة معلومات المدرسة
+                        if (student.schools) {
+                            student.schoolId = student.schools.code || '';
+                            student.schoolName = student.schools.name || '';
+                        }
+                    }
                 }
+                
+                // تحديث counter
+                if (students.length > 0) {
+                    const maxReceiptNumber = Math.max(...students.map(s => {
+                        const num = parseInt(s.receipt_number) || 0;
+                        return isNaN(num) ? 0 : num;
+                    }));
+                    receiptCounter = maxReceiptNumber + 1;
+                }
+                
+            updateStats();
             } catch (error) {
-                searchResultsDiv.innerHTML = `<p style=\"text-align: center; color: #dc3545;\">خطأ أثناء البحث: ${error.message}</p>`;
+                console.error('خطأ في تحميل البيانات:', error);
+                alert('حدث خطأ في تحميل البيانات من قاعدة البيانات');
             }
         }
 
-        // عرض تفاصيل النتيجة المحددة
-        function displaySelectedResult(item) {
-            document.getElementById("selectedName").value = item.Name || "";
-            document.getElementById("selectedRegion").value = item.Region || "";
-            document.getElementById("selectedPoint").value = item.ClosestPoint || "";
-            document.getElementById("selectedPhone").value = item.Phone || "";
-            document.getElementById("selectedDate").value = item.Date || "";
-            document.getElementById("selectedEmployee").value = item.Employee || "";
-            document.getElementById("selectedNotes").value = item.Notes || "";
-            document.getElementById("selectedResult").style.display = "block";
+        // دالة تسجيل الخروج
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                currentSchool = null;
+                isAdmin = false;
+                students = [];
+                document.getElementById('mainContent').style.display = 'none';
+                location.reload();
+            }
         }
 
+        // تصدير البيانات
+        function exportData() {
+            const dataStr = JSON.stringify(students, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `students_data_${new Date().getTime()}.json`;
+            link.click();
+        }
+
+        // عرض تفاصيل الطالب
+        function showStudentDetails(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            const installments = student.installments || [];
+            const totalPaid = installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+            const annualFee = student.annualFee || student.annual_fee || 1200000;
+            const discount = student.discount || 0;
+            const finalFee = student.finalFee || student.final_fee || annualFee;
+            const remaining = finalFee - totalPaid;
+            const installmentAmount = calculateInstallmentAmount(student);
+            
+            let detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p><strong>اسم الطالب:</strong> ${student.name || student.student_name || '---'}</p>
+                        <p><strong>اسم الأم:</strong> ${student.motherName || student.mother_name || '---'}</p>
+                        <p><strong>اسم ولي الأمر:</strong> ${student.guardian || '---'}</p>
+                        <p><strong>الصف:</strong> ${student.grade || '---'}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p><strong>رقم الوصل:</strong> ${student.receiptNumber || student.receipt_number || '---'}</p>
+                        <p><strong>رقم الهاتف:</strong> ${student.phone || '---'}</p>
+                        <p><strong>تاريخ التسجيل:</strong> ${student.registrationDate || student.registration_date || '---'}</p>
+                        <p><strong>إخوة (خصم 5%):</strong> ${student.hasSibling || student.has_sibling ? 'نعم' : 'لا'}</p>
+                    </div>
+                </div>
+                <hr>
+                <h5 class="mb-3">المعلومات المالية:</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>المبلغ السنوي:</strong> ${annualFee.toLocaleString('en-US')} د.ع</p>
+                        <p><strong>الخصم:</strong> ${discount.toLocaleString('en-US')} د.ع</p>
+                        <p><strong>المبلغ بعد الخصم:</strong> ${finalFee.toLocaleString('en-US')} د.ع</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>المبلغ المدفوع:</strong> ${totalPaid.toLocaleString('en-US')} د.ع</p>
+                        <p><strong>المبلغ المتبقي:</strong> ${remaining.toLocaleString('en-US')} د.ع</p>
+                    </div>
+                </div>
+                <hr>
+                <h5 class="mb-3">تفاصيل الدفعات:</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>الدفعة</th>
+                                <th>المبلغ المطلوب</th>
+                                <th>المبلغ المدفوع</th>
+                                <th>المتبقي</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${installments.map((inst, i) => {
+                                const paid = inst.amount_paid || inst.amount || 0;
+                                const required = installmentAmount;
+                                const remainingInst = required - paid;
+                                let statusBadge = '';
+                                
+                                if (paid >= required) {
+                                    statusBadge = '<span class="badge bg-success">مكتملة</span>';
+                                } else if (paid > 0) {
+                                    statusBadge = '<span class="badge bg-warning">جزئية</span>';
+                                } else {
+                                    statusBadge = '<span class="badge bg-danger">غير مسددة</span>';
+                                }
+                                
+                                return `
+                                    <tr>
+                                        <td>${i + 1}</td>
+                                        <td>${required.toLocaleString('en-US')} د.ع</td>
+                                        <td>${paid.toLocaleString('en-US')} د.ع</td>
+                                        <td>${remainingInst.toLocaleString('en-US')} د.ع</td>
+                                        <td>${statusBadge}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ${student.notes ? `<hr><p><strong>ملاحظات:</strong> ${student.notes}</p>` : ''}
+            `;
+            
+            document.getElementById('studentDetailsContent').innerHTML = detailsHTML;
+            const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            modal.show();
+        }
+
+        // فتح نموذج التعديل
+        function editStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('editStudentId').value = studentId;
+            document.getElementById('editStudentName').value = student.name;
+            document.getElementById('editMotherName').value = student.motherName || student.mother_name || '';
+            document.getElementById('editGuardianName').value = student.guardian;
+            document.getElementById('editGrade').value = student.grade;
+            document.getElementById('editAnnualFee').value = student.annualFee || student.annual_fee || 1200000;
+            document.getElementById('editHasSibling').value = (student.hasSibling || student.has_sibling) ? 'yes' : 'no';
+            document.getElementById('editPhone').value = student.phone || '';
+            document.getElementById('editNotes').value = student.notes || '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            modal.show();
+        }
+
+        // حفظ التعديلات
+        async function saveEditedStudent() {
+            try {
+                const studentId = document.getElementById('editStudentId').value;
+                console.log('Saving student ID:', studentId);
+                const student = students.find(s => s.id === studentId || s.id === parseInt(studentId));
+                console.log('Found student:', student);
+                if (!student) {
+                    console.error('Student not found');
+                    return;
+                }
+                
+                const annualFeeInput = document.getElementById('editAnnualFee').value;
+                const annualFee = parseFloat(annualFeeInput) || ANNUAL_FEE;
+                const hasSibling = document.getElementById('editHasSibling').value === 'yes';
+                
+                if (isNaN(annualFee) || annualFee <= 0) {
+                    alert('يرجى إدخال المبلغ السنوي صحيحاً');
+                    return;
+                }
+                
+                console.log('Annual Fee:', annualFee);
+                
+                // حساب المبلغ بعد الخصم
+                let finalFee = annualFee;
+                let discountAmount = 0;
+                
+                if (hasSibling) {
+                    discountAmount = annualFee * SIBLING_DISCOUNT_RATE;
+                    finalFee = annualFee - discountAmount;
+                }
+                
+                // تحديث في قاعدة البيانات
+                const updateData = {
+                    name: document.getElementById('editStudentName').value || 'غير محدد',
+                    mother_name: document.getElementById('editMotherName').value || '',
+                    guardian: document.getElementById('editGuardianName').value || '',
+                    grade: document.getElementById('editGrade').value || '',
+                    annual_fee: annualFee,
+                    final_fee: finalFee,
+                    has_sibling: hasSibling,
+                    discount: discountAmount
+                };
+                
+                // إضافة حقول اختيارية
+                const phoneValue = document.getElementById('editPhone').value;
+                const notesValue = document.getElementById('editNotes').value;
+                
+                if (phoneValue) updateData.phone = phoneValue;
+                if (notesValue) updateData.notes = notesValue;
+                
+                console.log('Update data:', updateData);
+                
+                const { error } = await window.supabaseClient
+                    .from('students')
+                    .update(updateData)
+                    .eq('id', studentId);
+                
+                if (error) throw error;
+                
+                // تحديث القائمة المحلية
+                student.name = document.getElementById('editStudentName').value;
+                student.motherName = document.getElementById('editMotherName').value;
+                student.mother_name = document.getElementById('editMotherName').value;
+                student.guardian = document.getElementById('editGuardianName').value;
+                student.grade = document.getElementById('editGrade').value;
+                student.annualFee = annualFee;
+                student.annual_fee = annualFee;
+                student.finalFee = finalFee;
+                student.final_fee = finalFee;
+                student.hasSibling = hasSibling;
+                student.has_sibling = hasSibling;
+                student.discount = discountAmount;
+                student.phone = document.getElementById('editPhone').value;
+                student.notes = document.getElementById('editNotes').value;
+                
+            renderTable();
+            updateStats();
+                
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
+                modal.hide();
+                
+                alert('تم حفظ التعديلات بنجاح');
+            } catch (error) {
+                console.error('خطأ في حفظ التعديلات:', error);
+                alert('حدث خطأ في حفظ التعديلات: ' + error.message);
+            }
+        }
+
+        // طباعة القائمة بتنسيق احترافي
+        function printList() {
+            const printWindow = window.open('', '_blank');
+            
+            let tableHTML = `
+                <!DOCTYPE html>
+                <html lang="ar" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>قائمة الطلاب - ${students.length} طالب</title>
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        @page { 
+                            size: A4; 
+                            margin: 0.5cm; 
+                        }
+                        @media print {
+                            body { margin: 0; padding: 0; }
+                        }
+                        body { font-family: Arial, sans-serif; direction: rtl; background: white; }
+                        .report-container { width: 100%; padding: 10px; font-size: 9px; }
+                        .header { text-align: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #667eea; }
+                        .header h1 { color: #667eea; font-size: 18px; margin-bottom: 5px; }
+                        .header p { color: #666; font-size: 12px; }
+                        .stats { display: flex; justify-content: space-around; margin: 10px 0; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 5px; }
+                        .stat-item { text-align: center; font-size: 9px; }
+                        .stat-item strong { display: block; font-size: 16px; margin-top: 3px; }
+                        table { width: 100%; border-collapse: collapse; margin: 5px 0; font-size: 7px; }
+                        th, td { padding: 4px; text-align: right; border: 1px solid #ddd; }
+                        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold; font-size: 8px; }
+                        tr:nth-child(even) { background: #f9f9f9; }
+                        .badge { padding: 3px 6px; border-radius: 3px; font-size: 8px; font-weight: bold; }
+                        .badge-success { background: #10b981; color: white; }
+                        .badge-warning { background: #f59e0b; color: white; }
+                        .badge-danger { background: #ef4444; color: white; }
+                        .print-date { text-align: left; color: #666; margin-top: 10px; font-size: 8px; }
+                        .school-col { display: none; }
+                    </style>
+                </head>
+                <body>
+                    <div class="report-container">
+                        <div class="header">
+                            <h1>مدرسة رسول الرحمة</h1>
+                            <p>قائمة الطلاب </p>
+                        </div>
+                        
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div>عدد الطلاب</div>
+                                <strong>${students.length}</strong>
+                            </div>
+                            <div class="stat-item">
+                                <div>إجمالي المطلوب</div>
+                                <strong id="statsTotal">0 د.ع</strong>
+                            </div>
+                            <div class="stat-item">
+                                <div>إجمالي المدفوع</div>
+                                <strong id="statsPaid">0 د.ع</strong>
+                            </div>
+                            <div class="stat-item">
+                                <div>المتبقي</div>
+                                <strong id="statsRemaining">0 د.ع</strong>
+                            </div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>م</th>
+                                    <th>رقم الوصل</th>
+                                    <th>اسم الطالب</th>
+                                    ${isAdmin ? '<th>المدرسة</th>' : ''}
+                                    <th>اسم الأم</th>
+                                    <th>ولي الأمر</th>
+                                    <th>الصف</th>
+                                    <th>المبلغ السنوي</th>
+                                    <th>الدُفعة 1</th>
+                                    <th>الدُفعة 2</th>
+                                    <th>الدُفعة 3</th>
+                                    <th>الدُفعة 4</th>
+                                    <th>إجمالي المدفوع</th>
+                                    <th>المتبقي</th>
+                                    <th>الخصم</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            let totalFees = 0, totalPaid = 0;
+            
+            students.forEach((student, index) => {
+                const installments = student.installments || [];
+                const studentTotalPaid = installments.reduce((sum, inst) => sum + (inst.amount || 0), 0);
+                const finalFee = student.finalFee || student.annualFee || student.final_fee || student.annual_fee || 1200000;
+                const studentRemaining = finalFee - studentTotalPaid;
+                const statusInfo = getFinancialStatus(student);
+                
+                totalFees += finalFee;
+                totalPaid += studentTotalPaid;
+                
+                let statusBadge = '';
+                if (studentRemaining <= 0) {
+                    statusBadge = '<span class="badge badge-success">مسدد</span>';
+                } else if (studentTotalPaid > 0) {
+                    statusBadge = '<span class="badge badge-warning">جزئي</span>';
+                } else {
+                    statusBadge = '<span class="badge badge-danger">غير مسدد</span>';
+                }
+                
+                const installmentAmount = calculateInstallmentAmount(student);
+                
+                // إنشاء أعمدة الأقساط
+                const installmentColumns = installments.map(inst => {
+                    const paid = inst.amount || 0;
+                    if (paid >= installmentAmount) {
+                        return '<td style="background: #d4edda; color: #155724;">' + paid.toLocaleString('en-US') + '</td>';
+                    } else if (paid > 0) {
+                        return '<td style="background: #fff3cd; color: #856404;">' + paid.toLocaleString('en-US') + '</td>';
+                    } else {
+                        return '<td>0</td>';
+                    }
+                }).join('');
+                
+                const schoolNameCell = isAdmin && student.schoolName ? `<td>${student.schoolName}</td>` : '';
+                const annualFee = student.annualFee || student.annual_fee || 1200000;
+                const discount = student.discount || 0;
+                tableHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.receiptNumber || student.receipt_number || '---'}</td>
+                        <td>${student.name || student.student_name || '---'}</td>
+                        ${schoolNameCell}
+                        <td>${student.motherName || student.mother_name || '---'}</td>
+                        <td>${student.guardian || student.guardian_name || '---'}</td>
+                        <td>${student.grade || '---'}</td>
+                        <td>${annualFee.toLocaleString('en-US')} د.ع</td>
+                        ${installmentColumns}
+                        <td><strong>${studentTotalPaid.toLocaleString('en-US')}</strong></td>
+                        <td><strong>${studentRemaining.toLocaleString('en-US')}</strong></td>
+                        <td>${discount.toLocaleString('en-US')}</td>
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+            });
+            
+            const remaining = totalFees - totalPaid;
+            const totalFeesStr = totalFees.toLocaleString('en-US');
+            const totalPaidStr = totalPaid.toLocaleString('en-US');
+            const remainingStr = remaining.toLocaleString('en-US');
+            
+            tableHTML += `
+                            </tbody>
+                        </table>
+                        
+                        <div class="print-date">
+                            تاريخ الطباعة: ${new Date().toLocaleString('ar-IQ')}
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(tableHTML);
+            printWindow.document.close();
+            
+            // تحديث الإحصائيات بعد تحميل الصفحة
+            const statsTotal = printWindow.document.getElementById('statsTotal');
+            const statsPaid = printWindow.document.getElementById('statsPaid');
+            const statsRemaining = printWindow.document.getElementById('statsRemaining');
+            
+            if (statsTotal) statsTotal.textContent = totalFeesStr + ' د.ع';
+            if (statsPaid) statsPaid.textContent = totalPaidStr + ' د.ع';
+            if (statsRemaining) statsRemaining.textContent = remainingStr + ' د.ع';
+            
+            printWindow.print();
+        }
     </script>
 </body>
 </html>
-
