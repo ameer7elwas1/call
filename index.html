@@ -1060,6 +1060,13 @@
                     currentSchool = null;
                     document.getElementById('schoolName').textContent = 'مدير النظام';
                     
+                    // حفظ حالة تسجيل الدخول
+                    localStorage.setItem('currentLogin', JSON.stringify({
+                        username: username,
+                        password: password,
+                        schoolId: 'admin'
+                    }));
+                    
                     // إخفاء modal تسجيل الدخول وإظهار المحتوى
                     const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
                     loginModal.hide();
@@ -1079,7 +1086,7 @@
                     
                     // تحميل بيانات جميع المدارس
                     loadData().then(() => {
-            renderTable();
+                        renderTable();
                         updateStats();
                     });
                     
@@ -1123,6 +1130,13 @@
             currentSchool = schools[schoolId];
             isAdmin = false;
             
+            // حفظ حالة تسجيل الدخول
+            localStorage.setItem('currentLogin', JSON.stringify({
+                username: username,
+                password: password,
+                schoolId: schoolId
+            }));
+            
             // تحديث عنوان المدرسة
             const schoolNameElement = document.getElementById('schoolName');
             if (schoolNameElement) {
@@ -1152,9 +1166,51 @@
 
         // تحميل البيانات عند بدء الصفحة
         window.addEventListener('DOMContentLoaded', function() {
-            // عرض modal تسجيل الدخول
-            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'), { backdrop: 'static', keyboard: false });
-            loginModal.show();
+            // التحقق من وجود تسجيل دخول سابق
+            const savedLogin = localStorage.getItem('currentLogin');
+            if (savedLogin) {
+                try {
+                    const loginData = JSON.parse(savedLogin);
+                    const { username, password, schoolId } = loginData;
+                    
+                    // محاولة تسجيل الدخول التلقائي
+                    if (schoolId === 'admin') {
+                        currentSchool = null;
+                        isAdmin = true;
+                        document.getElementById('schoolName').textContent = 'مدير النظام';
+                        document.getElementById('mainContent').style.display = 'block';
+                        document.getElementById('adminSchoolRow').style.display = 'block';
+                        document.getElementById('schoolNameHeader').style.display = 'table-cell';
+                        
+                        // تحميل البيانات
+                        loadData().then(() => {
+                            renderTable();
+                            updateStats();
+                        });
+                    } else {
+                        const school = schools[schoolId];
+                        if (school) {
+                            currentSchool = school;
+                            isAdmin = false;
+                            document.getElementById('schoolName').textContent = school.name;
+                            document.getElementById('mainContent').style.display = 'block';
+                            
+                            // تحميل البيانات
+                            loadData().then(() => {
+                                renderTable();
+                                updateStats();
+                            });
+                        } else {
+                            showLoginModal();
+                        }
+                    }
+                } catch (e) {
+                    console.error('خطأ في استعادة تسجيل الدخول:', e);
+                    showLoginModal();
+                }
+            } else {
+                showLoginModal();
+            }
             
             // إضافة حدث عند إغلاق الصفحة لإعادة إظهار تسجيل الدخول
             document.getElementById('loginModal').addEventListener('hidden.bs.modal', function() {
@@ -2235,9 +2291,17 @@
             }
         }
 
+        // دالة لعرض نافذة تسجيل الدخول
+        function showLoginModal() {
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'), { backdrop: 'static', keyboard: false });
+            loginModal.show();
+        }
+
         // دالة تسجيل الخروج
         function logout() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                // حذف بيانات تسجيل الدخول
+                localStorage.removeItem('currentLogin');
                 currentSchool = null;
                 isAdmin = false;
                 students = [];
@@ -2269,6 +2333,49 @@
             const finalFee = student.finalFee || student.final_fee || annualFee;
             const remaining = finalFee - totalPaid;
             const installmentAmount = calculateInstallmentAmount(student);
+            
+            // البحث عن الإخوة
+            const motherName = student.motherName || student.mother_name || '';
+            const guardian = student.guardian || '';
+            const siblings = students.filter(s => 
+                s.id !== studentId && 
+                (s.motherName || s.mother_name) === motherName && 
+                motherName !== '' &&
+                s.guardian === guardian
+            );
+            
+            let siblingsHTML = '';
+            if (siblings.length > 0) {
+                siblingsHTML = `
+                    <hr>
+                    <h5 class="mb-3"><i class="bi bi-people"></i> الإخوة (${siblings.length})</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>المدرسة</th>
+                                    <th>الصف</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${siblings.map(s => {
+                                    const schoolName = s.schoolName || '---';
+                                    return `
+                                        <tr>
+                                            <td>${s.name || '---'}</td>
+                                            <td>${schoolName}</td>
+                                            <td>${s.grade || '---'}</td>
+                                            <td><span class="badge ${s.hasSibling || s.has_sibling ? 'bg-success' : 'bg-danger'}">${s.hasSibling || s.has_sibling ? 'يستفيد من خصم' : 'لا يستفيد'}</span></td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
             
             let detailsHTML = `
                 <div class="row">
@@ -2339,6 +2446,7 @@
                         </tbody>
                     </table>
                 </div>
+                ${siblingsHTML}
                 ${student.notes ? `<hr><p><strong>ملاحظات:</strong> ${student.notes}</p>` : ''}
             `;
             
