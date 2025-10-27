@@ -881,7 +881,7 @@
                         <label class="form-label">اختر المدرسة</label>
                         <select id="loginSchool" class="form-select">
                             <option value="">-- اختر المدرسة --</option>
-                            <option value="admin">رئيس مجلس الإدارة (عرض جميع المدارس)</option>
+                            <option value="admin">رئيس مجلس الإدارة ( جميع المدارس )</option>
                             <option value="rawda">روضة رسول الرحمة</option>
                             <option value="rasoul">مدرسة رسول الرحمة</option>
                             <option value="noor">مدرسة نور الرحمة</option>
@@ -898,11 +898,11 @@
                         <strong class="mb-1" style="font-size: 0.85rem;">معلومات الدخول:</strong>
                         <small class="text-muted" style="display: block; font-size: 0.75rem;">
                             <strong>المدير:</strong> admin / master123<br>
-                            <strong>روضة رسول الرحمة:</strong> admin / rawda123<br>
-                            <strong>مدرسة رسول الرحمة:</strong> admin / rasoul123<br>
-                            <strong>مدرسة نور الرحمة:</strong> admin / noor123<br>
-                            <strong>مدرسة نبي الرحمة:</strong> admin / nabi123<br>
-                            <strong>ثانوية رسول الرحمة:</strong> admin / thanawiya123
+                            <strong>روضة رسول الرحمة:</strong> rawda / rawda123<br>
+                            <strong>مدرسة رسول الرحمة:</strong> rasoul / rasoul123<br>
+                            <strong>مدرسة نور الرحمة:</strong> noor / noor123<br>
+                            <strong>مدرسة نبي الرحمة:</strong> nabi / nabi123<br>
+                            <strong>ثانوية رسول الرحمة:</strong> thanawiya123 / thanawiya123
                         </small>
                     </div>
                 </div>
@@ -1094,6 +1094,7 @@
                                     <tr>
                                         <th>م</th>
                                         <th>اسم المستخدم</th>
+                                        <th>كلمة المرور</th>
                                         <th>المدرسة</th>
                                         <th>نوع المستخدم</th>
                                         <th>الحالة</th>
@@ -1414,7 +1415,7 @@
         let isAdmin = false;
 
         // دالة المصادقة
-        function authenticateUser() {
+        async function authenticateUser() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             const schoolId = document.getElementById('loginSchool').value;
@@ -1440,11 +1441,9 @@
                     
                     document.getElementById('mainContent').style.display = 'block';
                     
-                    // إظهار حقل اختيار المدرسة وعمود المدرسة
                     document.getElementById('adminSchoolRow').style.display = 'block';
                     document.getElementById('schoolNameHeader').style.display = 'table-cell';
                     
-                    // إظهار زر إدارة المستخدمين للمدير
                     document.getElementById('userManagementBtn').style.display = 'inline-block';
                     document.getElementById('userManagementSection').style.display = 'block';
                     
@@ -1483,16 +1482,66 @@
                 return;
             }
 
-            // التحقق من بيانات المستخدم
-            const schoolUsers = users[schoolId];
-            if (!schoolUsers) {
-                errorDiv.textContent = 'مدرسة غير موجودة';
-                errorDiv.style.display = 'block';
-                return;
+            // التحقق من بيانات المستخدم - محاولة من قاعدة البيانات أولاً
+            let userFound = false;
+            
+            try {
+                // الحصول على معرف المدرسة
+                const { data: schoolData, error: schoolError } = await window.supabaseClient
+                    .from('schools')
+                    .select('id')
+                    .eq('code', schoolId)
+                    .single();
+
+                if (schoolData && !schoolError) {
+                    // البحث عن المستخدم في قاعدة البيانات
+                    const { data: userData, error: userError } = await window.supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('username', username)
+                        .eq('school_id', schoolData.id)
+                        .eq('is_active', true)
+                        .maybeSingle();
+
+                    if (userData && !userError) {
+                        console.log('تم العثور على المستخدم في قاعدة البيانات:', userData);
+                        if (userData.password === password) {
+                            userFound = true;
+                            console.log('المصادقة ناجحة من قاعدة البيانات');
+                        } else {
+                            console.log('كلمة المرور غير صحيحة');
+                        }
+                    } else {
+                        console.log('المستخدم غير موجود في قاعدة البيانات أو غير نشط');
+                    }
+                }
+            } catch (error) {
+                console.log('خطأ في البحث في قاعدة البيانات:', error);
             }
 
-            const user = schoolUsers.find(u => u.username === username && u.password === password);
-            if (!user) {
+            // إذا لم يُوجد في قاعدة البيانات، البحث في الكود المحلي
+            if (!userFound) {
+                console.log('البحث في الكود المحلي...');
+                const schoolUsers = users[schoolId];
+                if (!schoolUsers) {
+                    errorDiv.textContent = 'مدرسة غير موجودة';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                const user = schoolUsers.find(u => u.username === username && u.password === password);
+                if (!user) {
+                    console.log('المستخدم غير موجود في الكود المحلي');
+                    errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                    errorDiv.style.display = 'block';
+                    return;
+                } else {
+                    console.log('المصادقة ناجحة من الكود المحلي');
+                    userFound = true;
+                }
+            }
+            
+            if (!userFound) {
                 errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
                 errorDiv.style.display = 'block';
                 return;
@@ -3829,13 +3878,12 @@
                 }
 
                 // التحقق من عدم وجود المستخدم
-                const { data: existingUser } = await window.supabaseClient
+                const { data: existingUsers, error: checkError } = await window.supabaseClient
                     .from('users')
                     .select('id')
-                    .eq('username', username)
-                    .single();
+                    .eq('username', username);
 
-                if (existingUser) {
+                if (checkError || (existingUsers && existingUsers.length > 0)) {
                     throw new Error('اسم المستخدم موجود مسبقاً');
                 }
 
@@ -3882,7 +3930,7 @@
                 tbody.innerHTML = '';
 
                 if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">لا يوجد مستخدمين</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">لا يوجد مستخدمين</td></tr>';
                     return;
                 }
 
@@ -3890,7 +3938,7 @@
                 const schoolUsers = data.filter(user => user.school_id !== null && user.schools);
 
                 if (schoolUsers.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">لا يوجد مستخدمين للمدارس</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">لا يوجد مستخدمين للمدارس</td></tr>';
                     return;
                 }
 
@@ -3900,6 +3948,7 @@
                     row.innerHTML = `
                         <td>${index + 1}</td>
                         <td>${user.username}</td>
+                        <td><strong style="color: #0f766e;">${user.password || '---'}</strong></td>
                         <td>${schoolName}</td>
                         <td>${getUserTypeLabel(user.user_type)}</td>
                         <td>
