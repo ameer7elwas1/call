@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,20 +20,12 @@
 
         body {
             background: linear-gradient(135deg, #048267 0%, #14b8a6 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             font-family: 'Cairo', 'Segoe UI', sans-serif;
-            padding: 80px 60px;
+            padding: 0;
             position: relative;
             overflow-x: hidden;
             line-height: 1.5;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         /* تأثيرات الجسيمات في الخلفية */
@@ -46,30 +42,152 @@
             z-index: 0;
         }
 
-        .main-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 
-                        0 0 100px rgba(102, 126, 234, 0.15);
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: slideInUp 0.6s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            border-left: 4px solid #0f766e;
+            box-shadow: 3px 0 20px rgba(0, 0, 0, 0.08);
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 2px solid #e5e7eb;
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            opacity: 0.95;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 15px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #0f766e 0%, #14b8a6 100%);
+            transform: translateX(100%);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .nav-item:hover {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            border-color: #14b8a6;
+            color: #0f766e;
+            transform: translateX(-5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.15) 0%, rgba(20, 184, 166, 0.1) 100%);
+            border-color: #0f766e;
+            color: #0f766e;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .nav-item.active::before {
+            transform: translateX(0);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.1) 0%, rgba(20, 184, 166, 0.05) 100%);
+            border-radius: 8px;
+        }
+
+        .nav-item.active .nav-icon {
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            color: white;
+        }
+
+        .nav-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 2px solid #e5e7eb;
+            background: #f8f9fa;
+        }
+
+        .user-info-sidebar {
+            color: #0f766e;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .date-info-sidebar {
+            color: #2d3748;
+            font-size: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .main-container {
+            margin-right: 280px;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
         .header-section {
@@ -87,14 +205,8 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
             top: -50%;
             right: -50%;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         .header-section h1 {
@@ -125,17 +237,9 @@
             letter-spacing: 0.3px;
         }
 
-        .header-section .bi {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
 
         .content-section {
-            padding: 50px 40px;
+            padding: 30px 25px;
         }
 
         .card-custom {
@@ -144,7 +248,6 @@
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
             margin-bottom: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%);
             border-top: 3px solid transparent;
             position: relative;
@@ -158,17 +261,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, #0f766e, #14b8a6);
-            transform: scaleX(0);
-            transition: transform 0.4s;
-        }
-
-        .card-custom:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-custom:hover::before {
-            transform: scaleX(1);
         }
 
         .card-header-custom {
@@ -187,20 +279,33 @@
             font-size: 0.85rem;
         }
 
-        .form-control, .form-select {
+        .form-control {
             border-radius: 10px;
             border: 2px solid #d1d5db;
             padding: 10px 14px;
-            transition: all 0.3s;
             font-size: 0.9rem;
             font-weight: 500;
             background-color: #ffffff;
         }
 
+        .form-select {
+            border-radius: 10px;
+            border: 2px solid #d1d5db;
+            padding: 10px 14px;
+            padding-left: 40px;
+            padding-right: 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 0.75rem center;
+            background-size: 16px 12px;
+        }
+
         .form-control:focus, .form-select:focus {
             border-color: #0f766e;
-            box-shadow: 0 0 0 0.3rem rgba(15, 118, 110, 0.2), 0 0 20px rgba(15, 118, 110, 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 0.3rem rgba(15, 118, 110, 0.2);
             background-color: #ffffff;
         }
 
@@ -261,30 +366,11 @@
             border-radius: 10px;
             padding: 10px 25px;
             font-weight: 700;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             letter-spacing: 0.5px;
             font-size: 0.95rem;
             box-shadow: 0 3px 12px rgba(102, 126, 234, 0.25);
-        }
-
-        .btn-custom::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn-custom:hover::before {
-            width: 300px;
-            height: 300px;
         }
 
         .btn-primary-custom {
@@ -295,7 +381,6 @@
         }
 
         .btn-primary-custom:hover {
-            transform: translateY(-4px) scale(1.05);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
         }
 
@@ -307,7 +392,6 @@
         }
 
         .btn-success-custom:hover {
-            transform: translateY(-4px) scale(1.05);
             box-shadow: 0 10px 30px rgba(86, 171, 47, 0.5);
         }
 
@@ -319,7 +403,6 @@
         }
 
         .btn-info-custom:hover {
-            transform: translateY(-4px) scale(1.05);
             box-shadow: 0 10px 30px rgba(52, 152, 219, 0.5);
         }
 
@@ -331,7 +414,6 @@
         }
 
         .btn-danger-custom:hover {
-            transform: translateY(-4px) scale(1.05);
             box-shadow: 0 10px 30px rgba(231, 76, 60, 0.5);
         }
 
@@ -361,7 +443,6 @@
         }
 
         .table tbody tr {
-            transition: all 0.3s ease;
             border-bottom: 1px solid #e2e8f0;
         }
 
@@ -374,7 +455,6 @@
 
         .table tbody tr:hover {
             background: linear-gradient(to right, #f8f9ff 0%, #ffffff 100%);
-            transform: scale(1.002);
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
             border-bottom: 1px solid #0f766e;
         }
@@ -401,18 +481,168 @@
             margin: 0;
         }
 
+        /* تبويبات المدارس */
+        .nav-tabs {
+            border-bottom: 3px solid #0f766e;
+        }
+
+        .nav-tabs .nav-link {
+            color: #0f766e;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+        
+        /* ألوان المدارس */
+        .nav-tabs .nav-link[data-school="rawda"] {
+            color: #8B4513;
+        }
+        .nav-tabs .nav-link[data-school="rawda"].active {
+            border-bottom-color: #8B4513;
+            color: #8B4513;
+        }
+        
+        .nav-tabs .nav-link[data-school="rasoul"] {
+            color: #0f766e;
+        }
+        .nav-tabs .nav-link[data-school="rasoul"].active {
+            border-bottom-color: #0f766e;
+            color: #0f766e;
+        }
+        
+        .nav-tabs .nav-link[data-school="noor"] {
+            color: #f59e0b;
+        }
+        .nav-tabs .nav-link[data-school="noor"].active {
+            border-bottom-color: #f59e0b;
+            color: #f59e0b;
+        }
+        
+        .nav-tabs .nav-link[data-school="nabi"] {
+            color: #3498db;
+        }
+        .nav-tabs .nav-link[data-school="nabi"].active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+        }
+        
+        .nav-tabs .nav-link[data-school="thanawiya"] {
+            color: #e74c3c;
+        }
+        .nav-tabs .nav-link[data-school="thanawiya"].active {
+            border-bottom-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .nav-tabs .nav-link:hover:not(.active) {
+            border-bottom-color: #14b8a6;
+            color: #14b8a6;
+        }
+        
+        .nav-tabs .nav-link[data-school="rawda"]:hover:not(.active) {
+            border-bottom-color: #8B4513;
+            color: #8B4513;
+        }
+        
+        .nav-tabs .nav-link[data-school="noor"]:hover:not(.active) {
+            border-bottom-color: #f59e0b;
+            color: #f59e0b;
+        }
+        
+        .nav-tabs .nav-link[data-school="nabi"]:hover:not(.active) {
+            border-bottom-color: #3498db;
+            color: #3498db;
+        }
+        
+        .nav-tabs .nav-link[data-school="thanawiya"]:hover:not(.active) {
+            border-bottom-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #0f766e;
+            background-color: transparent;
+            border-bottom: 3px solid #0f766e;
+            font-weight: 700;
+        }
+
+        .filter-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .main-tab-content {
+            display: none;
+        }
+
+        .main-tab-content.active {
+            display: block;
+        }
+
+        /* بطاقات الإحصائيات المتقدمة */
+        .stats-card-advanced {
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card-advanced::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transition: transform 0.5s ease;
+        }
+
+        .stats-card-advanced:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-card-advanced:hover::before {
+            transform: rotate(45deg);
+        }
+
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stats-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
         .badge-custom {
             padding: 4px 10px;
             border-radius: 10px;
             font-weight: 700;
             font-size: 0.75rem;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
             letter-spacing: 0;
         }
 
         .badge-custom:hover {
-            transform: scale(1.1);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
         }
 
@@ -425,7 +655,6 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .stats-box::before {
@@ -436,16 +665,9 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
         }
 
         .stats-box:hover {
-            transform: translateY(-8px) scale(1.02);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
@@ -474,7 +696,6 @@
             font-weight: 700;
             margin: 2px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-            transition: all 0.3s ease;
             letter-spacing: 0;
             line-height: 1.3;
         }
@@ -488,7 +709,6 @@
         }
 
         .installment-badge:hover {
-            transform: scale(1.1);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -531,18 +751,6 @@
             border: none;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            animation: slideInDown 0.4s ease-out;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .payment-modal .modal-header {
@@ -570,12 +778,10 @@
             background: white;
             border-radius: 12px;
             border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .installment-item:hover {
-            transform: translateX(-5px);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
 
@@ -609,10 +815,8 @@
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
         }
         .notification-bell:hover {
-            transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         .notification-badge {
@@ -646,10 +850,8 @@
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
         }
         .chat-button:hover {
-            transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         .chat-badge {
@@ -685,7 +887,6 @@
         }
         .notification-panel.show {
             display: block;
-            animation: slideInLeft 0.3s ease;
         }
         .notification-header {
             background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
@@ -706,10 +907,6 @@
             border-radius: 8px;
             border-right: 4px solid;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .notification-item:hover {
-            transform: translateX(-5px);
         }
         .notification-item.unread {
             background: #f0fdf4;
@@ -737,7 +934,6 @@
         }
         .chat-panel.show {
             display: flex;
-            animation: slideInUp 0.3s ease;
         }
         .chat-header {
             background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
@@ -808,14 +1004,6 @@
             flex: 1;
         }
         
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideInUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
     </style>
 </head>
 <body>
@@ -910,6 +1098,36 @@
         </div>
     </div>
 
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar" style="display: none;">
+        <div class="sidebar-header">
+            <h2><i class="bi bi-mortarboard"></i> مجموعة رسول الرحمة</h2>
+            <p id="sidebarSchoolName">إدارة الأقساط المدرسية</p>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-item active" onclick="switchMainTab('students')">
+                <span class="nav-icon"><i class="bi bi-people"></i></span>
+                <span class="nav-text">قائمة الطلاب</span>
+            </div>
+            <div class="nav-item" onclick="switchMainTab('schools')" id="schoolsTabNav" style="display: none;">
+                <span class="nav-icon"><i class="bi bi-building"></i></span>
+                <span class="nav-text">جميع المدارس</span>
+            </div>
+            <div class="nav-item" onclick="switchMainTab('users')" id="usersTabNav" style="display: none;">
+                <span class="nav-icon"><i class="bi bi-shield-lock"></i></span>
+                <span class="nav-text">إدارة المستخدمين</span>
+            </div>
+            <div class="nav-item" onclick="switchMainTab('settings')">
+                <span class="nav-icon"><i class="bi bi-gear"></i></span>
+                <span class="nav-text">الإعدادات</span>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-info-sidebar" id="sidebarUserInfo">مرحباً</div>
+            <div class="date-info-sidebar" id="sidebarDateTime"></div>
+        </div>
+    </div>
+
     <div class="main-container" id="mainContent" style="display: none;">
         <div class="header-section" style="position: relative;">
             <button onclick="logout()" class="btn btn-light no-print" style="position: absolute; left: 20px; top: 20px; border: none; border-radius: 10px; padding: 10px 20px; font-weight: bold;">
@@ -921,6 +1139,48 @@
         </div>
 
         <div class="content-section">
+            <!-- Tab Content: قائمة الطلاب -->
+            <div id="studentsTab" class="main-tab-content active">
+            <!-- تبويبات المدارس (للمدير فقط) -->
+            <div id="schoolTabsContainer" class="mb-4" style="display: none;">
+                <ul class="nav nav-tabs" id="schoolTabs" role="tablist" style="border-bottom: 3px solid #0f766e;">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-schools-tab" data-bs-toggle="tab" data-bs-target="#all-schools" type="button" role="tab" onclick="filterBySchool('all')">
+                            <i class="bi bi-building"></i> جميع المدارس
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- فلتر حسب الصف -->
+            <div class="card-custom no-print mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label"><i class="bi bi-funnel"></i> فلتر حسب الصف:</label>
+                            <select class="form-select" id="gradeFilter" onchange="filterByGrade()">
+                                <option value="all">جميع الصفوف</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label"><i class="bi bi-funnel-fill"></i> فلتر حسب الحالة:</label>
+                            <select class="form-select" id="statusFilter" onchange="filterByStatus()">
+                                <option value="all">جميع الحالات</option>
+                                <option value="paid">مسدد</option>
+                                <option value="partial">جزئي</option>
+                                <option value="unpaid">غير مسدد</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button onclick="clearFilters()" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-x-circle"></i> إزالة الفلاتر
+                            </button>
+                            <span id="filterInfo" class="badge bg-info ms-2" style="display: none;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row mb-4">
                 <div class="col-md-3 mb-3">
                     <div class="stats-box">
@@ -1058,7 +1318,7 @@
                                     <th>المبلغ السنوي</th>
                                     <th>الدُفعات</th>
                                     <th>المتبقي</th>
-                                    <th>خصم 5%</th>
+                                    <th>الخصم</th>
                                     <th>الحالة</th>
                                     <th class="no-print">إجراءات</th>
                                 </tr>
@@ -1071,8 +1331,119 @@
                 </div>
             </div>
 
-            <!-- قسم إدارة المستخدمين (للمدير فقط) -->
-            <div id="userManagementSection" style="display: none; margin-top: 20px;">
+            <!-- أزرار إضافية -->
+            <div class="text-center no-print mt-4">
+                <button onclick="printList()" class="btn btn-info-custom btn-custom me-2">
+                    <i class="bi bi-printer"></i> طباعة القائمة
+                </button>
+                <button onclick="exportData()" class="btn btn-success-custom btn-custom me-2">
+                    <i class="bi bi-download"></i> تصدير البيانات
+                </button>
+                <button onclick="sendBulkWhatsAppReminders()" class="btn btn-custom me-2" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none;" title="إرسال تذكيرات واتساب لجميع الطلاب المتأخرين">
+                    📱 إرسال تذكيرات جماعية
+                </button>
+            </div>
+            </div>
+            <!-- End Tab Content: قائمة الطلاب -->
+
+            <!-- Tab Content: جميع المدارس -->
+            <div id="schoolsTab" class="main-tab-content" style="display: none;">
+                <!-- لوحة التحكم الرئيسية -->
+                <div class="card-custom mb-3">
+                    <div class="card-header-custom" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">
+                        <i class="bi bi-speedometer2"></i> لوحة التحكم الرئيسية
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <div class="stats-card-advanced" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <div class="stats-icon"><i class="bi bi-building"></i></div>
+                                    <div class="stats-value" id="totalSchoolsCount">0</div>
+                                    <div class="stats-label">عدد المدارس</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stats-card-advanced" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    <div class="stats-icon"><i class="bi bi-people"></i></div>
+                                    <div class="stats-value" id="totalStudentsCount">0</div>
+                                    <div class="stats-label">إجمالي الطلاب</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stats-card-advanced" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                    <div class="stats-icon"><i class="bi bi-cash-stack"></i></div>
+                                    <div class="stats-value" id="totalFeesAmount">0</div>
+                                    <div class="stats-label">إجمالي المطلوب</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stats-card-advanced" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                    <div class="stats-icon"><i class="bi bi-percent"></i></div>
+                                    <div class="stats-value" id="overallPaymentRate">0%</div>
+                                    <div class="stats-label">متوسط نسبة الدفع</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- رسوم بيانية -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card-custom">
+                                    <div class="card-header-custom">
+                                        <i class="bi bi-pie-chart"></i> توزيع الطلاب حسب المدارس
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="studentsDistributionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card-custom">
+                                    <div class="card-header-custom">
+                                        <i class="bi bi-bar-chart"></i> نسبة الدفع لكل مدرسة
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="paymentRateChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قائمة المدارس التفصيلية -->
+                <div class="card-custom">
+                    <div class="card-header-custom" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">
+                        <i class="bi bi-building"></i> جميع المدارس - نظرة شاملة
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary" onclick="sortSchoolsBy('students')">
+                                        <i class="bi bi-sort-numeric-down"></i> ترتيب حسب عدد الطلاب
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="sortSchoolsBy('payment')">
+                                        <i class="bi bi-sort-alpha-down"></i> ترتيب حسب نسبة الدفع
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="sortSchoolsBy('fees')">
+                                        <i class="bi bi-sort-amount-down"></i> ترتيب حسب المبلغ المطلوب
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" onclick="exportSchoolsReport()">
+                                        <i class="bi bi-file-earmark-excel"></i> تصدير تقرير
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="schoolsStatsContainer" class="row mb-4"></div>
+                        <div id="schoolsListContainer"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Tab Content: جميع المدارس -->
+
+            <!-- Tab Content: إدارة المستخدمين -->
+            <div id="usersTab" class="main-tab-content" style="display: none;">
                 <div class="card-custom">
                     <div class="card-header-custom">
                         <i class="bi bi-shield-lock"></i> إدارة المستخدمين
@@ -1110,19 +1481,94 @@
                     </div>
                 </div>
             </div>
+            <!-- End Tab Content: إدارة المستخدمين -->
 
-            <!-- أزرار إضافية -->
-            <div class="text-center no-print mt-4">
-                <button onclick="printList()" class="btn btn-info-custom btn-custom me-2">
-                    <i class="bi bi-printer"></i> طباعة القائمة
+            <!-- Tab Content: الإعدادات -->
+            <div id="settingsTab" class="main-tab-content" style="display: none;">
+                <div class="card-custom">
+                    <div class="card-header-custom">
+                        <i class="bi bi-gear"></i> الإعدادات
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <h5 class="mb-3"><i class="bi bi-cash-coin"></i> إعدادات الأقساط حسب المرحلة</h5>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-book"></i> المبلغ السنوي للمرحلة الابتدائية</label>
+                                    <input type="number" class="form-control" id="elementaryFee" value="1100000" step="10000">
+                                    <small class="text-muted">المبلغ الافتراضي: 1,100,000 دينار عراقي</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-mortarboard"></i> المبلغ السنوي للمرحلة المتوسطة</label>
+                                    <input type="number" class="form-control" id="middleFee" value="1300000" step="10000">
+                                    <small class="text-muted">المبلغ الافتراضي: 1,300,000 دينار عراقي</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-calendar-check"></i> عدد الدفعات</label>
+                                    <input type="number" class="form-control" id="installmentCount" value="4" min="1" max="12">
+                                    <small class="text-muted">عدد الدفعات المقررة خلال السنة الدراسية</small>
+                                </div>
+                                <button onclick="saveFeeSettings()" class="btn btn-primary-custom btn-custom w-100">
+                                    <i class="bi bi-save"></i> حفظ الإعدادات
                 </button>
-                <button onclick="exportData()" class="btn btn-success-custom btn-custom me-2">
-                    <i class="bi bi-download"></i> تصدير البيانات
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <h5 class="mb-3"><i class="bi bi-graph-up"></i> التقارير والإحصائيات</h5>
+                                <button onclick="generateMonthlyReport()" class="btn btn-info-custom btn-custom w-100 mb-2">
+                                    <i class="bi bi-file-earmark-text"></i> تقرير شهري
                 </button>
-                <button onclick="showUserManagement()" class="btn btn-warning btn-custom me-2" id="userManagementBtn" style="display: none;">
-                    <i class="bi bi-shield-lock"></i> إدارة المستخدمين
+                                <button onclick="generateYearlyReport()" class="btn btn-info-custom btn-custom w-100 mb-2">
+                                    <i class="bi bi-calendar-year"></i> تقرير سنوي
+                                </button>
+                                <button onclick="exportToExcel()" class="btn btn-success-custom btn-custom w-100 mb-2">
+                                    <i class="bi bi-file-excel"></i> تصدير إلى Excel
+                                </button>
+                                <button onclick="exportToPDF()" class="btn btn-danger-custom btn-custom w-100">
+                                    <i class="bi bi-file-pdf"></i> تصدير إلى PDF
                 </button>
             </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <h5 class="mb-3"><i class="bi bi-bell"></i> إشعارات واتساب</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="autoWhatsApp" class="form-check-input me-2">
+                                        إرسال إشعارات واتساب تلقائياً بعد الدفع
+                                    </label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="reminderWhatsApp" class="form-check-input me-2">
+                                        إرسال تذكيرات تلقائية للطلاب المتأخرين
+                                    </label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">عدد أيام التأخير قبل الإرسال</label>
+                                    <input type="number" class="form-control" id="reminderDays" value="7" min="1">
+                                </div>
+                                <button onclick="saveWhatsAppSettings()" class="btn btn-primary-custom btn-custom">
+                                    <i class="bi bi-save"></i> حفظ الإعدادات
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <h5 class="mb-3"><i class="bi bi-database"></i> إدارة قاعدة البيانات</h5>
+                                <button onclick="backupData()" class="btn btn-warning btn-custom w-100 mb-2">
+                                    <i class="bi bi-cloud-upload"></i> نسخ احتياطي
+                                </button>
+                                <button onclick="restoreData()" class="btn btn-info-custom btn-custom w-100 mb-2">
+                                    <i class="bi bi-cloud-download"></i> استعادة البيانات
+                                </button>
+                                <button onclick="clearCache()" class="btn btn-secondary btn-custom w-100">
+                                    <i class="bi bi-trash"></i> مسح الذاكرة المؤقتة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Tab Content: الإعدادات -->
         </div>
     </div>
 
@@ -1368,7 +1814,15 @@
         const ANNUAL_FEE = 1200000; // المبلغ السنوي
         const QUARTERLY_INSTALLMENT = 300000; // كل دفعة ربع سنوية
         const INSTALLMENT_COUNT = 4; // عدد الدفعات
-        const SIBLING_DISCOUNT_RATE = 0.05; // خصم 5% للأخوة
+        // حساب خصم الأخوة حسب العدد
+        function calculateSiblingDiscount(siblingCount) {
+            if (siblingCount >= 3) {
+                return 0.10; // خصم 10% لـ 3 أخوة أو أكثر
+            } else if (siblingCount === 2) {
+                return 0.05; // خصم 5% لـ 2 أخوة
+            }
+            return 0; // لا يوجد خصم
+        }
 
         // معلومات المدارس
         const schools = {
@@ -1379,40 +1833,22 @@
             thanawiya: { name: 'ثانوية رسول الرحمة', id: 'thanawiya' }
         };
 
-        // بيانات المستخدمين لكل مدرسة
-        const users = {
-            rawda: [
-                { username: 'admin_rawda', password: 'rawda123' },
-                { username: 'user', password: 'user123' }
-            ],
-            rasoul: [
-                { username: 'admin_rasoul', password: 'rasoul123' },
-                { username: 'user', password: 'user123' }
-            ],
-            noor: [
-                { username: 'admin_noor', password: 'noor123' },
-                { username: 'user', password: 'user123' }
-            ],
-            nabi: [
-                { username: 'admin_nabi', password: 'nabi123' },
-                { username: 'user', password: 'user123' }
-            ],
-            thanawiya: [
-                { username: 'admin_thanawiya', password: 'thanawiya123' },
-                { username: 'user', password: 'user123' }
-            ]
-        };
-
         // حساب المدير
         const adminUser = { username: 'admin', password: 'master123' };
 
         // قائمة الطلاب
         let students = [];
+        let allStudents = []; // جميع الطلاب (للفلترة)
         let receiptCounter = 1;
         let currentSchool = null;
         let currentSchoolId = null;
         let currentSchoolName = null;
         let isAdmin = false;
+        let currentFilter = {
+            school: 'all',
+            grade: 'all',
+            status: 'all'
+        };
 
         // دالة المصادقة
         async function authenticateUser() {
@@ -1456,6 +1892,8 @@
                     
                     // تحميل بيانات جميع المدارس
                     loadData().then(() => {
+                        setupSchoolTabs(); // إعداد تبويبات المدارس
+                        updateGradeFilter(); // تحديث فلتر الصفوف
             renderTable();
                         updateStats();
                         loadUsers(); // تحميل قائمة المستخدمين للمدير
@@ -1519,28 +1957,7 @@
                 console.log('خطأ في البحث في قاعدة البيانات:', error);
             }
 
-            // إذا لم يُوجد في قاعدة البيانات، البحث في الكود المحلي
-            if (!userFound) {
-                console.log('البحث في الكود المحلي...');
-                const schoolUsers = users[schoolId];
-                if (!schoolUsers) {
-                    errorDiv.textContent = 'مدرسة غير موجودة';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
-
-                const user = schoolUsers.find(u => u.username === username && u.password === password);
-                if (!user) {
-                    console.log('المستخدم غير موجود في الكود المحلي');
-                    errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-                    errorDiv.style.display = 'block';
-                    return;
-                } else {
-                    console.log('المصادقة ناجحة من الكود المحلي');
-                    userFound = true;
-                }
-            }
-            
+            // إذا لم يُوجد في قاعدة البيانات
             if (!userFound) {
                 errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
                 errorDiv.style.display = 'block';
@@ -1573,11 +1990,17 @@
             document.getElementById('mainContent').style.display = 'block';
             
             // إخفاء عناصر إدارة المستخدمين للمستخدمين العاديين
-            document.getElementById('userManagementBtn').style.display = 'none';
-            document.getElementById('userManagementSection').style.display = 'none';
+            document.getElementById('schoolsTabNav').style.display = 'none';
+            document.getElementById('usersTabNav').style.display = 'none';
+            
+            // إظهار Sidebar
+            document.getElementById('sidebar').style.display = 'flex';
+            updateSidebarInfo();
+            startDateTimeUpdate();
             
             // تحميل بيانات المدرسة الحالية
             loadData().then(() => {
+                updateGradeFilter(); // تحديث فلتر الصفوف
                 renderTable();
                 updateStats();
                 initChatSystem(); // تهيئة نظام المحادثة
@@ -1611,14 +2034,22 @@
                         document.getElementById('schoolNameHeader').style.display = 'table-cell';
                         
                         // إظهار عناصر المدير
-                        document.getElementById('userManagementBtn').style.display = 'inline-block';
-                        document.getElementById('userManagementSection').style.display = 'block';
+                    document.getElementById('schoolsTabNav').style.display = 'block';
+                    document.getElementById('usersTabNav').style.display = 'block';
+                    
+                    // إظهار Sidebar
+                    document.getElementById('sidebar').style.display = 'flex';
+                    updateSidebarInfo();
+                    startDateTimeUpdate();
                         
                         // تحميل البيانات
                         loadData().then(() => {
+                        setupSchoolTabs(); // إعداد تبويبات المدارس
+                        updateGradeFilter(); // تحديث فلتر الصفوف
                             renderTable();
                             updateStats();
                             loadUsers(); // تحميل قائمة المستخدمين
+                        loadSchoolsStats(); // تحميل إحصائيات المدارس
                         });
                     } else {
                         const school = schools[schoolId];
@@ -1632,6 +2063,7 @@
                             
                             // تحميل البيانات
                             loadData().then(() => {
+                                updateGradeFilter(); // تحديث فلتر الصفوف
                                 renderTable();
                                 updateStats();
                                 initChatSystem(); // تهيئة نظام المحادثة
@@ -1749,7 +2181,30 @@
                 let discountAmount = 0;
                 
                 if (hasSibling) {
-                    discountAmount = annualFee * SIBLING_DISCOUNT_RATE;
+                    // البحث عن عدد الأخوة
+                    const motherName = document.getElementById('motherName').value.trim();
+                    const guardianName = document.getElementById('guardianName').value.trim();
+                    let siblingsCount = 1; // الطالب الجديد
+                    
+                    if (motherName && guardianName) {
+                        // البحث في قاعدة البيانات عن الأخوة
+                        try {
+                            const { data: siblingsData } = await window.supabaseClient
+                                .from('students')
+                                .select('id')
+                                .ilike('mother_name', motherName)
+                                .ilike('guardian', guardianName);
+                            
+                            if (siblingsData) {
+                                siblingsCount = siblingsData.length + 1;
+                            }
+                        } catch (error) {
+                            console.error('خطأ في البحث عن الأخوة:', error);
+                        }
+                    }
+                    
+                    const discountRate = calculateSiblingDiscount(siblingsCount);
+                    discountAmount = annualFee * discountRate;
                     finalFee = annualFee - discountAmount;
                 }
                 
@@ -1796,6 +2251,10 @@
                 
                 studentData.installments = installments;
                 students.push(studentData);
+                allStudents.push(studentData); // إضافة للقائمة الكاملة
+                
+                // تحديث فلتر الصفوف
+                updateGradeFilter();
                 
             renderTable();
             updateStats();
@@ -1903,7 +2362,7 @@
                             const grade = s.grade || 'غير محدد';
                             return `📌 الاسم: ${s.name}\n   🏫 المدرسة: ${schoolName}\n   📚 الصف: ${grade}\n   👨‍👩‍👧 ولي الأمر: ${s.guardian || 'غير محدد'}`;
                         }).join('\n\n') +
-                        `\n\nسيتم تفعيل خصم 5% لجميع الإخوة (الطلاب الحاليون + الطالب الجديد)!\nهل تريد المتابعة؟`;
+                        `\n\nسيتم تفعيل خصم ${siblingsData.length + 1 >= 3 ? '10%' : '5%'} لجميع الإخوة (${siblingsData.length + 1} أخ/أخت)!\nهل تريد المتابعة؟`;
                     
                     // تحديد أنهم إخوة تلقائياً وتفعيل الخصم لجميع الإخوة
                     if (document.getElementById('hasSibling').value === 'no') {
@@ -1911,10 +2370,14 @@
                             document.getElementById('hasSibling').value = 'yes';
                             
                             // تفعيل الخصم لجميع الإخوة الموجودين
+                            // حساب العدد الكلي للأخوة (الموجودين + الطالب الجديد)
+                            const totalSiblingsCount = siblingsData.length + 1;
+                            const discountRate = calculateSiblingDiscount(totalSiblingsCount);
+                            
                             const updatePromises = siblingsData.map(async (sibling) => {
                                 // حساب الخصم والمبلغ النهائي
                                 const siblingAnnualFee = sibling.annual_fee || sibling.annualFee || 1200000;
-                                const discount = siblingAnnualFee * SIBLING_DISCOUNT_RATE;
+                                const discount = siblingAnnualFee * discountRate;
                                 const finalFee = siblingAnnualFee - discount;
                                 
                                 // تحديث الأخ في قاعدة البيانات
@@ -1949,7 +2412,9 @@
                             renderTable();
                             updateStats();
                             
-                            alert(`تم تفعيل خصم 5% لجميع الإخوة (${siblingsData.length} أخ/أخت)`);
+                            const totalSiblings = siblingsData.length + 1;
+                            const discountPercent = totalSiblings >= 3 ? '10%' : '5%';
+                            alert(`تم تفعيل خصم ${discountPercent} لجميع الإخوة (${totalSiblings} أخ/أخت)`);
                         }
                     }
             } else {
@@ -1981,12 +2446,251 @@
             }
         }
 
+        // تطبيق الفلاتر
+        function applyFilters() {
+            let filtered = [...allStudents];
+            
+            // فلتر حسب المدرسة
+            if (currentFilter.school !== 'all') {
+                filtered = filtered.filter(s => {
+                    const schoolId = s.schoolId || s.school_id || '';
+                    return schoolId === currentFilter.school;
+                });
+            }
+            
+            // فلتر حسب الصف
+            if (currentFilter.grade !== 'all') {
+                filtered = filtered.filter(s => s.grade === currentFilter.grade);
+            }
+            
+            // فلتر حسب الحالة
+            if (currentFilter.status !== 'all') {
+                const statusMap = {
+                    'paid': 'مسدد',
+                    'partial': 'جزئي',
+                    'unpaid': 'غير مسدد'
+                };
+                const targetStatus = statusMap[currentFilter.status];
+                filtered = filtered.filter(s => {
+                    const statusInfo = getFinancialStatus(s);
+                    return statusInfo.status === targetStatus;
+                });
+            }
+            
+            students = filtered;
+            renderTable();
+            updateStats();
+            updateFilterInfo();
+        }
+        
+        // فلتر حسب المدرسة
+        function filterBySchool(schoolId) {
+            currentFilter.school = schoolId;
+            
+            // تحديث التبويب النشط
+            if (isAdmin) {
+                const tabsList = document.getElementById('schoolTabs');
+                if (tabsList) {
+                    tabsList.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    const activeTab = schoolId === 'all' 
+                        ? document.getElementById('all-schools-tab')
+                        : document.getElementById(`${schoolId}-tab`);
+                    
+                    if (activeTab) {
+                        activeTab.classList.add('active');
+                    }
+                }
+            }
+            
+            applyFilters();
+        }
+        
+        // فلتر حسب الصف
+        function filterByGrade() {
+            const grade = document.getElementById('gradeFilter').value;
+            currentFilter.grade = grade;
+            applyFilters();
+        }
+        
+        // فلتر حسب الحالة
+        function filterByStatus() {
+            const status = document.getElementById('statusFilter').value;
+            currentFilter.status = status;
+            applyFilters();
+        }
+        
+        // إزالة جميع الفلاتر
+        function clearFilters() {
+            currentFilter = {
+                school: 'all',
+                grade: 'all',
+                status: 'all'
+            };
+            
+            document.getElementById('gradeFilter').value = 'all';
+            document.getElementById('statusFilter').value = 'all';
+            
+            // إعادة تفعيل تبويب "جميع المدارس"
+            if (isAdmin) {
+                document.getElementById('all-schools-tab').click();
+            }
+            
+            applyFilters();
+        }
+        
+        // تحديث معلومات الفلتر
+        function updateFilterInfo() {
+            const info = document.getElementById('filterInfo');
+            const activeFilters = [];
+            
+            if (currentFilter.school !== 'all') {
+                const school = schools[currentFilter.school];
+                if (school) activeFilters.push(`المدرسة: ${school.name}`);
+            }
+            if (currentFilter.grade !== 'all') {
+                activeFilters.push(`الصف: ${currentFilter.grade}`);
+            }
+            if (currentFilter.status !== 'all') {
+                const statusNames = {
+                    'paid': 'مسدد',
+                    'partial': 'جزئي',
+                    'unpaid': 'غير مسدد'
+                };
+                activeFilters.push(`الحالة: ${statusNames[currentFilter.status]}`);
+            }
+            
+            if (activeFilters.length > 0) {
+                info.textContent = `فعال: ${activeFilters.join(' | ')} | عدد النتائج: ${students.length}`;
+                info.style.display = 'inline-block';
+            } else {
+                info.style.display = 'none';
+            }
+        }
+        
+        // إعداد تبويبات المدارس (للمدير فقط)
+        function setupSchoolTabs() {
+            if (!isAdmin) return;
+            
+            const tabsContainer = document.getElementById('schoolTabsContainer');
+            const tabsList = document.getElementById('schoolTabs');
+            
+            // إظهار التبويبات
+            tabsContainer.style.display = 'block';
+            
+            // التحقق من وجود التبويبات بالفعل لتجنب التكرار
+            const existingTabs = tabsList.querySelectorAll('.nav-item');
+            if (existingTabs.length > 1) {
+                // التبويبات موجودة بالفعل، لا حاجة لإضافتها مرة أخرى
+                return;
+            }
+            
+            // إضافة تبويبات للمدارس
+            Object.keys(schools).forEach(schoolId => {
+                const school = schools[schoolId];
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                li.setAttribute('role', 'presentation');
+                
+                const button = document.createElement('button');
+                button.className = 'nav-link';
+                button.id = `${schoolId}-tab`;
+                button.setAttribute('data-bs-toggle', 'tab');
+                button.setAttribute('data-bs-target', `#${schoolId}`);
+                button.setAttribute('data-school', schoolId);
+                button.setAttribute('type', 'button');
+                button.setAttribute('role', 'tab');
+                button.onclick = () => filterBySchool(schoolId);
+                button.innerHTML = `<i class="bi bi-building"></i> ${school.name}`;
+                
+                li.appendChild(button);
+                tabsList.appendChild(li);
+            });
+        }
+        
+        // تحديث فلتر الصفوف
+        function updateGradeFilter() {
+            const gradeFilter = document.getElementById('gradeFilter');
+            const currentValue = gradeFilter.value;
+            
+            // جمع جميع الصفوف من الطلاب
+            const allGrades = new Set();
+            allStudents.forEach(student => {
+                if (student.grade) {
+                    allGrades.add(student.grade);
+                }
+            });
+            
+            // إضافة الصفوف حسب المدرسة الحالية
+            if (!isAdmin && currentSchool) {
+                const grades = {
+                    'rawda': ['روضة'],
+                    'rasoul': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                    'noor': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                    'nabi': ['الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي'],
+                    'thanawiya': ['الاول متوسط', 'الثاني متوسط', 'الثالث متوسط']
+                };
+                
+                const schoolGrades = grades[currentSchool.id] || [];
+                schoolGrades.forEach(grade => allGrades.add(grade));
+            }
+            
+            // ترتيب الصفوف
+            const sortedGrades = Array.from(allGrades).sort((a, b) => {
+                const order = ['روضة', 'الاول ابتدائي', 'الثاني ابتدائي', 'الثالث ابتدائي', 'الرابع ابتدائي', 'الخامس ابتدائي', 'السادس ابتدائي', 'الاول متوسط', 'الثاني متوسط', 'الثالث متوسط'];
+                const indexA = order.indexOf(a);
+                const indexB = order.indexOf(b);
+                return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+            });
+            
+            // تحديث القائمة
+            gradeFilter.innerHTML = '<option value="all">جميع الصفوف</option>';
+            sortedGrades.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.textContent = grade;
+                gradeFilter.appendChild(option);
+            });
+            
+            // استعادة القيمة السابقة إذا كانت موجودة
+            if (currentValue && Array.from(gradeFilter.options).some(opt => opt.value === currentValue)) {
+                gradeFilter.value = currentValue;
+            }
+        }
+
         // عرض الجدول
         function renderTable() {
             const tbody = document.getElementById('studentsTable');
             tbody.innerHTML = '';
 
-            students.forEach((student, index) => {
+            // ترتيب الطلاب: أولاً حسب الحالة المالية (غير مسدد أولاً)، ثم حسب الصف، ثم حسب الاسم
+            const sortedStudents = [...students].sort((a, b) => {
+                // ترتيب حسب الحالة المالية
+                const statusA = getFinancialStatus(a);
+                const statusB = getFinancialStatus(b);
+                const statusOrder = { 'غير مسدد': 1, 'جزئي': 2, 'مسدد': 3 };
+                const statusDiff = (statusOrder[statusA.status] || 99) - (statusOrder[statusB.status] || 99);
+                if (statusDiff !== 0) return statusDiff;
+                
+                // ترتيب حسب الصف
+                const gradeOrder = ['الصف الأول', 'الصف الثاني', 'الصف الثالث', 'الصف الرابع', 'الصف الخامس', 'الصف السادس', 
+                                   'الصف السابع', 'الصف الثامن', 'الصف التاسع', 'الصف العاشر', 'الصف الحادي عشر', 'الصف الثاني عشر'];
+                const gradeA = gradeOrder.indexOf(a.grade || '');
+                const gradeB = gradeOrder.indexOf(b.grade || '');
+                if (gradeA !== -1 && gradeB !== -1) {
+                    if (gradeA !== gradeB) return gradeA - gradeB;
+                } else if (a.grade && b.grade) {
+                    const gradeDiff = (a.grade || '').localeCompare(b.grade || '', 'ar');
+                    if (gradeDiff !== 0) return gradeDiff;
+                }
+                
+                // ترتيب حسب الاسم
+                return (a.name || '').localeCompare(b.name || '', 'ar');
+            });
+
+            sortedStudents.forEach((student, index) => {
                 // التأكد من وجود installments
                 if (!student.installments || !Array.isArray(student.installments)) {
                     if (!student.installments) {
@@ -2009,6 +2713,9 @@
                 const receiptNumber = getStudentField(student, 'receiptNumber');
                 const annualFeeValue = Number(annualFee || finalFee || 1200000);
                 const discountValue = Number(getStudentField(student, 'discount') || 0);
+                // حساب النسبة المئوية للخصم
+                const discountPercent = annualFeeValue > 0 ? ((discountValue / annualFeeValue) * 100).toFixed(0) : 0;
+                const discountDisplay = discountValue > 0 ? `${discountValue.toLocaleString('en-US')} د.ع (${discountPercent}%)` : '0 د.ع';
 
                 // إنشاء شارات الدفعات
                 const installmentsHtml = student.installments.map((inst, i) => {
@@ -2040,9 +2747,21 @@
                 }).join('');
 
                 const row = document.createElement('tr');
-                const schoolNameCell = isAdmin && student.schoolName ? `<td>${student.schoolName}</td>` : '';
+                const schoolNameCell = isAdmin && student.schoolName ? `<td><strong>${student.schoolName}</strong></td>` : '';
+                
+                // إضافة لون للصف حسب الحالة المالية
+                let rowClass = '';
+                if (statusInfo.status === 'غير مسدد') {
+                    rowClass = 'table-warning';
+                } else if (statusInfo.status === 'جزئي') {
+                    rowClass = 'table-info';
+                } else {
+                    rowClass = 'table-success';
+                }
+                
+                row.className = rowClass;
                 row.innerHTML = `
-                    <td>${index + 1}</td>
+                    <td><strong>${index + 1}</strong></td>
                     <td><strong>${receiptNumber || '---'}</strong></td>
                     <td><strong style="cursor: pointer; color: #0f766e;" onclick="showStudentDetails('${student.id}')" title="انقر لعرض التفاصيل">${student.name}</strong></td>
                     ${schoolNameCell}
@@ -2051,11 +2770,17 @@
                     <td>${annualFeeValue.toLocaleString('en-US')} د.ع</td>
                     <td>${installmentsHtml}</td>
                     <td><strong>${remaining.toLocaleString('en-US')} د.ع</strong></td>
-                    <td>${discountValue.toLocaleString('en-US')} د.ع</td>
+                    <td>${discountDisplay}</td>
                     <td><span class="badge bg-${statusInfo.class} badge-custom">${statusInfo.status}</span></td>
                     <td class="no-print">
                         <button onclick="openPaymentModal('${student.id}')" class="btn btn-success-custom btn-sm">
                             <i class="bi bi-cash-coin"></i> دفعة
+                        </button>
+                        <button onclick="sendWhatsAppMessage('${student.id}', 'payment')" class="btn btn-sm" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none;" title="إرسال إشعار دفع عبر واتساب">
+                            📱 إشعار دفع
+                        </button>
+                        <button onclick="sendWhatsAppMessage('${student.id}', 'reminder')" class="btn btn-sm" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; border: none;" title="إرسال تذكير بالدفع عبر واتساب">
+                            <i class="bi bi-bell"></i> تذكير
                         </button>
                         <button onclick="editStudent('${student.id}')" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil"></i> تعديل
@@ -2545,6 +3270,15 @@
             document.getElementById('paymentForm').reset();
             
                 alert(`تم تسجيل الدفعة بنجاح!\nالمبلغ: ${paymentAmount.toLocaleString('en-US')} د.ع`);
+                
+                // إرسال إشعار واتساب تلقائي بعد الدفع
+                setTimeout(() => {
+                    sendWhatsAppMessage(studentId, 'payment', {
+                        amount: paymentAmount,
+                        installmentNumber: selectedIndex + 1,
+                        paymentDate: paymentDate
+                    });
+                }, 500);
             } catch (error) {
                 console.error('خطأ في تسجيل الدفعة:', error);
                 alert('حدث خطأ في تسجيل الدفعة: ' + error.message);
@@ -2809,6 +3543,7 @@
                 
                 // تحديث القائمة المحلية
             students = students.filter(s => s.id !== studentId);
+            allStudents = allStudents.filter(s => s.id !== studentId);
             renderTable();
             updateStats();
                 
@@ -2964,6 +3699,7 @@
                     if (error) throw error;
                     
                     students = data || [];
+                    allStudents = [...students]; // حفظ نسخة من جميع الطلاب
                     
                     // جلب الأقساط لكل طالب
                     for (let student of students) {
@@ -2990,6 +3726,7 @@
                     if (error) throw error;
                     
                     students = data || [];
+                    allStudents = [...students]; // حفظ نسخة من جميع الطلاب
                     
                     // جلب الأقساط لكل طالب
                     for (let student of students) {
@@ -3011,6 +3748,11 @@
                             student.schoolId = student.schools.code || '';
                             student.schoolName = student.schools.name || '';
                         }
+                    }
+                    
+                    // إعداد تبويبات المدارس بعد تحميل البيانات
+                    if (isAdmin) {
+                        setupSchoolTabs();
                     }
                 }
                 
@@ -3241,7 +3983,22 @@
                 let discountAmount = 0;
                 
                 if (hasSibling) {
-                    discountAmount = annualFee * SIBLING_DISCOUNT_RATE;
+                        // البحث عن عدد الأخوة
+                        const motherName = document.getElementById('editMotherName').value.trim();
+                        const guardian = document.getElementById('editGuardianName').value.trim();
+                        let siblingsCount = 1; // الطالب الحالي
+                        
+                        if (motherName && guardian) {
+                            const siblings = allStudents.filter(s => 
+                                s.id !== studentId && 
+                                (s.motherName || s.mother_name) === motherName && 
+                                s.guardian === guardian
+                            );
+                            siblingsCount = siblings.length + 1;
+                        }
+                        
+                        const discountRate = calculateSiblingDiscount(siblingsCount);
+                        discountAmount = annualFee * discountRate;
                     finalFee = annualFee - discountAmount;
                 }
                 
@@ -3288,6 +4045,9 @@
                 student.discount = discountAmount;
                 student.phone = document.getElementById('editPhone').value;
                 student.notes = document.getElementById('editNotes').value;
+                
+            // تحديث فلتر الصفوف
+            updateGradeFilter();
                 
             renderTable();
             updateStats();
@@ -3829,23 +4589,6 @@
 
         // ============ نظام إدارة المستخدمين ============
         
-        // إظهار قسم إدارة المستخدمين للمدير
-        function showUserManagement() {
-            if (isAdmin) {
-                const section = document.getElementById('userManagementSection');
-                if (section.style.display === 'none' || section.style.display === '') {
-                    section.style.display = 'block';
-                    loadUsers();
-                } else {
-                    section.style.display = 'none';
-                }
-            }
-        }
-
-        // إخفاء قسم إدارة المستخدمين
-        function hideUserManagement() {
-            document.getElementById('userManagementSection').style.display = 'none';
-        }
 
         // فتح Modal إضافة مستخدم
         function openAddUserModal() {
@@ -4015,7 +4758,6 @@
             }
         }
 
-        // ترجمة نوع المستخدم
         function getUserTypeLabel(type) {
             const types = {
                 'user': 'مستخدم عادي',
@@ -4025,8 +4767,1208 @@
             return types[type] || type;
         }
 
-        // استدعاء showUserManagement عند تسجيل دخول المدير
-        // إضافة هذا في authenticateUser عند isAdmin = true
+        // ============ نظام التبويبات الجانبية ============
+        
+        // التبديل بين التبويبات الرئيسية
+        function switchMainTab(tabName) {
+            // إخفاء جميع التبويبات
+            document.querySelectorAll('.main-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+                tab.classList.remove('active');
+            });
+            
+            // إزالة active من جميع nav-item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            const targetTab = document.getElementById(tabName + 'Tab');
+            if (targetTab) {
+                targetTab.style.display = 'block';
+                targetTab.classList.add('active');
+            }
+            
+            // تفعيل nav-item المحدد
+            const navItems = document.querySelectorAll('.nav-item');
+            if (tabName === 'students') navItems[0]?.classList.add('active');
+            else if (tabName === 'schools') navItems[1]?.classList.add('active');
+            else if (tabName === 'users') navItems[2]?.classList.add('active');
+            else if (tabName === 'settings') navItems[3]?.classList.add('active');
+            
+            // تحميل البيانات حسب التبويب
+            if (tabName === 'schools') {
+                loadSchoolsStats();
+            } else if (tabName === 'users') {
+                loadUsers();
+            }
+        }
+        
+        // تحديث معلومات Sidebar
+        function updateSidebarInfo() {
+            const userInfo = document.getElementById('sidebarUserInfo');
+            const schoolName = document.getElementById('sidebarSchoolName');
+            
+            if (isAdmin) {
+                userInfo.textContent = 'رئيس مجلس الإدارة';
+                schoolName.textContent = 'جميع المدارس';
+            } else if (currentSchoolName) {
+                userInfo.textContent = currentSchoolName;
+                schoolName.textContent = currentSchoolName;
+            }
+        }
+        
+        // تحديث التاريخ والوقت في Sidebar
+        function startDateTimeUpdate() {
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('ar-IQ', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const timeStr = now.toLocaleTimeString('ar-IQ', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                const dateTimeEl = document.getElementById('sidebarDateTime');
+                if (dateTimeEl) {
+                    dateTimeEl.textContent = `${dateStr} - ${timeStr}`;
+                }
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        }
+        
+        // ============ إحصائيات المدارس المتقدمة ============
+        
+        let schoolsDataGlobal = [];
+        let chartsInstances = {};
+        
+        async function loadSchoolsStats() {
+            if (!isAdmin || !window.supabaseClient) return;
+            
+            try {
+                const statsContainer = document.getElementById('schoolsStatsContainer');
+                const listContainer = document.getElementById('schoolsListContainer');
+                
+                statsContainer.innerHTML = '';
+                listContainer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
+                
+                let html = '';
+                let totalStudents = 0;
+                let totalFees = 0;
+                let totalPaid = 0;
+                let totalUnpaid = 0;
+                let totalPartial = 0;
+                let totalPaidStudents = 0;
+                
+                // إنشاء مصفوفة للمدارس مع بياناتها للترتيب
+                const schoolsData = [];
+                
+                for (const [schoolId, school] of Object.entries(schools)) {
+                    const { data: schoolData } = await window.supabaseClient
+                        .from('schools')
+                        .select('id')
+                        .eq('code', schoolId)
+                        .single();
+                    
+                    if (!schoolData) continue;
+                    
+                    const { data: studentsData } = await window.supabaseClient
+                        .from('students')
+                        .select('id, final_fee, annual_fee')
+                        .eq('school_id', schoolData.id);
+                    
+                    if (!studentsData || studentsData.length === 0) continue;
+                    
+                    let schoolStudents = 0;
+                    let schoolFees = 0;
+                    let schoolPaid = 0;
+                    let schoolUnpaid = 0;
+                    let schoolPartial = 0;
+                    let schoolPaidCount = 0;
+                    
+                    for (const student of studentsData) {
+                        schoolStudents++;
+                        const finalFee = student.final_fee || student.annual_fee || 1200000;
+                        schoolFees += finalFee;
+                        
+                        // حساب المدفوع من جدول installments
+                        const { data: installmentsData } = await window.supabaseClient
+                            .from('installments')
+                            .select('amount_paid')
+                            .eq('student_id', student.id);
+                        
+                        let studentPaid = 0;
+                        if (installmentsData) {
+                            studentPaid = installmentsData.reduce((sum, inst) => sum + (inst.amount_paid || 0), 0);
+                            schoolPaid += studentPaid;
+                        }
+                        
+                        // تحديد حالة الطالب
+                        const remaining = finalFee - studentPaid;
+                        if (remaining <= 0) {
+                            schoolPaidCount++;
+                        } else if (studentPaid > 0) {
+                            schoolPartial++;
+                        } else {
+                            schoolUnpaid++;
+                        }
+                    }
+                    
+                    totalStudents += schoolStudents;
+                    totalFees += schoolFees;
+                    totalPaid += schoolPaid;
+                    totalUnpaid += schoolUnpaid;
+                    totalPartial += schoolPartial;
+                    totalPaidStudents += schoolPaidCount;
+                    
+                    const paymentRate = schoolFees > 0 ? (schoolPaid / schoolFees) * 100 : 0;
+                    
+                    schoolsData.push({
+                        id: schoolId,
+                        name: school.name,
+                        students: schoolStudents,
+                        fees: schoolFees,
+                        paid: schoolPaid,
+                        remaining: schoolFees - schoolPaid,
+                        paymentRate: paymentRate,
+                        unpaid: schoolUnpaid,
+                        partial: schoolPartial,
+                        paidCount: schoolPaidCount
+                    });
+                }
+                
+                // حفظ البيانات للاستخدام في الرسوم البيانية
+                schoolsDataGlobal = schoolsData;
+                
+                // ترتيب المدارس: أولاً حسب عدد الطلاب (الأكثر أولاً)، ثم حسب نسبة الدفع
+                schoolsData.sort((a, b) => {
+                    if (b.students !== a.students) {
+                        return b.students - a.students; // الأكثر طلاباً أولاً
+                    }
+                    return b.paymentRate - a.paymentRate; // الأعلى نسبة دفع أولاً
+                });
+                
+                // عرض قائمة المدارس
+                renderSchoolsList(schoolsData);
+                
+                // إضافة إجمالي عام
+                const totalHtml = '<div class="col-12 mb-4">' +
+                    '<div class="stats-box" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">' +
+                        '<div class="row text-center">' +
+                            '<div class="col-md-3">' +
+                                '<h3><i class="bi bi-people"></i> إجمالي الطلاب</h3>' +
+                                '<p style="font-size: 2rem;">' + totalStudents + '</p>' +
+                            '</div>' +
+                            '<div class="col-md-3">' +
+                                '<h3><i class="bi bi-cash-stack"></i> إجمالي المطلوب</h3>' +
+                                '<p style="font-size: 2rem;">' + totalFees.toLocaleString('en-US') + ' د.ع</p>' +
+                            '</div>' +
+                            '<div class="col-md-3">' +
+                                '<h3><i class="bi bi-check-circle"></i> إجمالي المدفوع</h3>' +
+                                '<p style="font-size: 2rem;">' + totalPaid.toLocaleString('en-US') + ' د.ع</p>' +
+                            '</div>' +
+                            '<div class="col-md-3">' +
+                                '<h3><i class="bi bi-clock"></i> المتبقي</h3>' +
+                                '<p style="font-size: 2rem;">' + (totalFees - totalPaid).toLocaleString('en-US') + ' د.ع</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="row text-center mt-3">' +
+                            '<div class="col-md-4">' +
+                                '<small class="text-white-50">مسدد بالكامل: <strong>' + totalPaidStudents + '</strong></small>' +
+                            '</div>' +
+                            '<div class="col-md-4">' +
+                                '<small class="text-white-50">دفع جزئي: <strong>' + totalPartial + '</strong></small>' +
+                            '</div>' +
+                            '<div class="col-md-4">' +
+                                '<small class="text-white-50">غير مسدد: <strong>' + totalUnpaid + '</strong></small>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+                
+                statsContainer.innerHTML = totalHtml;
+                
+                // تحديث لوحة التحكم الرئيسية
+                setTimeout(() => {
+                    updateDashboardStats(totalStudents, totalFees, totalPaid, schoolsData);
+                }, 100);
+                
+                // تحديث عدد المدارس مباشرة
+                const totalSchoolsEl = document.getElementById('totalSchoolsCount');
+                if (totalSchoolsEl && schools) {
+                    totalSchoolsEl.textContent = Object.keys(schools).length;
+                }
+                
+                // إنشاء الرسوم البيانية
+                setTimeout(() => {
+                    createCharts(schoolsData);
+                }, 200);
+                
+            } catch (error) {
+                console.error('خطأ في تحميل إحصائيات المدارس:', error);
+            }
+        }
+        
+        // تحديث إحصائيات لوحة التحكم
+        function updateDashboardStats(totalStudents, totalFees, totalPaid, schoolsData) {
+            const totalSchoolsEl = document.getElementById('totalSchoolsCount');
+            const totalStudentsEl = document.getElementById('totalStudentsCount');
+            const totalFeesEl = document.getElementById('totalFeesAmount');
+            const overallRateEl = document.getElementById('overallPaymentRate');
+            
+            if (totalSchoolsEl) {
+                // حساب عدد جميع المدارس من كائن schools وليس فقط المدارس التي لديها طلاب
+                const totalSchoolsCount = schools ? Object.keys(schools).length : (schoolsData ? schoolsData.length : 0);
+                totalSchoolsEl.textContent = totalSchoolsCount;
+            }
+            if (totalStudentsEl) {
+                totalStudentsEl.textContent = totalStudents ? totalStudents.toLocaleString('en-US') : '0';
+            }
+            if (totalFeesEl) {
+                totalFeesEl.textContent = totalFees ? (totalFees / 1000000).toFixed(1) + 'M' : '0M';
+            }
+            if (overallRateEl) {
+                const overallRate = totalFees > 0 ? (totalPaid / totalFees) * 100 : 0;
+                overallRateEl.textContent = overallRate.toFixed(1) + '%';
+            }
+        }
+        
+        // إنشاء الرسوم البيانية
+        function createCharts(schoolsData) {
+            if (!schoolsData || schoolsData.length === 0) {
+                console.warn('لا توجد بيانات للمدارس لعرض الرسوم البيانية');
+                return;
+            }
+            
+            // تدمير الرسوم البيانية السابقة إن وجدت
+            if (chartsInstances.studentsChart) {
+                chartsInstances.studentsChart.destroy();
+            }
+            if (chartsInstances.paymentChart) {
+                chartsInstances.paymentChart.destroy();
+            }
+            
+            // رسم بياني لتوزيع الطلاب
+            const studentsCtx = document.getElementById('studentsDistributionChart');
+            if (studentsCtx && typeof Chart !== 'undefined') {
+                chartsInstances.studentsChart = new Chart(studentsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: schoolsData.map(s => s.name),
+                        datasets: [{
+                            label: 'عدد الطلاب',
+                            data: schoolsData.map(s => s.students),
+                            backgroundColor: [
+                                'rgba(15, 118, 110, 0.8)',
+                                'rgba(139, 69, 19, 0.8)',
+                                'rgba(245, 158, 11, 0.8)',
+                                'rgba(52, 152, 219, 0.8)',
+                                'rgba(231, 76, 60, 0.8)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                rtl: true
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                        return context.label + ': ' + context.parsed + ' طالب (' + percentage + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // رسم بياني لنسبة الدفع
+            const paymentCtx = document.getElementById('paymentRateChart');
+            if (paymentCtx && typeof Chart !== 'undefined') {
+                chartsInstances.paymentChart = new Chart(paymentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: schoolsData.map(s => s.name),
+                        datasets: [{
+                            label: 'نسبة الدفع (%)',
+                            data: schoolsData.map(s => parseFloat(s.paymentRate.toFixed(1))),
+                            backgroundColor: schoolsData.map(s => {
+                                if (s.paymentRate >= 80) return 'rgba(67, 233, 123, 0.8)';
+                                if (s.paymentRate >= 50) return 'rgba(255, 193, 7, 0.8)';
+                                return 'rgba(231, 76, 60, 0.8)';
+                            }),
+                            borderColor: schoolsData.map(s => {
+                                if (s.paymentRate >= 80) return 'rgba(67, 233, 123, 1)';
+                                if (s.paymentRate >= 50) return 'rgba(255, 193, 7, 1)';
+                                return 'rgba(231, 76, 60, 1)';
+                            }),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'نسبة الدفع: ' + context.parsed.y + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // ترتيب المدارس
+        let currentSortBy = 'students';
+        function sortSchoolsBy(sortType) {
+            currentSortBy = sortType;
+            const schoolsData = [...schoolsDataGlobal];
+            
+            schoolsData.sort((a, b) => {
+                if (sortType === 'students') {
+                    return b.students - a.students;
+                } else if (sortType === 'payment') {
+                    return b.paymentRate - a.paymentRate;
+                } else if (sortType === 'fees') {
+                    return b.fees - a.fees;
+                }
+                return 0;
+            });
+            
+            // إعادة عرض المدارس بعد الترتيب
+            renderSchoolsList(schoolsData);
+        }
+        
+        // عرض قائمة المدارس
+        function renderSchoolsList(schoolsData) {
+            const listContainer = document.getElementById('schoolsListContainer');
+            let html = '';
+            
+            schoolsData.forEach((schoolData, index) => {
+                const schoolColor = {
+                    'rawda': '#8B4513',
+                    'rasoul': '#0f766e',
+                    'noor': '#f59e0b',
+                    'nabi': '#3498db',
+                    'thanawiya': '#e74c3c'
+                }[schoolData.id] || '#0f766e';
+                
+                const paymentPercent = schoolData.paymentRate.toFixed(1);
+                const progressColor = schoolData.paymentRate >= 80 ? 'success' : schoolData.paymentRate >= 50 ? 'warning' : 'danger';
+                
+                // ترتيب الأداء
+                const rank = index + 1;
+                const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+                
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card-custom" style="border-top: 4px solid ${schoolColor}; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="card-header-custom" style="background: linear-gradient(135deg, ${schoolColor} 0%, ${schoolColor}dd 100%);">
+                                <i class="bi bi-building"></i> ${schoolData.name} ${rankIcon}
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center mb-3">
+                                    <div class="col-4">
+                                        <h6 class="text-muted mb-1"><i class="bi bi-people"></i> الطلاب</h6>
+                                        <h4 class="mb-0" style="color: ${schoolColor}; font-weight: 700;">${schoolData.students}</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <h6 class="text-muted mb-1"><i class="bi bi-cash-stack"></i> المطلوب</h6>
+                                        <h6 class="mb-0" style="color: ${schoolColor}; font-weight: 600;">${schoolData.fees.toLocaleString('en-US')} د.ع</h6>
+                                    </div>
+                                    <div class="col-4">
+                                        <h6 class="text-muted mb-1"><i class="bi bi-check-circle"></i> المدفوع</h6>
+                                        <h6 class="mb-0" style="color: ${schoolColor}; font-weight: 600;">${schoolData.paid.toLocaleString('en-US')} د.ع</h6>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <small class="text-muted">نسبة الدفع</small>
+                                        <small class="text-muted"><strong>${paymentPercent}%</strong></small>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-${progressColor}" role="progressbar" style="width: ${paymentPercent}%"></div>
+                                    </div>
+                                </div>
+                                <div class="row text-center mb-2">
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">مسدد</small>
+                                        <strong style="color: #28a745;">${schoolData.paidCount || 0}</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">جزئي</small>
+                                        <strong style="color: #ffc107;">${schoolData.partial || 0}</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">غير مسدد</small>
+                                        <strong style="color: #dc3545;">${schoolData.unpaid || 0}</strong>
+                                    </div>
+                                </div>
+                                <div class="text-center mb-2">
+                                    <small class="text-muted"><i class="bi bi-clock"></i> المتبقي: <strong>${schoolData.remaining.toLocaleString('en-US')} د.ع</strong></small>
+                                </div>
+                                <hr>
+                                <div class="text-center">
+                                    <button onclick="filterBySchool('${schoolData.id}'); switchMainTab('students');" class="btn btn-sm btn-primary-custom w-100 mb-2">
+                                        <i class="bi bi-eye"></i> عرض طلاب ${schoolData.name}
+                                    </button>
+                                    <button onclick="showSchoolDetails('${schoolData.id}')" class="btn btn-sm btn-info-custom w-100">
+                                        <i class="bi bi-info-circle"></i> تفاصيل المدرسة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+        }
+        
+        // عرض تفاصيل المدرسة
+        function showSchoolDetails(schoolId) {
+            const school = schoolsDataGlobal.find(s => s.id === schoolId);
+            if (!school) return;
+            
+            const details = `
+                <div class="modal fade" id="schoolDetailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); color: white;">
+                                <h5 class="modal-title"><i class="bi bi-building"></i> تفاصيل ${school.name}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <h6><i class="bi bi-people"></i> إحصائيات الطلاب</h6>
+                                        <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>إجمالي الطلاب:</span>
+                                                <strong>${school.students}</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>مسدد بالكامل:</span>
+                                                <strong class="text-success">${school.paidCount || 0}</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>دفع جزئي:</span>
+                                                <strong class="text-warning">${school.partial || 0}</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>غير مسدد:</span>
+                                                <strong class="text-danger">${school.unpaid || 0}</strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <h6><i class="bi bi-cash-stack"></i> الإحصائيات المالية</h6>
+                                        <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>المبلغ المطلوب:</span>
+                                                <strong>${school.fees.toLocaleString('en-US')} د.ع</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>المبلغ المدفوع:</span>
+                                                <strong class="text-success">${school.paid.toLocaleString('en-US')} د.ع</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>المبلغ المتبقي:</span>
+                                                <strong class="text-danger">${school.remaining.toLocaleString('en-US')} د.ع</strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>نسبة الدفع:</span>
+                                                <strong>${school.paymentRate.toFixed(1)}%</strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                                <button type="button" class="btn btn-primary" onclick="filterBySchool('${schoolId}'); switchMainTab('students'); bootstrap.Modal.getInstance(document.getElementById('schoolDetailsModal')).hide();">
+                                    <i class="bi bi-eye"></i> عرض الطلاب
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // إزالة Modal السابق إن وجد
+            const existingModal = document.getElementById('schoolDetailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // إضافة Modal جديد
+            document.body.insertAdjacentHTML('beforeend', details);
+            const modal = new bootstrap.Modal(document.getElementById('schoolDetailsModal'));
+            modal.show();
+        }
+        
+        // تصدير تقرير المدارس
+        function exportSchoolsReport() {
+            if (schoolsDataGlobal.length === 0) {
+                alert('لا توجد بيانات للتصدير');
+                return;
+            }
+            
+            let csv = 'اسم المدرسة,عدد الطلاب,المبلغ المطلوب,المبلغ المدفوع,المتبقي,نسبة الدفع,مسدد,جزئي,غير مسدد\n';
+            
+            schoolsDataGlobal.forEach(school => {
+                csv += `${school.name},${school.students},${school.fees},${school.paid},${school.remaining},${school.paymentRate.toFixed(1)}%,${school.paidCount || 0},${school.partial || 0},${school.unpaid || 0}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `تقرير_المدارس_${new Date().getTime()}.csv`;
+            link.click();
+            
+            alert('تم تصدير التقرير بنجاح');
+        }
+        
+        // ============ إعدادات النظام ============
+        
+        function saveFeeSettings() {
+            const elementaryFee = document.getElementById('elementaryFee').value;
+            const middleFee = document.getElementById('middleFee').value;
+            const installmentCount = document.getElementById('installmentCount').value;
+            
+            localStorage.setItem('elementaryFee', elementaryFee);
+            localStorage.setItem('middleFee', middleFee);
+            localStorage.setItem('installmentCount', installmentCount);
+            
+            alert('تم حفظ إعدادات الأقساط بنجاح!\n\nالابتدائية: ' + parseInt(elementaryFee).toLocaleString('en-US') + ' د.ع\nالمتوسطة: ' + parseInt(middleFee).toLocaleString('en-US') + ' د.ع');
+        }
+        
+        // الحصول على المبلغ السنوي حسب المرحلة
+        function getAnnualFeeByGrade(grade) {
+            const elementaryFee = parseInt(localStorage.getItem('elementaryFee')) || 1100000;
+            const middleFee = parseInt(localStorage.getItem('middleFee')) || 1300000;
+            
+            // تحديد المرحلة حسب الصف
+            const gradeNum = parseInt(grade?.replace(/[^0-9]/g, '')) || 0;
+            
+            if (gradeNum >= 1 && gradeNum <= 6) {
+                return elementaryFee; // ابتدائية
+            } else if (gradeNum >= 7 && gradeNum <= 9) {
+                return middleFee; // متوسطة
+            } else if (gradeNum >= 10 && gradeNum <= 12) {
+                return middleFee; // إعدادية
+            }
+            
+            // افتراضي: ابتدائية
+            return elementaryFee;
+        }
+        
+        function saveWhatsAppSettings() {
+            const autoWhatsApp = document.getElementById('autoWhatsApp').checked;
+            const reminderWhatsApp = document.getElementById('reminderWhatsApp').checked;
+            const reminderDays = document.getElementById('reminderDays').value;
+            
+            localStorage.setItem('autoWhatsApp', autoWhatsApp);
+            localStorage.setItem('reminderWhatsApp', reminderWhatsApp);
+            localStorage.setItem('reminderDays', reminderDays);
+            
+            alert('تم حفظ إعدادات واتساب بنجاح');
+        }
+        
+        // ============ التقارير والإحصائيات ============
+        
+        // تقرير شهري
+        async function generateMonthlyReport() {
+            const monthInput = prompt('أدخل الشهر (1-12):');
+            if (!monthInput) return;
+            
+            const month = parseInt(monthInput);
+            if (month < 1 || month > 12) {
+                alert('الرجاء إدخال رقم صحيح بين 1 و 12');
+                return;
+            }
+            
+            const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                              'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            const monthName = monthNames[month - 1];
+            const currentYear = new Date().getFullYear();
+            
+            try {
+                // جمع بيانات الدفعات لهذا الشهر
+                let monthlyData = [];
+                let totalPaid = 0;
+                let totalStudents = 0;
+                
+                for (const student of students) {
+                    const installments = student.installments || [];
+                    for (const inst of installments) {
+                        if (inst.payment_date) {
+                            const paymentDate = new Date(inst.payment_date);
+                            if (paymentDate.getMonth() + 1 === month && paymentDate.getFullYear() === currentYear) {
+                                const paidAmount = inst.amount_paid || inst.amount || 0;
+                                if (paidAmount > 0) {
+                                    monthlyData.push({
+                                        'اسم الطالب': student.name,
+                                        'ولي الأمر': student.guardian,
+                                        'المدرسة': student.schoolName || currentSchoolName || 'غير محدد',
+                                        'الصف': student.grade,
+                                        'المبلغ المدفوع': paidAmount,
+                                        'تاريخ الدفع': inst.payment_date,
+                                        'طريقة الدفع': inst.payment_method || 'نقد'
+                                    });
+                                    totalPaid += paidAmount;
+                                    totalStudents++;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (monthlyData.length === 0) {
+                    alert(`لا توجد دفعات مسجلة لشهر ${monthName} ${currentYear}`);
+                    return;
+                }
+                
+                // إنشاء تقرير Excel
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(monthlyData);
+                XLSX.utils.book_append_sheet(wb, ws, `تقرير ${monthName}`);
+                
+                // إضافة ملخص
+                const summaryData = [
+                    ['ملخص التقرير الشهري'],
+                    ['الشهر', monthName],
+                    ['السنة', currentYear],
+                    ['عدد الدفعات', monthlyData.length],
+                    ['عدد الطلاب', totalStudents],
+                    ['إجمالي المدفوع', totalPaid]
+                ];
+                const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'ملخص');
+                
+                XLSX.writeFile(wb, `تقرير_شهري_${monthName}_${currentYear}.xlsx`);
+                alert(`تم إنشاء التقرير الشهري بنجاح!\n\nعدد الدفعات: ${monthlyData.length}\nإجمالي المدفوع: ${totalPaid.toLocaleString('en-US')} د.ع`);
+            } catch (error) {
+                console.error('خطأ في إنشاء التقرير الشهري:', error);
+                alert('حدث خطأ أثناء إنشاء التقرير');
+            }
+        }
+        
+        // تقرير سنوي
+        async function generateYearlyReport() {
+            const yearInput = prompt('أدخل السنة (مثال: 2024):', new Date().getFullYear());
+            if (!yearInput) return;
+            
+            const year = parseInt(yearInput);
+            if (isNaN(year) || year < 2000 || year > 2100) {
+                alert('الرجاء إدخال سنة صحيحة');
+                return;
+            }
+            
+            try {
+                // جمع بيانات الدفعات لهذه السنة
+                let yearlyData = [];
+                let totalPaid = 0;
+                let totalStudents = new Set();
+                let monthlyTotals = {};
+                
+                for (const student of students) {
+                    const installments = student.installments || [];
+                    for (const inst of installments) {
+                        if (inst.payment_date) {
+                            const paymentDate = new Date(inst.payment_date);
+                            if (paymentDate.getFullYear() === year) {
+                                const paidAmount = inst.amount_paid || inst.amount || 0;
+                                if (paidAmount > 0) {
+                                    const month = paymentDate.getMonth() + 1;
+                                    if (!monthlyTotals[month]) {
+                                        monthlyTotals[month] = 0;
+                                    }
+                                    monthlyTotals[month] += paidAmount;
+                                    
+                                    yearlyData.push({
+                                        'اسم الطالب': student.name,
+                                        'ولي الأمر': student.guardian,
+                                        'المدرسة': student.schoolName || currentSchoolName || 'غير محدد',
+                                        'الصف': student.grade,
+                                        'المبلغ المدفوع': paidAmount,
+                                        'تاريخ الدفع': inst.payment_date,
+                                        'الشهر': paymentDate.getMonth() + 1,
+                                        'طريقة الدفع': inst.payment_method || 'نقد'
+                                    });
+                                    totalPaid += paidAmount;
+                                    totalStudents.add(student.id);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (yearlyData.length === 0) {
+                    alert(`لا توجد دفعات مسجلة لسنة ${year}`);
+                    return;
+                }
+                
+                // إنشاء تقرير Excel
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(yearlyData);
+                XLSX.utils.book_append_sheet(wb, ws, `دفعات ${year}`);
+                
+                // إضافة ملخص شهري
+                const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                                  'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                const monthlySummary = [['الشهر', 'المبلغ المدفوع']];
+                for (let m = 1; m <= 12; m++) {
+                    monthlySummary.push([monthNames[m - 1], monthlyTotals[m] || 0]);
+                }
+                const monthlyWs = XLSX.utils.aoa_to_sheet(monthlySummary);
+                XLSX.utils.book_append_sheet(wb, monthlyWs, 'ملخص شهري');
+                
+                // إضافة ملخص عام
+                const summaryData = [
+                    ['ملخص التقرير السنوي'],
+                    ['السنة', year],
+                    ['عدد الدفعات', yearlyData.length],
+                    ['عدد الطلاب', totalStudents.size],
+                    ['إجمالي المدفوع', totalPaid],
+                    ['متوسط الدفعة', Math.round(totalPaid / yearlyData.length)]
+                ];
+                const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'ملخص عام');
+                
+                XLSX.writeFile(wb, `تقرير_سنوي_${year}.xlsx`);
+                alert(`تم إنشاء التقرير السنوي بنجاح!\n\nعدد الدفعات: ${yearlyData.length}\nعدد الطلاب: ${totalStudents.size}\nإجمالي المدفوع: ${totalPaid.toLocaleString('en-US')} د.ع`);
+            } catch (error) {
+                console.error('خطأ في إنشاء التقرير السنوي:', error);
+                alert('حدث خطأ أثناء إنشاء التقرير');
+            }
+        }
+        
+        // تصدير إلى Excel
+        function exportToExcel() {
+            try {
+                if (!students || students.length === 0) {
+                    alert('لا توجد بيانات للتصدير');
+                    return;
+                }
+                
+                // تحضير البيانات
+                const excelData = students.map((student, index) => {
+                    const installments = student.installments || [];
+                    const totalPaid = installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                    const annualFee = student.annualFee || student.annual_fee || 1200000;
+                    const finalFee = student.finalFee || student.final_fee || annualFee;
+                    const remaining = finalFee - totalPaid;
+                    const statusInfo = getFinancialStatus(student);
+                    
+                    return {
+                        'م': index + 1,
+                        'رقم الإيصال': student.receiptNumber || '---',
+                        'اسم الطالب': student.name,
+                        'ولي الأمر': student.guardian,
+                        'المدرسة': student.schoolName || currentSchoolName || 'غير محدد',
+                        'الصف': student.grade,
+                        'المبلغ السنوي': annualFee,
+                        'الخصم': student.discount || 0,
+                        'المبلغ النهائي': finalFee,
+                        'المدفوع': totalPaid,
+                        'المتبقي': remaining,
+                        'الحالة المالية': statusInfo.status,
+                        'تاريخ التسجيل': student.registrationDate || student.registration_date || ''
+                    };
+                });
+                
+                // إنشاء ملف Excel
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                XLSX.utils.book_append_sheet(wb, ws, 'قائمة الطلاب');
+                
+                // إضافة ملخص
+                const totalFees = students.reduce((sum, s) => sum + (s.finalFee || s.annualFee || 1200000), 0);
+                const totalPaid = students.reduce((sum, s) => {
+                    const insts = s.installments || [];
+                    return sum + insts.reduce((s, i) => s + (i.amount_paid || i.amount || 0), 0);
+                }, 0);
+                
+                const summaryData = [
+                    ['ملخص البيانات'],
+                    ['عدد الطلاب', students.length],
+                    ['إجمالي المطلوب', totalFees],
+                    ['إجمالي المدفوع', totalPaid],
+                    ['المتبقي', totalFees - totalPaid]
+                ];
+                const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+                XLSX.utils.book_append_sheet(wb, summaryWs, 'ملخص');
+                
+                XLSX.writeFile(wb, `قائمة_الطلاب_${new Date().getTime()}.xlsx`);
+                alert('تم تصدير البيانات إلى Excel بنجاح!');
+            } catch (error) {
+                console.error('خطأ في التصدير إلى Excel:', error);
+                alert('حدث خطأ أثناء التصدير. تأكد من تحميل مكتبة XLSX.');
+            }
+        }
+        
+        // تصدير إلى PDF
+        function exportToPDF() {
+            try {
+                if (typeof window.jsPDF === 'undefined') {
+                    alert('مكتبة jsPDF غير محملة. سيتم استخدام الطباعة العادية.');
+                    printList();
+                    return;
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // العنوان
+                doc.setFontSize(18);
+                doc.setTextColor(15, 118, 110);
+                doc.text('قائمة الطلاب - مجموعة رسول الرحمة', 105, 15, { align: 'center' });
+                
+                // التاريخ
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                const now = new Date();
+                doc.text(`تاريخ التصدير: ${now.toLocaleDateString('ar-IQ')}`, 105, 22, { align: 'center' });
+                
+                // إعداد البيانات للجدول
+                const tableData = students.map((student, index) => {
+                    const installments = student.installments || [];
+                    const totalPaid = installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                    const annualFee = student.annualFee || student.annual_fee || 1200000;
+                    const finalFee = student.finalFee || student.final_fee || annualFee;
+                    const remaining = finalFee - totalPaid;
+                    const statusInfo = getFinancialStatus(student);
+                    
+                    return [
+                        index + 1,
+                        student.receiptNumber || '---',
+                        student.name,
+                        student.guardian,
+                        student.grade,
+                        annualFee.toLocaleString('en-US'),
+                        totalPaid.toLocaleString('en-US'),
+                        remaining.toLocaleString('en-US'),
+                        statusInfo.status
+                    ];
+                });
+                
+                // إضافة الجدول
+                doc.autoTable({
+                    head: [['م', 'رقم الإيصال', 'الاسم', 'ولي الأمر', 'الصف', 'المبلغ السنوي', 'المدفوع', 'المتبقي', 'الحالة']],
+                    body: tableData,
+                    startY: 30,
+                    styles: { fontSize: 8, font: 'Arial' },
+                    headStyles: { fillColor: [15, 118, 110], textColor: 255 },
+                    alternateRowStyles: { fillColor: [245, 245, 245] },
+                    margin: { top: 30, right: 10, left: 10 }
+                });
+                
+                // إضافة ملخص في الصفحة الأخيرة
+                const totalFees = students.reduce((sum, s) => sum + (s.finalFee || s.annualFee || 1200000), 0);
+                const totalPaid = students.reduce((sum, s) => {
+                    const insts = s.installments || [];
+                    return sum + insts.reduce((s, i) => s + (i.amount_paid || i.amount || 0), 0);
+                }, 0);
+                
+                doc.addPage();
+                doc.setFontSize(16);
+                doc.setTextColor(15, 118, 110);
+                doc.text('ملخص البيانات', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`عدد الطلاب: ${students.length}`, 20, 40);
+                doc.text(`إجمالي المطلوب: ${totalFees.toLocaleString('en-US')} د.ع`, 20, 50);
+                doc.text(`إجمالي المدفوع: ${totalPaid.toLocaleString('en-US')} د.ع`, 20, 60);
+                doc.text(`المتبقي: ${(totalFees - totalPaid).toLocaleString('en-US')} د.ع`, 20, 70);
+                
+                // حفظ الملف
+                doc.save(`قائمة_الطلاب_${new Date().getTime()}.pdf`);
+                alert('تم تصدير البيانات إلى PDF بنجاح!');
+            } catch (error) {
+                console.error('خطأ في التصدير إلى PDF:', error);
+                alert('حدث خطأ أثناء التصدير. سيتم استخدام الطباعة العادية.');
+                printList();
+            }
+        }
+        
+        function backupData() {
+            const data = {
+                students: allStudents,
+                timestamp: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `backup_${new Date().getTime()}.json`;
+            link.click();
+            alert('تم إنشاء نسخة احتياطية بنجاح');
+        }
+        
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            alert('سيتم إضافة ميزة الاستعادة قريباً');
+                        } catch (error) {
+                            alert('خطأ في قراءة الملف');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+        
+        function clearCache() {
+            if (confirm('هل أنت متأكد من مسح الذاكرة المؤقتة؟')) {
+                localStorage.clear();
+                alert('تم مسح الذاكرة المؤقتة');
+                location.reload();
+            }
+        }
+        
+        // تحميل الإعدادات المحفوظة
+        window.addEventListener('DOMContentLoaded', function() {
+            const elementaryFee = localStorage.getItem('elementaryFee');
+            const middleFee = localStorage.getItem('middleFee');
+            const installmentCount = localStorage.getItem('installmentCount');
+            const autoWhatsApp = localStorage.getItem('autoWhatsApp') === 'true';
+            const reminderWhatsApp = localStorage.getItem('reminderWhatsApp') === 'true';
+            const reminderDays = localStorage.getItem('reminderDays');
+            
+            if (elementaryFee) document.getElementById('elementaryFee').value = elementaryFee;
+            if (middleFee) document.getElementById('middleFee').value = middleFee;
+            if (installmentCount) document.getElementById('installmentCount').value = installmentCount;
+            if (autoWhatsApp !== null) document.getElementById('autoWhatsApp').checked = autoWhatsApp;
+            if (reminderWhatsApp !== null) document.getElementById('reminderWhatsApp').checked = reminderWhatsApp;
+            if (reminderDays) document.getElementById('reminderDays').value = reminderDays;
+        });
+
+        // ============ نظام إرسال رسائل واتساب ============
+        
+        // إرسال رسالة واتساب
+        function sendWhatsAppMessage(studentId, messageType, paymentData = null) {
+            const student = students.find(s => s.id === studentId || s.id === parseInt(studentId));
+            if (!student) {
+                alert('الطالب غير موجود');
+                return;
+            }
+            
+            const phone = student.phone || '';
+            if (!phone) {
+                alert('رقم الهاتف غير متوفر للطالب');
+                return;
+            }
+            
+            // تنظيف رقم الهاتف (إزالة المسافات والرموز)
+            let cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+            
+            // إضافة رمز البلد إذا لم يكن موجوداً (964 للعراق)
+            if (!cleanPhone.startsWith('964') && !cleanPhone.startsWith('+964')) {
+                if (cleanPhone.startsWith('0')) {
+                    cleanPhone = '964' + cleanPhone.substring(1);
+                } else {
+                    cleanPhone = '964' + cleanPhone;
+                }
+            }
+            
+            // إزالة علامة + إذا كانت موجودة
+            cleanPhone = cleanPhone.replace(/^\+/, '');
+            
+            // إنشاء الرسالة حسب النوع
+            let message = '';
+            const schoolName = currentSchoolName || 'مجموعة رسول الرحمة التعليمية';
+            
+            if (messageType === 'payment' && paymentData) {
+                // رسالة إشعار دفع
+                const installmentNames = ['الأول', 'الثاني', 'الثالث', 'الرابع'];
+                const installmentName = installmentNames[paymentData.installmentNumber - 1] || 'الأول';
+                
+                const totalPaid = student.installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                const finalFee = getStudentField(student, 'finalFee') || getStudentField(student, 'annualFee') || 1200000;
+                const remaining = finalFee - totalPaid;
+                
+                message = `*${schoolName}*\n\n` +
+                    `*إشعار استلام دفعة*\n\n` +
+                    `السيد/السيدة ولي أمر الطالب: *${student.guardian}*\n` +
+                    `اسم الطالب: *${student.name}*\n` +
+                    `الصف: *${student.grade}*\n` +
+                    `رقم الوصل: *${getStudentField(student, 'receiptNumber') || '---'}*\n\n` +
+                    `تم استلام مبلغ: *${paymentData.amount.toLocaleString('en-US')} دينار عراقي*\n` +
+                    `وهو القسط: *${installmentName}*\n` +
+                    `تاريخ الدفع: *${formatDateArabic(paymentData.paymentDate)}*\n\n` +
+                    `*ملخص الحساب:*\n` +
+                    `إجمالي المطلوب: ${finalFee.toLocaleString('en-US')} د.ع\n` +
+                    `إجمالي المدفوع: ${totalPaid.toLocaleString('en-US')} د.ع\n` +
+                    `المتبقي: ${remaining.toLocaleString('en-US')} د.ع\n\n` +
+                    `شكراً لكم على متابعة تسديد الأقساط.\n` +
+                    `*${schoolName}*`;
+                    
+            } else if (messageType === 'reminder') {
+                // رسالة تذكير بالدفع
+                const installments = student.installments || [];
+                const installmentAmount = calculateInstallmentAmount(student);
+                const totalPaid = installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                const finalFee = getStudentField(student, 'finalFee') || getStudentField(student, 'annualFee') || 1200000;
+                const remaining = finalFee - totalPaid;
+                
+                // العثور على الدفعات غير المكتملة
+                const unpaidInstallments = [];
+                installments.forEach((inst, index) => {
+                    const paid = inst.amount_paid || inst.amount || 0;
+                    if (paid < installmentAmount) {
+                        const installmentNames = ['الأول', 'الثاني', 'الثالث', 'الرابع'];
+                        unpaidInstallments.push({
+                            number: index + 1,
+                            name: installmentNames[index],
+                            paid: paid,
+                            required: installmentAmount,
+                            remaining: installmentAmount - paid
+                        });
+                    }
+                });
+                
+                message = `*${schoolName}*\n\n` +
+                    `*تذكير بدفع الأقساط المدرسية*\n\n` +
+                    `السيد/السيدة ولي أمر الطالب: *${student.guardian}*\n` +
+                    `اسم الطالب: *${student.name}*\n` +
+                    `الصف: *${student.grade}*\n` +
+                    `رقم الوصل: *${getStudentField(student, 'receiptNumber') || '---'}*\n\n`;
+                
+                if (unpaidInstallments.length > 0) {
+                    message += `*الدفعات المستحقة:*\n`;
+                    unpaidInstallments.forEach(inst => {
+                        message += `- القسط ${inst.name}: ${inst.remaining.toLocaleString('en-US')} د.ع (المطلوب: ${inst.required.toLocaleString('en-US')} د.ع)\n`;
+                    });
+                    message += `\n`;
+                }
+                
+                message += `*ملخص الحساب:*\n` +
+                    `إجمالي المطلوب: ${finalFee.toLocaleString('en-US')} د.ع\n` +
+                    `إجمالي المدفوع: ${totalPaid.toLocaleString('en-US')} د.ع\n` +
+                    `*المتبقي: ${remaining.toLocaleString('en-US')} د.ع*\n\n` +
+                    `نرجو منكم التكرم بتسديد المبلغ المتبقي في أقرب وقت ممكن.\n\n` +
+                    `شكراً لكم\n` +
+                    `*${schoolName}*`;
+                    
+            } else {
+                // رسالة عامة
+                message = `*${schoolName}*\n\n` +
+                    `السيد/السيدة ولي أمر الطالب: *${student.guardian}*\n` +
+                    `اسم الطالب: *${student.name}*\n` +
+                    `الصف: *${student.grade}*\n\n` +
+                    `نرجو منكم التواصل معنا بخصوص الأقساط المدرسية.\n\n` +
+                    `*${schoolName}*`;
+            }
+            
+            // ترميز الرسالة للرابط
+            const encodedMessage = encodeURIComponent(message);
+            
+            // إنشاء رابط واتساب
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            
+            // فتح واتساب في نافذة جديدة
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        // إرسال تذكيرات جماعية للطلاب المتأخرين
+        function sendBulkWhatsAppReminders() {
+            const unpaidStudents = students.filter(student => {
+                const installments = student.installments || [];
+                const totalPaid = installments.reduce((sum, inst) => sum + (inst.amount_paid || inst.amount || 0), 0);
+                const finalFee = getStudentField(student, 'finalFee') || getStudentField(student, 'annualFee') || 1200000;
+                const remaining = finalFee - totalPaid;
+                return remaining > 0 && student.phone;
+            });
+            
+            if (unpaidStudents.length === 0) {
+                alert('لا يوجد طلاب متأخرين لديهم أرقام هواتف');
+                return;
+            }
+            
+            const confirmMessage = `سيتم إرسال تذكيرات واتساب إلى ${unpaidStudents.length} ولي أمر.\n\nهل تريد المتابعة؟`;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            // إرسال الرسائل واحدة تلو الأخرى مع تأخير بسيط
+            let index = 0;
+            const sendNext = () => {
+                if (index < unpaidStudents.length) {
+                    const student = unpaidStudents[index];
+                    sendWhatsAppMessage(student.id, 'reminder');
+                    index++;
+                    if (index < unpaidStudents.length) {
+                        setTimeout(sendNext, 2000); // تأخير ثانيتين بين كل رسالة
+                    } else {
+                        alert(`تم فتح ${unpaidStudents.length} رسالة واتساب. يرجى إرسالها واحدة تلو الأخرى.`);
+                    }
+                }
+            };
+            
+            sendNext();
+        }
+        
+        // تنسيق التاريخ بالعربية
+        function formatDateArabic(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            
+            const monthNames = [
+                'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+                'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+            ];
+            
+            return `${day} ${monthNames[month - 1]} ${year}`;
+        }
+
     </script>
 </body>
 </html>
