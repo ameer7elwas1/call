@@ -2141,56 +2141,6 @@
                 padding: 12px;
             }
         }
-        
-        /* Report Option Cards Hover Effects */
-        .report-option-card:hover {
-            border-color: var(--primary-color) !important;
-            background: var(--primary-light) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-md) !important;
-        }
-        .report-option-card input[type="checkbox"]:checked + div {
-            color: var(--primary-color);
-        }
-        .report-option-card input[type="checkbox"]:checked ~ div span:last-child {
-            color: var(--primary-color);
-        }
-        
-        /* Date Input Focus Effects */
-        #reportStartDate:focus,
-        #reportEndDate:focus {
-            border-color: var(--primary-color) !important;
-            outline: none;
-            box-shadow: 0 0 0 3px var(--primary-light) !important;
-        }
-        
-        /* Responsive Design for Reports Tab */
-        @media (max-width: 768px) {
-            #reports .card {
-                padding: 15px;
-            }
-            #reportDateRangeSection {
-                grid-template-columns: 1fr !important;
-            }
-            .report-option-card {
-                min-width: 100% !important;
-            }
-        }
-        @media (max-width: 480px) {
-            #reports h2 {
-                font-size: 1.4rem !important;
-            }
-            #reports h3 {
-                font-size: 1.1rem !important;
-            }
-            .report-option-card {
-                padding: 12px !important;
-                gap: 10px !important;
-            }
-            .report-option-card span[style*="font-size: 1.3rem"] {
-                font-size: 1.1rem !important;
-            }
-        }
     </style>
 </head>
 <body>
@@ -2629,114 +2579,49 @@
 
             <!-- Reports Tab -->
             <div id="reports" class="tab-content">
-                <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
-                    <!-- Header Section -->
-                    <div class="card" style="margin-bottom: 25px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); color: white; border: none;">
-                        <div style="display: flex; align-items: center; gap: 15px; padding: 20px;">
-                            <div style="font-size: 3rem; line-height: 1;">📊</div>
-                            <div style="flex: 1;">
-                                <h2 style="margin: 0 0 8px 0; font-size: 1.8rem; font-weight: 700;">تصدير تقرير الإحصائيات</h2>
-                                <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">قم بتصدير تقارير شاملة ومفصلة عن المكالمات والمشتركين والإحصائيات</p>
-                            </div>
-                        </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">📊 تصدير تقرير الإحصائيات</h3>
                     </div>
-
                     <div id="reportsAlert"></div>
-
-                    <!-- Date Range Section -->
-                    <div class="card" style="margin-bottom: 25px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border-light);">
-                            <span style="font-size: 1.5rem;">📅</span>
-                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">الفترة الزمنية</h3>
-                        </div>
-                        <div style="background: var(--primary-light); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid var(--primary-color);">
-                            <label for="reportIncludeAll" style="display: flex; align-items: center; cursor: pointer; font-weight: 600;">
-                                <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()" style="width: 20px; height: 20px; margin-left: 12px; cursor: pointer; accent-color: var(--primary-color);">
-                                <span style="flex: 1;">تقرير شامل (جميع البيانات بدون تحديد فترة زمنية)</span>
-                            </label>
-                            <p style="margin: 8px 0 0 32px; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.8;">سيتم تضمين جميع البيانات المتاحة في النظام</p>
-                        </div>
-                        <div id="reportDateRangeSection" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-group">
-                                <label for="reportStartDate" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
-                                    <span>📆</span>
-                                    <span>من تاريخ *</span>
-                                </label>
-                                <input type="date" id="reportStartDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; background: var(--input-bg); color: var(--text-primary); transition: all 0.3s ease;">
-                            </div>
-                            <div class="form-group">
-                                <label for="reportEndDate" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
-                                    <span>📆</span>
-                                    <span>إلى تاريخ *</span>
-                                </label>
-                                <input type="date" id="reportEndDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; background: var(--input-bg); color: var(--text-primary); transition: all 0.3s ease;">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="reportStartDate">من تاريخ *</label>
+                        <input type="date" id="reportStartDate" required>
                     </div>
-
-                    <!-- Report Content Section -->
-                    <div class="card" style="margin-bottom: 25px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border-light);">
-                            <span style="font-size: 1.5rem;">📋</span>
-                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">محتوى التقرير</h3>
-                        </div>
-                        <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">اختر العناصر التي تريد تضمينها في التقرير:</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-                            <label for="reportIncludeSummary" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
-                                <input type="checkbox" id="reportIncludeSummary" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                                        <span style="font-size: 1.3rem;">📊</span>
-                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">ملخص الإحصائيات</span>
-                                    </div>
-                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">إجمالي المكالمات، المشتركين، الشكاوى، والرسائل المرسلة</p>
-                                </div>
+                    <div class="form-group">
+                        <label for="reportEndDate">إلى تاريخ *</label>
+                        <input type="date" id="reportEndDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reportIncludeAll">
+                            <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()">
+                            <span style="margin-right: 8px;">تقرير شامل (جميع البيانات بدون تحديد فترة)</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 10px;">محتوى التقرير:</div>
+                        <div style="margin-top: 10px;">
+                            <label for="reportIncludeSummary" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                <input type="checkbox" id="reportIncludeSummary" checked style="margin-left: 8px;">
+                                <span>ملخص الإحصائيات</span>
                             </label>
-                            <label for="reportIncludeCalls" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
-                                <input type="checkbox" id="reportIncludeCalls" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                                        <span style="font-size: 1.3rem;">📞</span>
-                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">تفاصيل المكالمات</span>
-                                    </div>
-                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">قائمة كاملة بجميع المكالمات مع التفاصيل الكاملة</p>
-                                </div>
+                            <label for="reportIncludeCalls" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                <input type="checkbox" id="reportIncludeCalls" checked style="margin-left: 8px;">
+                                <span>تفاصيل المكالمات</span>
                             </label>
-                            <label for="reportIncludeCustomers" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
-                                <input type="checkbox" id="reportIncludeCustomers" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                                        <span style="font-size: 1.3rem;">👥</span>
-                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">تفاصيل المشتركين</span>
-                                    </div>
-                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">قائمة بجميع بيانات المشتركين المسجلين</p>
-                                </div>
+                            <label for="reportIncludeCustomers" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                <input type="checkbox" id="reportIncludeCustomers" checked style="margin-left: 8px;">
+                                <span>تفاصيل المشتركين</span>
                             </label>
-                            <label for="reportIncludeCharts" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
-                                <input type="checkbox" id="reportIncludeCharts" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                                        <span style="font-size: 1.3rem;">📈</span>
-                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">الرسوم البيانية</span>
-                                    </div>
-                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">الرسوم البيانية والإحصائيات التفصيلية</p>
-                                </div>
+                            <label for="reportIncludeCharts" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                                <input type="checkbox" id="reportIncludeCharts" checked style="margin-left: 8px;">
+                                <span>الرسوم البيانية والإحصائيات التفصيلية</span>
                             </label>
                         </div>
                     </div>
-
-                    <!-- Action Buttons Section -->
-                    <div class="card" style="background: var(--bg-secondary); border: 2px dashed var(--border-color);">
-                        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px;">
-                            <button class="btn btn-primary" onclick="generateReport()" style="min-width: 200px; padding: 15px 30px; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px var(--shadow-md);">
-                                <span style="font-size: 1.3rem;">📥</span>
-                                <span>تصدير التقرير</span>
-                            </button>
-                            <button class="btn btn-secondary" onclick="resetReportForm()" style="min-width: 180px; padding: 15px 30px; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                <span style="font-size: 1.2rem;">🔄</span>
-                                <span>إعادة تعيين</span>
-                            </button>
-                        </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="generateReport()">📥 تصدير التقرير</button>
+                        <button class="btn btn-secondary" onclick="resetReportForm()">إعادة تعيين</button>
                     </div>
                 </div>
             </div>
@@ -4440,21 +4325,39 @@
 
         async function checkDuplicateCall(phone, name, details) {
             try {
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+                
                 const cached = getCachedData('calls');
                 if (cached && cached.length > 0) {
-                    const duplicate = cached.find(c => 
+                    const duplicates = cached.filter(c => 
                         c.phone === phone && c.name === name && c.details === details
                     );
-                    if (duplicate) {
-                        return duplicate;
+                    
+                    if (duplicates.length > 0) {
+                        for (const duplicate of duplicates) {
+                            if (duplicate.created_at) {
+                                const duplicateDate = new Date(duplicate.created_at);
+                                if (duplicateDate > oneHourAgo) {
+                                    return duplicate;
+                                }
+                            }
+                        }
                     }
                 }
                 
-                const phoneFilter = `?phone=eq.${encodeURIComponent(phone)}&name=eq.${encodeURIComponent(name)}&details=eq.${encodeURIComponent(details)}`;
+                const phoneFilter = `?phone=eq.${encodeURIComponent(phone)}&name=eq.${encodeURIComponent(name)}&details=eq.${encodeURIComponent(details)}&order=created_at.desc`;
                 const existingCalls = await supabaseRequest('calls', 'GET', null, phoneFilter);
                 
                 if (existingCalls && existingCalls.length > 0) {
-                    return existingCalls[0];
+                    for (const call of existingCalls) {
+                        if (call.created_at) {
+                            const callDate = new Date(call.created_at);
+                            if (callDate > oneHourAgo) {
+                                return call;
+                            }
+                        }
+                    }
                 }
                 return null;
             } catch (error) {
@@ -4481,7 +4384,13 @@
                 try {
                     const duplicate = await checkDuplicateCall(phone, name, details);
                     if (duplicate) {
-                        showAlert(alertDiv, `⚠️ هذه المكالمة موجودة مسبقاً في النظام!\n\nنوع المكالمة: ${duplicate.call_type}\nاسم المتصل: ${duplicate.name}\nرقم الهاتف: ${duplicate.phone}\nالتفاصيل: ${duplicate.details}\nالتاريخ: ${duplicate.created_at ? new Date(duplicate.created_at).toLocaleString('en-US') : 'غير محدد'}\n\nلا يمكن إضافة نفس المعلومات مرة أخرى.`, 'error');
+                        const duplicateDate = new Date(duplicate.created_at);
+                        const now = new Date();
+                        const timeDiff = Math.ceil((now - duplicateDate) / (1000 * 60));
+                        const remainingMinutes = 60 - timeDiff;
+                        const canAddAfter = new Date(duplicateDate.getTime() + 60 * 60 * 1000);
+                        
+                        showAlert(alertDiv, `⚠️ هذه المكالمة موجودة مسبقاً في النظام!\n\nنوع المكالمة: ${duplicate.call_type}\nاسم المتصل: ${duplicate.name}\nرقم الهاتف: ${duplicate.phone}\nالتفاصيل: ${duplicate.details}\nالتاريخ: ${duplicate.created_at ? new Date(duplicate.created_at).toLocaleString('en-US') : 'غير محدد'}\n\nيمكنك إضافة نفس المكالمة مرة أخرى بعد مرور ساعة من آخر تسجيل.\nيمكنك الإضافة بعد: ${canAddAfter.toLocaleString('en-US')}`, 'error');
                         return;
                     }
                 } catch (error) {
@@ -6482,7 +6391,7 @@
                 
                 
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
-                rows.push([' تقرير الإحصائيات ', '', '']);
+                rows.push(['📊 تقرير الإحصائيات الشامل', '', '']);
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
                 rows.push(['', '', '']);
                 rows.push(['📅 تاريخ إنشاء التقرير', `${reportDate} ${reportTime}`, '']);
@@ -6625,7 +6534,7 @@
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
                 
                 const fileName = includeAll 
-                    ? `${reportDate.replace(/\//g, '_')}`
+                    ? `تقرير_شامل_${reportDate.replace(/\//g, '_')}`
                     : `تقرير_${startDate.replace(/-/g, '_')}_${endDate.replace(/-/g, '_')}`;
                 
                 exportToExcel(headers, rows, fileName);
