@@ -1318,25 +1318,7 @@
         }
         /* Chat Window */
         .chat-window {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 900px;
-            max-width: calc(100vw - 40px);
-            height: 700px;
-            max-height: calc(100vh - 40px);
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            z-index: 2000;
-            flex-direction: column;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .chat-window.active {
-            display: flex;
+            display: none !important;
         }
         .chat-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
@@ -1527,6 +1509,22 @@
             background: #202c33;
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
+        [data-theme="dark"] #chat .chat-main {
+            background: #0b141a !important;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.02) 10px, rgba(255,255,255,.02) 20px) !important;
+        }
+        [data-theme="dark"] #chat .chat-messages-header {
+            background: #202c33 !important;
+            border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme="dark"] #chat .chat-input-area {
+            background: #202c33 !important;
+            border-top-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        [data-theme="dark"] #chat .chat-input-area textarea {
+            background: #2a3942 !important;
+            color: #e9edef !important;
+        }
         .chat-messages-user-info {
             display: flex;
             align-items: center;
@@ -1570,10 +1568,10 @@
         .chat-message {
             display: flex;
             gap: 8px;
-            max-width: 75%;
             margin-bottom: 4px;
-            animation: messageSlide 0.2s ease;
+            animation: messageSlide 0.3s ease;
             position: relative;
+            width: 100%;
         }
         @keyframes messageSlide {
             from { opacity: 0; transform: translateY(5px); }
@@ -1582,12 +1580,16 @@
         .chat-message.sent {
             align-self: flex-end;
             margin-left: auto;
-            flex-direction: row;
+            margin-right: 0;
+            flex-direction: row-reverse;
+            width: 100%;
         }
         .chat-message.received {
             align-self: flex-start;
             margin-right: auto;
+            margin-left: 0;
             flex-direction: row;
+            width: 100%;
         }
         .chat-message-avatar {
             width: 32px;
@@ -1616,21 +1618,25 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .chat-message.sent .chat-message-content {
-            background: #DCF8C6;
+            background: linear-gradient(135deg, #DCF8C6 0%, #C8E6C9 100%);
             border-top-right-radius: 0;
-            margin-right: 0;
+            border-bottom-right-radius: 4px;
+            margin-right: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         [data-theme="dark"] .chat-message.sent .chat-message-content {
-            background: #056162;
+            background: linear-gradient(135deg, #056162 0%, #0a7c7c 100%);
             color: #e9edef;
         }
         .chat-message.received .chat-message-content {
-            background: #ffffff;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
             border-top-left-radius: 0;
-            margin-left: 0;
+            border-bottom-left-radius: 4px;
+            margin-left: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         [data-theme="dark"] .chat-message.received .chat-message-content {
-            background: #202c33;
+            background: linear-gradient(135deg, #202c33 0%, #2a3942 100%);
             color: #e9edef;
         }
         .chat-message-text {
@@ -1670,6 +1676,13 @@
         .message-status {
             font-size: 0.65rem;
             opacity: 0.7;
+            color: #8696a0;
+        }
+        .message-status.sent {
+            color: #8696a0;
+        }
+        .message-status.delivered {
+            color: #8696a0;
         }
         .message-status.read {
             color: #53bdeb;
@@ -2202,7 +2215,7 @@
                     <span class="nav-item-icon"></span>
                     <span>أقسام الشركة</span>
                 </div>
-                <div class="nav-item" onclick="openChatWindow()">
+                <div class="nav-item" onclick="switchTab('chat')">
                     <span class="nav-item-icon">💬</span>
                     <span> محادثة الموظفين</span>
                     <span id="unreadMessagesBadge" class="unread-badge" style="display: none;">0</span>
@@ -2579,49 +2592,94 @@
 
             <!-- Reports Tab -->
             <div id="reports" class="tab-content">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0;">📊 تصدير تقرير الإحصائيات</h3>
-                    </div>
-                    <div id="reportsAlert"></div>
-                    <div class="form-group">
-                        <label for="reportStartDate">من تاريخ *</label>
-                        <input type="date" id="reportStartDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportEndDate">إلى تاريخ *</label>
-                        <input type="date" id="reportEndDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportIncludeAll">
-                            <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()">
-                            <span style="margin-right: 8px;">تقرير شامل (جميع البيانات بدون تحديد فترة)</span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 10px;">محتوى التقرير:</div>
-                        <div style="margin-top: 10px;">
-                            <label for="reportIncludeSummary" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeSummary" checked style="margin-left: 8px;">
-                                <span>ملخص الإحصائيات</span>
-                            </label>
-                            <label for="reportIncludeCalls" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCalls" checked style="margin-left: 8px;">
-                                <span>تفاصيل المكالمات</span>
-                            </label>
-                            <label for="reportIncludeCustomers" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCustomers" checked style="margin-left: 8px;">
-                                <span>تفاصيل المشتركين</span>
-                            </label>
-                            <label for="reportIncludeCharts" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCharts" checked style="margin-left: 8px;">
-                                <span>الرسوم البيانية والإحصائيات التفصيلية</span>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                    <!-- Export Report Card -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                                📊
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-primary); font-weight: 700;"> تقرير </h3>
+                                <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">   </p>
+                            </div>
+                        </div>
+                        <div id="reportsAlert"></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label for="reportStartDate" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">من تاريخ *</label>
+                                <input type="date" id="reportStartDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; background: var(--input-bg); color: var(--text-primary); font-size: 0.95rem; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px var(--primary-light)'" onblur="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label for="reportEndDate" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">إلى تاريخ *</label>
+                                <input type="date" id="reportEndDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; background: var(--input-bg); color: var(--text-primary); font-size: 0.95rem; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px var(--primary-light)'" onblur="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'">
+                            </div>
+                        </div>
+                        <div class="form-group" style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-light);">
+                            <label for="reportIncludeAll" style="display: flex; align-items: center; cursor: pointer; font-weight: 600; color: var(--text-primary);">
+                                <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()" style="margin-left: 12px; width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary-color);">
+                                <span>📋 تقرير  (جميع البيانات بدون تحديد فترة)</span>
                             </label>
                         </div>
+                        <div class="form-group" style="background: var(--bg-secondary); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border-light);">
+                            <div style="font-weight: 700; color: var(--primary-color); margin-bottom: 16px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                                <span>📑</span>
+                                <span>محتوى التقرير</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                                <label for="reportIncludeSummary" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
+                                    <input type="checkbox" id="reportIncludeSummary" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
+                                    <span style="font-weight: 600; color: var(--text-primary);">📈 ملخص الإحصائيات</span>
+                                </label>
+                                <label for="reportIncludeCalls" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
+                                    <input type="checkbox" id="reportIncludeCalls" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
+                                    <span style="font-weight: 600; color: var(--text-primary);">📞 تفاصيل المكالمات</span>
+                                </label>
+                                <label for="reportIncludeCustomers" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
+                                    <input type="checkbox" id="reportIncludeCustomers" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
+                                    <span style="font-weight: 600; color: var(--text-primary);">👤 تفاصيل المشتركين</span>
+                                </label>
+                                <label for="reportIncludeCharts" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
+                                    <input type="checkbox" id="reportIncludeCharts" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
+                                    <span style="font-weight: 600; color: var(--text-primary);">📊 الرسوم البيانية</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="btn-group" style="display: flex; gap: 12px; margin-top: 8px;">
+                            <button class="btn btn-primary" onclick="generateReport()" style="flex: 1; padding: 14px 24px; font-size: 1rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
+                                📥 تصدير التقرير
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetReportForm()" style="padding: 14px 24px; font-size: 1rem; font-weight: 600; border-radius: 12px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                🔄 إعادة تعيين
+                            </button>
+                        </div>
                     </div>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="generateReport()">📥 تصدير التقرير</button>
-                        <button class="btn btn-secondary" onclick="resetReportForm()">إعادة تعيين</button>
+
+                    <!-- Quick Export Card -->
+                    <div class="card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%); border: 2px solid var(--success-color); box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--success-color) 0%, #22c55e 100%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
+                            
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-primary); font-weight: 700;">تصدير سريع</h3>
+                                <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">تصدير البيانات مباشرة</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="exportCustomersToExcel()" style="width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; background: var(--card-bg); border: 2px solid var(--border-color);" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'; this.style.transform='translateX(-4px)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.background='var(--card-bg)'; this.style.transform='translateX(0)'">
+                                <span></span>
+                                <span>تصدير المشتركين</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportCallsToExcel()" style="width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; background: var(--card-bg); border: 2px solid var(--border-color);" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'; this.style.transform='translateX(-4px)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.background='var(--card-bg)'; this.style.transform='translateX(0)'">
+                                <span></span>
+                                <span>تصدير المكالمات</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportAdvancedStatsToExcel()" style="width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; background: var(--card-bg); border: 2px solid var(--border-color);" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'; this.style.transform='translateX(-4px)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.background='var(--card-bg)'; this.style.transform='translateX(0)'">
+                                <span></span>
+                                <span>تصدير الإحصائيات </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2719,6 +2777,44 @@
             </div>
 
             <!-- Users Management Tab (Admin Only) -->
+            <!-- Chat Tab -->
+            <div id="chat" class="tab-content">
+                <div style="display: flex; height: calc(100vh - 120px); gap: 0; border-radius: 12px; overflow: hidden; border: 2px solid var(--border-color); background: var(--card-bg);">
+                    <div class="chat-sidebar" style="width: 300px; border-left: 2px solid var(--border-color); background: var(--bg-secondary); display: flex; flex-direction: column; overflow: hidden;">
+                        <div class="chat-search" style="padding: 15px; border-bottom: 1px solid var(--border-light);">
+                            <input type="text" id="chatSearchInput" placeholder="🔍 ابحث عن موظف..." onkeyup="filterChatUsers()" style="width: 100%; padding: 10px 14px; border: 2px solid var(--input-border); border-radius: 10px; background: var(--input-bg); color: var(--text-primary); font-size: 0.9rem;">
+                        </div>
+                        <div class="chat-users-list" id="chatUsersList" style="flex: 1; overflow-y: auto; padding: 10px;">
+                            <p style="text-align: center; color: var(--text-secondary); padding: 20px;">جاري تحميل عطلات الكول سنتر...</p>
+                        </div>
+                    </div>
+                    <div class="chat-main" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #efeae2; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,.03) 10px, rgba(0,0,0,.03) 20px);">
+                        <div id="chatNoSelection" class="chat-no-selection" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary);">
+                            <div style="font-size: 4rem; margin-bottom: 15px; opacity: 0.5;">💬</div>
+                            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">  </p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;"></p>
+                        </div>
+                        <div id="chatMessagesArea" class="chat-messages-area" style="display: none; flex: 1; flex-direction: column; overflow: hidden;">
+                            <div class="chat-messages-header" style="padding: 12px 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); background: #f0f2f5; display: flex; align-items: center; justify-content: space-between;">
+                                <div class="chat-messages-user-info" style="display: flex; align-items: center; gap: 10px;">
+                                    <span id="chatCurrentUserName" style="font-weight: 600; color: var(--text-primary);">-</span>
+                                    <span id="chatCurrentUserStatus" class="user-status" style="font-size: 0.8rem; color: var(--success-color); font-weight: 600;">نشط</span>
+                                </div>
+                            </div>
+                            <div class="chat-messages" id="chatMessages" style="flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px;">
+                                <!-- الرسائل ستظهر هنا -->
+                            </div>
+                            <div class="chat-input-area" style="padding: 8px 12px; border-top: 1px solid rgba(0, 0, 0, 0.08); background: #f0f2f5; display: flex; gap: 8px; align-items: flex-end;">
+                                <textarea id="chatMessageInput" placeholder="اكتب رسالتك هنا..." rows="1" onkeydown="handleChatInputKeydown(event)" style="flex: 1; padding: 9px 12px; border: none; border-radius: 20px; background: white; color: var(--text-primary); font-size: 0.95rem; resize: none; max-height: 120px; overflow-y: auto; font-family: inherit;"></textarea>
+                                <button class="chat-send-btn" onclick="sendChatMessage()" title="إرسال (Enter)" style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-color); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                                    <span style="font-size: 1.2rem;">➤</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="users" class="tab-content">
                 <div class="card" style="min-height: auto;">
                     <h3>إدارة المستخدمين</h3>
@@ -2914,13 +3010,15 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
         const dataCache = {
-            calls: { data: null, timestamp: 0, ttl: 3600000 },
-            customers: { data: null, timestamp: 0, ttl: 3600000 },
-            users: { data: null, timestamp: 0, ttl: 7200000 },
-            allowedUsers: { data: null, timestamp: 0, ttl: 14400000 },
-            agents: { data: null, timestamp: 0, ttl: 14400000 },
-            departments: { data: null, timestamp: 0, ttl: 14400000 },
-            sentMessages: { data: null, timestamp: 0, ttl: 1800000 }
+            calls: { data: null, timestamp: 0, ttl: 7200000 },
+            customers: { data: null, timestamp: 0, ttl: 7200000 },
+            users: { data: null, timestamp: 0, ttl: 28800000 },
+            allowedUsers: { data: null, timestamp: 0, ttl: 28800000 },
+            agents: { data: null, timestamp: 0, ttl: 28800000 },
+            departments: { data: null, timestamp: 0, ttl: 28800000 },
+            sentMessages: { data: null, timestamp: 0, ttl: 3600000 },
+            messages: { data: null, timestamp: 0, ttl: 60000 },
+            userProfiles: { data: null, timestamp: 0, ttl: 3600000 }
         };
         
         let isTabActive = true;
@@ -2958,10 +3056,28 @@
         const SYSTEM_NAME = 'customer_service';
         
         async function supabaseRequest(table, method = 'GET', data = null, filters = '', customHeaders = {}, useCache = false) {
-            if (method === 'GET' && useCache && dataCache[table]) {
-                const cached = getCachedData(table);
-                if (cached !== null) {
-                    return cached;
+            if (method === 'GET') {
+                if (table === 'messages') {
+                    const cacheKey = `messages_${filters}`;
+                    if (dataCache[cacheKey]) {
+                        const cached = getCachedData(cacheKey);
+                        if (cached !== null) {
+                            return cached;
+                        }
+                    }
+                } else if (table === 'user_profiles') {
+                    const cacheKey = `user_profiles_${filters}`;
+                    if (dataCache[cacheKey]) {
+                        const cached = getCachedData(cacheKey);
+                        if (cached !== null) {
+                            return cached;
+                        }
+                    }
+                } else if (useCache && dataCache[table]) {
+                    const cached = getCachedData(table);
+                    if (cached !== null) {
+                        return cached;
+                    }
                 }
             }
             
@@ -2994,8 +3110,24 @@
                     throw new Error(`Supabase error: ${response.status} - ${errorText}`);
                 }
                 const result = await response.json();
-                if (method === 'GET' && dataCache[table] && table !== 'messages') {
-                    setCachedData(table, result);
+                if (method === 'GET') {
+                    if (table === 'messages') {
+                        const cacheKey = `messages_${filters}`;
+                        if (!dataCache[cacheKey]) {
+                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 60000 };
+                        }
+                        dataCache[cacheKey].data = result;
+                        dataCache[cacheKey].timestamp = Date.now();
+                    } else if (table === 'user_profiles') {
+                        const cacheKey = `user_profiles_${filters}`;
+                        if (!dataCache[cacheKey]) {
+                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 3600000 };
+                        }
+                        dataCache[cacheKey].data = result;
+                        dataCache[cacheKey].timestamp = Date.now();
+                    } else if (dataCache[table]) {
+                        setCachedData(table, result);
+                    }
                 }
                 return result;
             } catch (error) {
@@ -3163,7 +3295,7 @@
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 1800000);
+            }, 14400000);
         });
 
         async function handleLogin() {
@@ -3393,6 +3525,18 @@
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
+
+            if (tabName === 'chat') {
+                loadChatUsers();
+                updateUnreadMessagesCount();
+                if (!chatInterval) {
+                    startChatAutoUpdate();
+                }
+            } else {
+                if (chatInterval) {
+                    stopChatAutoUpdate();
+                }
+            }
 
             const tabElement = document.getElementById(tabName);
             if (!tabElement) {
@@ -5922,25 +6066,31 @@
             const agentStats = {};
             
             try {
+                const cachedSentMessages = getCachedData('sentMessages');
                 let sentMessages = [];
-                let from = 0;
-                const batchSize = 1000;
-                let hasMore = true;
                 
-                while (hasMore) {
-                    const to = from + batchSize - 1;
-                    const batch = await supabaseRequest('sent_messages', 'GET', null, '?type=eq.customer&order=sent_at.desc', {
-                        'Range': `${from}-${to}`
-                    });
-                    if (Array.isArray(batch) && batch.length > 0) {
-                        sentMessages = sentMessages.concat(batch);
-                        if (batch.length < batchSize) {
-                            hasMore = false;
+                if (cachedSentMessages && Array.isArray(cachedSentMessages) && cachedSentMessages.length > 0) {
+                    sentMessages = cachedSentMessages.filter(msg => msg.type === 'customer');
+                } else {
+                    let from = 0;
+                    const batchSize = 1000;
+                    let hasMore = true;
+                    
+                    while (hasMore) {
+                        const to = from + batchSize - 1;
+                        const batch = await supabaseRequest('sent_messages', 'GET', null, '?type=eq.customer&order=sent_at.desc', {
+                            'Range': `${from}-${to}`
+                        }, {}, true);
+                        if (Array.isArray(batch) && batch.length > 0) {
+                            sentMessages = sentMessages.concat(batch);
+                            if (batch.length < batchSize) {
+                                hasMore = false;
+                            } else {
+                                from += batchSize;
+                            }
                         } else {
-                            from += batchSize;
+                            hasMore = false;
                         }
-                    } else {
-                        hasMore = false;
                     }
                 }
                 
@@ -6005,7 +6155,34 @@
                     let lastSentDate = 'لا يوجد';
                     if (stats.lastSent) {
                         try {
-                            lastSentDate = new Date(stats.lastSent).toLocaleString('en-US');
+                            const date = new Date(stats.lastSent);
+                            if (!isNaN(date.getTime())) {
+                                const now = new Date();
+                                const diffMs = now - date;
+                                const diffMins = Math.floor(diffMs / 60000);
+                                const diffHours = Math.floor(diffMs / 3600000);
+                                const diffDays = Math.floor(diffMs / 86400000);
+                                
+                                if (diffMins < 1) {
+                                    lastSentDate = 'الآن';
+                                } else if (diffMins < 60) {
+                                    lastSentDate = `منذ ${diffMins} دقيقة`;
+                                } else if (diffHours < 24) {
+                                    lastSentDate = `منذ ${diffHours} ساعة`;
+                                } else if (diffDays < 7) {
+                                    lastSentDate = `منذ ${diffDays} يوم`;
+                                } else {
+                                    lastSentDate = date.toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'short', 
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                }
+                            } else {
+                                lastSentDate = stats.lastSent;
+                            }
                         } catch (e) {
                             lastSentDate = stats.lastSent;
                         }
@@ -6101,7 +6278,7 @@
         
         async function fetchSentMessagesForActivity() {
             try {
-                const data = await supabaseRequest('sent_messages', 'GET', null, '?order=sent_at.desc&limit=5');
+                const data = await supabaseRequest('sent_messages', 'GET', null, '?order=sent_at.desc&limit=5', {}, true);
                 return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching sent messages for activity:', error);
@@ -6217,14 +6394,38 @@
         
         async function exportCallsToExcel() {
             try {
-                const calls = await supabaseRequest('calls', 'GET', null, '?order=created_at.desc');
-                if (!calls || calls.length === 0) {
+                showAlert(document.getElementById('callAlert'), 'جاري تحميل البيانات...', 'info');
+                
+                let allCalls = [];
+                let from = 0;
+                const batchSize = 1000;
+                let hasMore = true;
+                
+                while (hasMore) {
+                    const to = from + batchSize - 1;
+                    const batch = await supabaseRequest('calls', 'GET', null, '?order=created_at.desc', {
+                        'Range': `${from}-${to}`
+                    }, false);
+                    
+                    if (Array.isArray(batch) && batch.length > 0) {
+                        allCalls = allCalls.concat(batch);
+                        if (batch.length < batchSize) {
+                            hasMore = false;
+                        } else {
+                            from += batchSize;
+                        }
+                    } else {
+                        hasMore = false;
+                    }
+                }
+                
+                if (allCalls.length === 0) {
                     showAlert(document.getElementById('callAlert'), 'لا توجد مكالمات للتصدير', 'info');
                     return;
                 }
                 
                 const headers = ['نوع المكالمة', 'اسم المتصل', 'رقم الهاتف', 'التفاصيل', 'الموظف', 'القسم', 'وقت الشفت', 'تاريخ الإنشاء'];
-                const rows = calls.map(call => [
+                const rows = allCalls.map(call => [
                     call.call_type || '',
                     call.name || '',
                     call.phone || '',
@@ -6236,7 +6437,7 @@
                 ]);
                 
                 exportToExcel(headers, rows, 'المكالمات');
-                showAlert(document.getElementById('callAlert'), `تم تصدير ${calls.length} مكالمة بنجاح`, 'success');
+                showAlert(document.getElementById('callAlert'), `تم تصدير ${allCalls.length} مكالمة بنجاح`, 'success');
             } catch (error) {
                 console.error('Error exporting calls:', error);
                 showAlert(document.getElementById('callAlert'), 'حدث خطأ أثناء التصدير', 'error');
@@ -6245,14 +6446,38 @@
         
         async function exportCustomersToExcel() {
             try {
-                const customers = await supabaseRequest('customers', 'GET', null, '?order=created_at.desc');
-                if (!customers || customers.length === 0) {
+                showAlert(document.getElementById('customerAlert'), 'جاري تحميل البيانات...', 'info');
+                
+                let allCustomers = [];
+                let from = 0;
+                const batchSize = 1000;
+                let hasMore = true;
+                
+                while (hasMore) {
+                    const to = from + batchSize - 1;
+                    const batch = await supabaseRequest('customers', 'GET', null, '?order=created_at.desc', {
+                        'Range': `${from}-${to}`
+                    }, false);
+                    
+                    if (Array.isArray(batch) && batch.length > 0) {
+                        allCustomers = allCustomers.concat(batch);
+                        if (batch.length < batchSize) {
+                            hasMore = false;
+                        } else {
+                            from += batchSize;
+                        }
+                    } else {
+                        hasMore = false;
+                    }
+                }
+                
+                if (allCustomers.length === 0) {
                     showAlert(document.getElementById('customerAlert'), 'لا يوجد مشتركين للتصدير', 'info');
                     return;
                 }
                 
                 const headers = ['الاسم', 'المنطقة', 'أقرب نقطة دالة', 'رقم الهاتف', 'التاريخ', 'الملاحظات', 'الموظف', 'الوكيل', 'تاريخ الإنشاء'];
-                const rows = customers.map(customer => [
+                const rows = allCustomers.map(customer => [
                     customer.username || '',
                     customer.region || '',
                     customer.closest_point || '',
@@ -6265,7 +6490,7 @@
                 ]);
                 
                 exportToExcel(headers, rows, 'المشتركين');
-                showAlert(document.getElementById('customerAlert'), `تم تصدير ${customers.length} مشترك بنجاح`, 'success');
+                showAlert(document.getElementById('customerAlert'), `تم تصدير ${allCustomers.length} مشترك بنجاح`, 'success');
             } catch (error) {
                 console.error('Error exporting customers:', error);
                 showAlert(document.getElementById('customerAlert'), 'حدث خطأ أثناء التصدير', 'error');
@@ -6830,10 +7055,63 @@
                 const callsFilter = `?created_at=gte.${startDate.toISOString()}&created_at=lt.${endDate.toISOString()}&order=created_at.desc`;
                 const customersFilter = `?created_at=gte.${startDate.toISOString()}&created_at=lt.${endDate.toISOString()}&order=created_at.desc`;
                 
-                const [calls, customers] = await Promise.all([
-                    supabaseRequest('calls', 'GET', null, callsFilter),
-                    supabaseRequest('customers', 'GET', null, customersFilter)
-                ]);
+                let allCalls = [];
+                let allCustomers = [];
+                
+                let from = 0;
+                const batchSize = 1000;
+                let hasMoreCalls = true;
+                let hasMoreCustomers = true;
+                
+                while (hasMoreCalls || hasMoreCustomers) {
+                    const to = from + batchSize - 1;
+                    
+                    const promises = [];
+                    if (hasMoreCalls) {
+                        promises.push(supabaseRequest('calls', 'GET', null, callsFilter, {
+                            'Range': `${from}-${to}`
+                        }, false));
+                    } else {
+                        promises.push(Promise.resolve([]));
+                    }
+                    
+                    if (hasMoreCustomers) {
+                        promises.push(supabaseRequest('customers', 'GET', null, customersFilter, {
+                            'Range': `${from}-${to}`
+                        }, false));
+                    } else {
+                        promises.push(Promise.resolve([]));
+                    }
+                    
+                    const [callsBatch, customersBatch] = await Promise.all(promises);
+                    
+                    if (Array.isArray(callsBatch) && callsBatch.length > 0) {
+                        allCalls = allCalls.concat(callsBatch);
+                        if (callsBatch.length < batchSize) {
+                            hasMoreCalls = false;
+                        }
+                    } else {
+                        hasMoreCalls = false;
+                    }
+                    
+                    if (Array.isArray(customersBatch) && customersBatch.length > 0) {
+                        allCustomers = allCustomers.concat(customersBatch);
+                        if (customersBatch.length < batchSize) {
+                            hasMoreCustomers = false;
+                        }
+                    } else {
+                        hasMoreCustomers = false;
+                    }
+                    
+                    if (!hasMoreCalls && !hasMoreCustomers) {
+                        break;
+                    }
+                    
+                    from += batchSize;
+                }
+                
+                const calls = allCalls;
+                const customers = allCustomers;
                 
                 const periodName = period === 'daily' ? 'يومية' : period === 'weekly' ? 'أسبوعية' : 'شهرية';
                 const headers = ['نوع البيانات', 'التفاصيل', 'العدد'];
@@ -7245,29 +7523,11 @@
         let isSendingMessage = false; 
         
         function openChatWindow() {
-            if (!currentUserId) {
-                alert('يجب تسجيل الدخول أولاً');
-                return;
-            }
-            document.getElementById('chatWindow').classList.add('active');
-            loadChatUsers();
-            if (chatInterval) {
-                clearInterval(chatInterval);
-            }
-            
-            chatInterval = setInterval(() => {
-                if (currentChatUserId) {
-                    loadChatMessages(currentChatUserId);
-                }
-                updateUnreadMessagesCount();
-            }, 5000); 
+            switchTab('chat');
         }
         
         function closeChatWindow() {
-            document.getElementById('chatWindow').classList.remove('active');
-            if (chatInterval) {
-                clearInterval(chatInterval);
-            }
+            switchTab('dashboard');
         }
         
         async function loadChatUsers() {
@@ -7406,21 +7666,25 @@
             
             Promise.allSettled(users.map(async (user) => {
                 try {
-                    const [unreadCount, lastMessage] = await Promise.allSettled([
+                    const [unreadCount, lastMessage, profile] = await Promise.allSettled([
                         getUnreadMessagesCount(user.id),
-                        getLastMessage(user.id)
+                        getLastMessage(user.id),
+                        supabaseRequest('user_profiles', 'GET', null, `?user_id=eq.${user.id}`)
                     ]);
+                    const profileData = profile.status === 'fulfilled' && profile.value && profile.value.length > 0 ? profile.value[0] : null;
                     return { 
                         user, 
                         unreadCount: unreadCount.status === 'fulfilled' ? unreadCount.value : 0,
-                        lastMessage: lastMessage.status === 'fulfilled' ? lastMessage.value : null
+                        lastMessage: lastMessage.status === 'fulfilled' ? lastMessage.value : null,
+                        profilePicture: profileData?.profile_picture || null
                     };
                 } catch (error) {
                     
                     return { 
                         user, 
                         unreadCount: 0,
-                        lastMessage: null
+                        lastMessage: null,
+                        profilePicture: null
                     };
                 }
             })).then(results => {
@@ -7440,12 +7704,15 @@
                         `;
                     }
                     
-                    const { user, unreadCount, lastMessage } = result.value;
+                    const { user, unreadCount, lastMessage, profilePicture } = result.value;
                     const avatarText = user.full_name ? user.full_name.charAt(0) : '?';
+                    const avatarHTML = profilePicture ? 
+                        `<img src="${escapeHtml(profilePicture)}" alt="${escapeHtml(user.full_name)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'; this.parentElement.textContent='${avatarText}';">` : 
+                        avatarText;
                     return `
                         <div class="chat-user-item" onclick="selectChatUser(${user.id}, '${escapeHtml(user.full_name)}', this)">
                             ${unreadCount > 0 ? `<span class="chat-user-unread">${unreadCount}</span>` : ''}
-                            <div class="chat-user-avatar">${avatarText}</div>
+                            <div class="chat-user-avatar">${avatarHTML}</div>
                             <div class="chat-user-info">
                                 <div class="chat-user-name">${escapeHtml(user.full_name)}</div>
                                 <div class="chat-user-last-message">${lastMessage ? escapeHtml(lastMessage.substring(0, 30)) + '...' : 'لا توجد رسائل'}</div>
@@ -7592,19 +7859,39 @@
             }
         }
         
-        function displayChatMessages(messages) {
+        async function displayChatMessages(messages) {
             const container = document.getElementById('chatMessages');
             if (!messages || messages.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 60px 20px; color: #667781;"><div style="font-size: 4rem; margin-bottom: 15px; opacity: 0.5;">💬</div><p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">لا توجد رسائل بعد</p><p style="font-size: 0.9rem; opacity: 0.7;">ابدأ المحادثة بإرسال رسالة</p></div>';
                 return;
             }
             
+            const uniqueUserIds = [...new Set(messages.map(m => m.sender_id))];
+            const userProfiles = {};
+            
+            await Promise.allSettled(uniqueUserIds.map(async (userId) => {
+                try {
+                    const profile = await supabaseRequest('user_profiles', 'GET', null, `?user_id=eq.${userId}`);
+                    if (profile && profile.length > 0 && profile[0].profile_picture) {
+                        userProfiles[userId] = profile[0].profile_picture;
+                    }
+                } catch (error) {
+                    console.warn('Error loading profile for user', userId, error);
+                }
+            }));
+            
+            const currentUserProfile = userProfiles[currentUserId] || null;
+            
             let lastDate = null;
             let lastSenderId = null;
             
             container.innerHTML = messages.map((msg, index) => {
                 const isSent = msg.sender_id === currentUserId;
+                const senderProfile = isSent ? currentUserProfile : (userProfiles[msg.sender_id] || null);
                 const avatarText = isSent ? (loggedInUser ? loggedInUser.charAt(0).toUpperCase() : 'أ') : (msg.sender_name ? msg.sender_name.charAt(0).toUpperCase() : '?');
+                const avatarHTML = senderProfile ? 
+                    `<img src="${escapeHtml(senderProfile)}" alt="${escapeHtml(isSent ? loggedInUser : msg.sender_name)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'; this.parentElement.textContent='${avatarText}';">` : 
+                    avatarText;
                 const messageDate = new Date(msg.created_at);
                 const messageTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                 const messageDateStr = messageDate.toLocaleDateString('en-US', { 
@@ -7635,20 +7922,29 @@
                     lastSenderId = msg.sender_id;
                 }
                 
-                const statusIcon = isSent ? (msg.is_read ? '<span class="message-status read">✓✓</span>' : '<span class="message-status">✓</span>') : '';
+                let statusIcon = '';
+                if (isSent) {
+                    if (msg.is_read) {
+                        statusIcon = '<span class="message-status read" title="مقروءة">✓✓</span>';
+                    } else if (msg.is_delivered) {
+                        statusIcon = '<span class="message-status delivered" title="وصلت">✓✓</span>';
+                    } else {
+                        statusIcon = '<span class="message-status sent" title="أرسلت">✓</span>';
+                    }
+                }
                 
                 return `
                     ${dateSeparator}
-                    <div class="chat-message ${isSent ? 'sent' : 'received'}" style="margin-bottom: ${showAvatar ? '8px' : '2px'};">
-                        ${!isSent && showAvatar ? `<div class="chat-message-avatar">${avatarText}</div>` : !isSent && !showSpacer ? '<div style="width: 32px; flex-shrink: 0;"></div>' : ''}
-                        <div class="chat-message-content">
-                            <p class="chat-message-text">${escapeHtml(msg.message)}</p>
-                            <div class="chat-message-time">
+                    <div class="chat-message ${isSent ? 'sent' : 'received'}" style="margin-bottom: ${showAvatar ? '12px' : '4px'}; width: 100%; display: flex; ${isSent ? 'justify-content: flex-end; padding-right: 0;' : 'justify-content: flex-start; padding-left: 0;'}">
+                        ${!isSent && showAvatar ? `<div class="chat-message-avatar" style="margin-left: 0; margin-right: 8px; flex-shrink: 0;">${avatarHTML}</div>` : !isSent && !showSpacer ? '<div style="width: 40px; flex-shrink: 0;"></div>' : ''}
+                        <div class="chat-message-content" style="position: relative; ${isSent ? 'margin-right: 0; margin-left: auto;' : 'margin-left: 0; margin-right: auto;'} max-width: 70%;">
+                            <p class="chat-message-text" style="margin: 0 0 4px 0; word-wrap: break-word; white-space: pre-wrap;">${escapeHtml(msg.message)}</p>
+                            <div class="chat-message-time" style="display: flex; align-items: center; gap: 4px; justify-content: ${isSent ? 'flex-end' : 'flex-start'}; font-size: 0.7rem; color: rgba(0,0,0,0.5); margin-top: 4px;">
                                 <span>${messageTime}</span>
                                 ${statusIcon}
                             </div>
                         </div>
-                        ${isSent && showAvatar ? `<div class="chat-message-avatar">${avatarText}</div>` : isSent && !showSpacer ? '<div style="width: 32px; flex-shrink: 0;"></div>' : ''}
+                        ${isSent && showAvatar ? `<div class="chat-message-avatar" style="margin-right: 0; margin-left: 8px; flex-shrink: 0;">${avatarHTML}</div>` : isSent && !showSpacer ? '<div style="width: 40px; flex-shrink: 0;"></div>' : ''}
                     </div>
                 `;
             }).join('');
@@ -7737,10 +8033,22 @@
                     receiver_id: parseInt(currentChatUserId),
                     receiver_name: receiver.full_name,
                     message: message,
-                    is_read: false
+                    is_read: false,
+                    is_delivered: false
                 };
                 
-                await supabaseRequest('messages', 'POST', messageData);
+                const result = await supabaseRequest('messages', 'POST', messageData);
+                
+                if (result && result.length > 0) {
+                    const messageId = result[0].id;
+                    setTimeout(async () => {
+                        try {
+                            await supabaseRequest('messages', 'PATCH', { is_delivered: true }, `?id=eq.${messageId}`);
+                        } catch (error) {
+                            console.warn('Error marking message as delivered:', error);
+                        }
+                    }, 1000);
+                }
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 
@@ -7765,7 +8073,18 @@
         
         async function markMessagesAsRead(userId) {
             try {
-                await supabaseRequest('messages', 'PATCH', { is_read: true }, `?receiver_id=eq.${currentUserId}&sender_id=eq.${userId}&is_read=eq.false`);
+                const unreadMessages = await supabaseRequest('messages', 'GET', null, `?receiver_id=eq.${currentUserId}&sender_id=eq.${userId}&is_read=eq.false`);
+                if (unreadMessages && Array.isArray(unreadMessages) && unreadMessages.length > 0) {
+                    const messageIds = unreadMessages.map(m => m.id);
+                    for (const msgId of messageIds) {
+                        try {
+                            await supabaseRequest('messages', 'PATCH', { is_read: true, is_delivered: true }, `?id=eq.${msgId}`);
+                        } catch (error) {
+                            console.warn('Error marking message as read:', error);
+                        }
+                    }
+                }
+                await loadChatMessages(userId);
                 await loadChatUsers();
                 updateUnreadMessagesCount();
             } catch (error) {
@@ -7810,7 +8129,7 @@
             
             if (unreadMessagesInterval) clearInterval(unreadMessagesInterval);
             unreadMessagesInterval = setInterval(() => {
-                if (isTabActive) {
+                if (isTabActive && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     updateUnreadMessagesCount();
                 }
             }, 1800000); 
@@ -7821,12 +8140,11 @@
         function startChatAutoUpdate() {
             if (chatUpdateInterval) clearInterval(chatUpdateInterval);
             chatUpdateInterval = setInterval(async () => {
-                
-                if (isTabActive && currentChatUserId && document.getElementById('chatWindow').classList.contains('active')) {
+                if (isTabActive && currentChatUserId && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     await loadChatMessages(currentChatUserId);
                     await loadChatUsers();
                 }
-            }, 300000); 
+            }, 1800000); 
         }
         
         function stopChatAutoUpdate() {
