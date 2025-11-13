@@ -5278,7 +5278,8 @@
                     type: type,
                     agent_id: recipientId,
                     agent_name: recipientName,
-                    customer_name: subject
+                    customer_name: subject,
+                    employee_name: loggedInUser || 'غير معروف'
                 };
                 await supabaseRequest('sent_messages', 'POST', messageData);
                 console.log('Sent message saved to Supabase');
@@ -6075,7 +6076,7 @@
                             title: `إرسال ${msg.type === 'customer' ? 'مشترك' : 'شكوى'}`,
                             agentName: msg.agent_name || 'غير معروف',
                             customerName: msg.customer_name || '',
-                            employee: msg.agent_name || 'غير معروف',
+                            employee: msg.employee_name || msg.agent_name || 'غير معروف',
                             time: msg.sent_at,
                             fullTime: new Date(msg.sent_at).toLocaleString('en-US'),
                             color: '#fbbf24'
