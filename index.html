@@ -250,6 +250,278 @@
                 top: 60px;
             }
         }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 15px 10px;
+            }
+            .sidebar.hidden ~ .main-content {
+                margin-right: 0;
+                width: 100%;
+            }
+            .top-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-header h2 {
+                font-size: 1.2rem;
+            }
+            .header-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .shift-display {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+            .card {
+                padding: 15px;
+            }
+            .card h3 {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-group .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px;
+            }
+            .toast {
+                min-width: 280px;
+                max-width: calc(100vw - 40px);
+            }
+            .toast-container {
+                left: 10px;
+                right: 10px;
+                top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+            .sidebar {
+                width: 100%;
+                max-width: 100%;
+            }
+            .main-content {
+                padding: 10px 8px;
+            }
+            .top-header {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+            .top-header h2 {
+                font-size: 1rem;
+            }
+            .shift-display {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+            .card {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+            .card h3 {
+                font-size: 0.95rem;
+                margin-bottom: 12px;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            .form-group label {
+                font-size: 0.85rem;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 8px 10px;
+                font-size: 16px;
+            }
+            .btn {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .sidebar-header h1 {
+                font-size: 1rem;
+            }
+            .nav-item {
+                padding: 10px 8px;
+                font-size: 0.75rem;
+            }
+            .nav-item-icon {
+                font-size: 1rem;
+                width: 20px;
+            }
+            .sidebar-toggle-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+            .stat-card {
+                padding: 12px;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            table th,
+            table td {
+                padding: 8px 6px;
+            }
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+            .toast {
+                min-width: calc(100vw - 20px);
+                max-width: calc(100vw - 20px);
+                padding: 12px 15px;
+            }
+            .toast-container {
+                left: 10px;
+                right: 10px;
+            }
+            #employeeAwardsList {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .employee-stat-item {
+                padding: 8px;
+                font-size: 0.7rem;
+            }
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            #profilePictureContainer {
+                width: 120px !important;
+                height: 120px !important;
+                font-size: 2rem !important;
+            }
+            .chat-window {
+                width: 100vw;
+                height: 100vh;
+                max-width: 100vw;
+                max-height: 100vh;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+            .chat-sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 2px solid var(--border-color);
+            }
+            .chat-messages-area {
+                height: calc(100vh - 200px);
+            }
+            .chat-input-area {
+                padding: 10px;
+            }
+            .login-container {
+                padding: 20px 15px;
+            }
+            .login-form {
+                padding: 20px 15px;
+            }
+            .bar-label {
+                min-width: 80px;
+                max-width: 80px;
+                font-size: 0.7rem;
+            }
+            .bar-value {
+                min-width: 40px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            body {
+                font-size: 13px;
+            }
+            .main-content {
+                padding: 8px 5px;
+            }
+            .card {
+                padding: 10px;
+            }
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+            .nav-item {
+                padding: 8px 6px;
+                font-size: 0.7rem;
+            }
+            .sidebar-header {
+                padding: 15px 10px 10px 10px;
+            }
+            .top-header {
+                padding: 10px;
+            }
+            .stat-card {
+                padding: 10px;
+            }
+            .stat-value {
+                font-size: 1.3rem;
+            }
+            table {
+                font-size: 0.7rem;
+            }
+            table th,
+            table td {
+                padding: 6px 4px;
+            }
+        }
+        
         .sidebar-toggle-btn:hover {
             background: var(--primary-hover);
             transform: scale(1.1);
@@ -389,6 +661,13 @@
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .employee-stat-item {
+                padding: 6px 8px;
+                font-size: 0.75rem;
             }
         }
         .btn {
@@ -1477,6 +1756,88 @@
                 border-left: none;
                 border-bottom: 2px solid var(--border-color);
             }
+            .chat-messages-area {
+                height: calc(100vh - 180px);
+            }
+            .chat-input-area {
+                padding: 8px;
+            }
+            .chat-user-item {
+                padding: 10px 8px;
+            }
+            .chat-message {
+                max-width: 85%;
+                padding: 8px 12px;
+            }
+            .chat-message-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .chat-message-content {
+                font-size: 0.85rem;
+            }
+            .chat-message-time {
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chat-message {
+                max-width: 90%;
+                padding: 6px 10px;
+            }
+            .chat-message-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .chat-message-content {
+                font-size: 0.8rem;
+            }
+            .chat-messages-header {
+                padding: 10px 12px;
+            }
+            .chat-user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+            .chat-user-name {
+                font-size: 0.85rem;
+            }
+            .chat-user-last-message {
+                font-size: 0.75rem;
+            }
+            .search-results {
+                max-height: 400px;
+            }
+            .search-result-item {
+                padding: 12px;
+            }
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: 5px auto;
+                padding: 12px;
+                max-height: 95vh;
+            }
+            .modal-header {
+                padding: 12px;
+            }
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+            .employee-of-week-banner {
+                padding: 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .employee-of-week-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
         }
         /* Charts Section */
         .charts-section {
@@ -1488,6 +1849,38 @@
         @media (max-width: 1024px) {
             .charts-section {
                 grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-info {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .shift-display {
+                width: 100%;
+                text-align: center;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn-group .btn {
+                width: 100%;
+            }
+            .table-container {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                min-width: 600px;
             }
         }
         .chart-card {
@@ -1691,6 +2084,61 @@
             .main-content {
                 margin-right: 0;
                 width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .agents-stats-table th,
+            .agents-stats-table td {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+            .login-card {
+                padding: 20px 15px;
+                margin: 10px;
+            }
+            .login-card h1 {
+                font-size: 1.5rem;
+            }
+            .employee-of-week-banner {
+                padding: 12px;
+            }
+            .employee-of-week-stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .employee-of-week-stat-item {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 15px 10px;
+            }
+            .login-card h1 {
+                font-size: 1.3rem;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 500px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                padding: 10px;
+            }
+            .top-header {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            .card {
+                padding: 12px;
             }
         }
     </style>
@@ -2214,6 +2662,16 @@
                             <div class="btn-group">
                                 <button class="btn btn-primary" onclick="saveProfile()">حفظ التغييرات</button>
                                 <button class="btn btn-secondary" onclick="loadProfile()">إعادة تحميل</button>
+                            </div>
+                        </div>
+                        
+                        <div style="width: 100%; max-width: 600px; margin-top: 30px; padding-top: 30px; border-top: 2px solid var(--border-color);">
+                            <h4 style="margin-bottom: 20px; color: var(--primary-color); display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.5rem;">🏆</span>
+                                <span>جوائز الموظف المثالي</span>
+                            </h4>
+                            <div id="employeeAwardsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                                <p style="text-align: center; color: var(--text-secondary); padding: 20px; grid-column: 1 / -1;">جاري تحميل الجوائز...</p>
                             </div>
                         </div>
                     </div>
@@ -7429,9 +7887,103 @@
                     document.getElementById('profilePicture').style.display = 'none';
                     document.getElementById('profileInitials').style.display = 'block';
                 }
+                
+                await loadEmployeeAwards();
             } catch (error) {
                 console.error('Error loading profile:', error);
                 showToast('حدث خطأ في تحميل الملف الشخصي', 'error');
+            }
+        }
+        
+        async function loadEmployeeAwards() {
+            try {
+                const awardsList = document.getElementById('employeeAwardsList');
+                if (!awardsList) return;
+                
+                const user = await supabaseRequest('users', 'GET', null, `?id=eq.${currentUserId}`);
+                if (!user || user.length === 0) {
+                    awardsList.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px; grid-column: 1 / -1;">لا توجد بيانات للمستخدم</p>';
+                    return;
+                }
+                
+                const fullName = (user[0].full_name || '').trim();
+                if (!fullName) {
+                    awardsList.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px; grid-column: 1 / -1;">لا توجد بيانات للمستخدم</p>';
+                    return;
+                }
+                
+                let allAwards = [];
+                let from = 0;
+                const batchSize = 1000;
+                let hasMore = true;
+                
+                while (hasMore) {
+                    const to = from + batchSize - 1;
+                    try {
+                        const batch = await supabaseRequest('employee_of_the_week', 'GET', null, `?employee_name=eq.${encodeURIComponent(fullName)}&order=week_start_date.desc`, {
+                            'Range': `${from}-${to}`
+                        });
+                        if (Array.isArray(batch) && batch.length > 0) {
+                            allAwards = allAwards.concat(batch);
+                            if (batch.length < batchSize) {
+                                hasMore = false;
+                            } else {
+                                from += batchSize;
+                            }
+                        } else {
+                            hasMore = false;
+                        }
+                    } catch (error) {
+                        console.warn('Error fetching awards batch:', error);
+                        hasMore = false;
+                    }
+                }
+                
+                if (allAwards.length === 0) {
+                    awardsList.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px; grid-column: 1 / -1;">لم تحصل على أي جائزة بعد</p>';
+                    return;
+                }
+                
+                awardsList.innerHTML = allAwards.map((award, index) => {
+                    const weekStart = award.week_start_date ? new Date(award.week_start_date) : null;
+                    const weekEnd = award.week_end_date ? new Date(award.week_end_date) : null;
+                    const weekStartStr = weekStart ? weekStart.toLocaleDateString('ar-EG') : 'غير محدد';
+                    const weekEndStr = weekEnd ? weekEnd.toLocaleDateString('ar-EG') : 'غير محدد';
+                    
+                    return `
+                        <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%;"></div>
+                            <div style="position: absolute; bottom: -30px; left: -30px; width: 100px; height: 100px; background: rgba(255, 255, 255, 0.15); border-radius: 50%;"></div>
+                            <div style="position: relative; z-index: 1;">
+                                <div style="font-size: 3rem; margin-bottom: 10px;">🏆</div>
+                                <div style="font-weight: 700; font-size: 1.1rem; color: #8B4513; margin-bottom: 8px;">الموظف المثالي</div>
+                                <div style="font-size: 0.85rem; color: #654321; margin-bottom: 12px; line-height: 1.4;">
+                                    ${weekStartStr}<br>إلى ${weekEndStr}
+                                </div>
+                                <div style="display: flex; justify-content: space-around; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(139, 69, 19, 0.3);">
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: #654321; opacity: 0.8;">المكالمات</div>
+                                        <div style="font-weight: 700; color: #8B4513; font-size: 1.1rem;">${award.total_calls || 0}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: #654321; opacity: 0.8;">المشتركين</div>
+                                        <div style="font-weight: 700; color: #8B4513; font-size: 1.1rem;">${award.total_customers || 0}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: #654321; opacity: 0.8;">النقاط</div>
+                                        <div style="font-weight: 700; color: #8B4513; font-size: 1.1rem;">${award.total_score || 0}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading employee awards:', error);
+                const awardsList = document.getElementById('employeeAwardsList');
+                if (awardsList) {
+                    awardsList.innerHTML = '<p style="text-align: center; color: var(--error-color); padding: 20px; grid-column: 1 / -1;">حدث خطأ أثناء تحميل الجوائز</p>';
+                }
             }
         }
         
