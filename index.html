@@ -6075,7 +6075,7 @@
                             title: `إرسال ${msg.type === 'customer' ? 'مشترك' : 'شكوى'}`,
                             agentName: msg.agent_name || 'غير معروف',
                             customerName: msg.customer_name || '',
-                            employee: loggedInUser,
+                            employee: msg.agent_name || 'غير معروف',
                             time: msg.sent_at,
                             fullTime: new Date(msg.sent_at).toLocaleString('en-US'),
                             color: '#fbbf24'
