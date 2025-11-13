@@ -2141,6 +2141,56 @@
                 padding: 12px;
             }
         }
+        
+        /* Report Option Cards Hover Effects */
+        .report-option-card:hover {
+            border-color: var(--primary-color) !important;
+            background: var(--primary-light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-md) !important;
+        }
+        .report-option-card input[type="checkbox"]:checked + div {
+            color: var(--primary-color);
+        }
+        .report-option-card input[type="checkbox"]:checked ~ div span:last-child {
+            color: var(--primary-color);
+        }
+        
+        /* Date Input Focus Effects */
+        #reportStartDate:focus,
+        #reportEndDate:focus {
+            border-color: var(--primary-color) !important;
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-light) !important;
+        }
+        
+        /* Responsive Design for Reports Tab */
+        @media (max-width: 768px) {
+            #reports .card {
+                padding: 15px;
+            }
+            #reportDateRangeSection {
+                grid-template-columns: 1fr !important;
+            }
+            .report-option-card {
+                min-width: 100% !important;
+            }
+        }
+        @media (max-width: 480px) {
+            #reports h2 {
+                font-size: 1.4rem !important;
+            }
+            #reports h3 {
+                font-size: 1.1rem !important;
+            }
+            .report-option-card {
+                padding: 12px !important;
+                gap: 10px !important;
+            }
+            .report-option-card span[style*="font-size: 1.3rem"] {
+                font-size: 1.1rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2579,49 +2629,114 @@
 
             <!-- Reports Tab -->
             <div id="reports" class="tab-content">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0;">📊 تصدير تقرير الإحصائيات</h3>
+                <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+                    <!-- Header Section -->
+                    <div class="card" style="margin-bottom: 25px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); color: white; border: none;">
+                        <div style="display: flex; align-items: center; gap: 15px; padding: 20px;">
+                            <div style="font-size: 3rem; line-height: 1;">📊</div>
+                            <div style="flex: 1;">
+                                <h2 style="margin: 0 0 8px 0; font-size: 1.8rem; font-weight: 700;">تصدير تقرير الإحصائيات</h2>
+                                <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">قم بتصدير تقارير شاملة ومفصلة عن المكالمات والمشتركين والإحصائيات</p>
+                            </div>
+                        </div>
                     </div>
+
                     <div id="reportsAlert"></div>
-                    <div class="form-group">
-                        <label for="reportStartDate">من تاريخ *</label>
-                        <input type="date" id="reportStartDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportEndDate">إلى تاريخ *</label>
-                        <input type="date" id="reportEndDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportIncludeAll">
-                            <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()">
-                            <span style="margin-right: 8px;">تقرير شامل (جميع البيانات بدون تحديد فترة)</span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 10px;">محتوى التقرير:</div>
-                        <div style="margin-top: 10px;">
-                            <label for="reportIncludeSummary" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeSummary" checked style="margin-left: 8px;">
-                                <span>ملخص الإحصائيات</span>
+
+                    <!-- Date Range Section -->
+                    <div class="card" style="margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border-light);">
+                            <span style="font-size: 1.5rem;">📅</span>
+                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">الفترة الزمنية</h3>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-right: 4px solid var(--primary-color);">
+                            <label for="reportIncludeAll" style="display: flex; align-items: center; cursor: pointer; font-weight: 600;">
+                                <input type="checkbox" id="reportIncludeAll" onchange="toggleReportDateRange()" style="width: 20px; height: 20px; margin-left: 12px; cursor: pointer; accent-color: var(--primary-color);">
+                                <span style="flex: 1;">تقرير شامل (جميع البيانات بدون تحديد فترة زمنية)</span>
                             </label>
-                            <label for="reportIncludeCalls" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCalls" checked style="margin-left: 8px;">
-                                <span>تفاصيل المكالمات</span>
+                            <p style="margin: 8px 0 0 32px; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.8;">سيتم تضمين جميع البيانات المتاحة في النظام</p>
+                        </div>
+                        <div id="reportDateRangeSection" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="reportStartDate" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
+                                    <span>📆</span>
+                                    <span>من تاريخ *</span>
+                                </label>
+                                <input type="date" id="reportStartDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; background: var(--input-bg); color: var(--text-primary); transition: all 0.3s ease;">
+                            </div>
+                            <div class="form-group">
+                                <label for="reportEndDate" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
+                                    <span>📆</span>
+                                    <span>إلى تاريخ *</span>
+                                </label>
+                                <input type="date" id="reportEndDate" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; background: var(--input-bg); color: var(--text-primary); transition: all 0.3s ease;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Content Section -->
+                    <div class="card" style="margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border-light);">
+                            <span style="font-size: 1.5rem;">📋</span>
+                            <h3 style="margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary-color);">محتوى التقرير</h3>
+                        </div>
+                        <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">اختر العناصر التي تريد تضمينها في التقرير:</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                            <label for="reportIncludeSummary" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
+                                <input type="checkbox" id="reportIncludeSummary" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                        <span style="font-size: 1.3rem;">📊</span>
+                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">ملخص الإحصائيات</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">إجمالي المكالمات، المشتركين، الشكاوى، والرسائل المرسلة</p>
+                                </div>
                             </label>
-                            <label for="reportIncludeCustomers" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCustomers" checked style="margin-left: 8px;">
-                                <span>تفاصيل المشتركين</span>
+                            <label for="reportIncludeCalls" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
+                                <input type="checkbox" id="reportIncludeCalls" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                        <span style="font-size: 1.3rem;">📞</span>
+                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">تفاصيل المكالمات</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">قائمة كاملة بجميع المكالمات مع التفاصيل الكاملة</p>
+                                </div>
                             </label>
-                            <label for="reportIncludeCharts" style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
-                                <input type="checkbox" id="reportIncludeCharts" checked style="margin-left: 8px;">
-                                <span>الرسوم البيانية والإحصائيات التفصيلية</span>
+                            <label for="reportIncludeCustomers" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
+                                <input type="checkbox" id="reportIncludeCustomers" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                        <span style="font-size: 1.3rem;">👥</span>
+                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">تفاصيل المشتركين</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">قائمة بجميع بيانات المشتركين المسجلين</p>
+                                </div>
+                            </label>
+                            <label for="reportIncludeCharts" class="report-option-card" style="display: flex; align-items: flex-start; gap: 15px; padding: 18px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: var(--card-bg);">
+                                <input type="checkbox" id="reportIncludeCharts" checked style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--primary-color); flex-shrink: 0;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                        <span style="font-size: 1.3rem;">📈</span>
+                                        <span style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;">الرسوم البيانية</span>
+                                    </div>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">الرسوم البيانية والإحصائيات التفصيلية</p>
+                                </div>
                             </label>
                         </div>
                     </div>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="generateReport()">📥 تصدير التقرير</button>
-                        <button class="btn btn-secondary" onclick="resetReportForm()">إعادة تعيين</button>
+
+                    <!-- Action Buttons Section -->
+                    <div class="card" style="background: var(--bg-secondary); border: 2px dashed var(--border-color);">
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px;">
+                            <button class="btn btn-primary" onclick="generateReport()" style="min-width: 200px; padding: 15px 30px; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px var(--shadow-md);">
+                                <span style="font-size: 1.3rem;">📥</span>
+                                <span>تصدير التقرير</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetReportForm()" style="min-width: 180px; padding: 15px 30px; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <span style="font-size: 1.2rem;">🔄</span>
+                                <span>إعادة تعيين</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3589,8 +3704,8 @@
                                 <td><strong>${usernameSafe}</strong></td>
                                 <td>${fullNameSafe}</td>
                                 <td><span style="color: ${user.role === 'admin' ? '#dc3545' : '#28a745'}; font-weight: 600;">${user.role === 'admin' ? 'مدير' : 'موظف'}</span></td>
-                                <td>${user.last_login ? new Date(user.last_login).toLocaleString('ar-EG') : 'لم يسجل دخول'}</td>
-                                <td>${user.created_at ? new Date(user.created_at).toLocaleString('ar-EG') : 'غير محدد'}</td>
+                                <td>${user.last_login ? new Date(user.last_login).toLocaleString('en-US') : 'لم يسجل دخول'}</td>
+                                <td>${user.created_at ? new Date(user.created_at).toLocaleString('en-US') : 'غير محدد'}</td>
                                 <td><span style="color: ${user.is_active ? '#28a745' : '#dc3545'}; font-weight: 600;">${user.is_active ? 'نشط' : 'معطل'}</span></td>
                                 <td>
                                     <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="openEditUserModal(${user.id}, '${usernameEscaped}', '${fullNameEscaped}', '${user.role}', ${user.is_active})">تعديل</button>
@@ -4130,7 +4245,7 @@
                 minute: '2-digit', 
                 second: '2-digit' 
             });
-            const date = now.toLocaleDateString('ar-EG');
+            const date = now.toLocaleDateString('en-US');
             document.getElementById('shiftDisplay').textContent = `${date} ${time} - ${shift}`;
         }
 
@@ -4192,7 +4307,7 @@
                 try {
                     const duplicate = await checkDuplicateCustomer(name, phone);
                     if (duplicate) {
-                        showAlert(alertDiv, `⚠️ هذا المشترك موجود مسبقاً في النظام!\n\nالاسم: ${duplicate.username}\nرقم الهاتف: ${duplicate.phone}\nالمنطقة: ${duplicate.region}\nالتاريخ: ${duplicate.date || duplicate.created_at ? new Date(duplicate.date || duplicate.created_at).toLocaleDateString('ar-EG') : 'غير محدد'}\n\nلا يمكن إضافة نفس المعلومات مرة أخرى.`, 'error');
+                        showAlert(alertDiv, `⚠️ هذا المشترك موجود مسبقاً في النظام!\n\nالاسم: ${duplicate.username}\nرقم الهاتف: ${duplicate.phone}\nالمنطقة: ${duplicate.region}\nالتاريخ: ${duplicate.date || duplicate.created_at ? new Date(duplicate.date || duplicate.created_at).toLocaleDateString('en-US') : 'غير محدد'}\n\nلا يمكن إضافة نفس المعلومات مرة أخرى.`, 'error');
                         return;
                     }
                 } catch (error) {
@@ -4366,7 +4481,7 @@
                 try {
                     const duplicate = await checkDuplicateCall(phone, name, details);
                     if (duplicate) {
-                        showAlert(alertDiv, `⚠️ هذه المكالمة موجودة مسبقاً في النظام!\n\nنوع المكالمة: ${duplicate.call_type}\nاسم المتصل: ${duplicate.name}\nرقم الهاتف: ${duplicate.phone}\nالتفاصيل: ${duplicate.details}\nالتاريخ: ${duplicate.created_at ? new Date(duplicate.created_at).toLocaleString('ar-EG') : 'غير محدد'}\n\nلا يمكن إضافة نفس المعلومات مرة أخرى.`, 'error');
+                        showAlert(alertDiv, `⚠️ هذه المكالمة موجودة مسبقاً في النظام!\n\nنوع المكالمة: ${duplicate.call_type}\nاسم المتصل: ${duplicate.name}\nرقم الهاتف: ${duplicate.phone}\nالتفاصيل: ${duplicate.details}\nالتاريخ: ${duplicate.created_at ? new Date(duplicate.created_at).toLocaleString('en-US') : 'غير محدد'}\n\nلا يمكن إضافة نفس المعلومات مرة أخرى.`, 'error');
                         return;
                     }
                 } catch (error) {
@@ -4381,7 +4496,7 @@
                 minute: '2-digit', 
                 second: '2-digit' 
             });
-            const date = now.toLocaleDateString('ar-EG');
+            const date = now.toLocaleDateString('en-US');
             const shift = getCurrentShift();
             const shiftAndTime = `${date} ${time} - ${shift}`;
 
@@ -5110,7 +5225,7 @@
             if (diffInSeconds < 86400) return `منذ ${Math.floor(diffInSeconds / 3600)} ساعة`;
             if (diffInSeconds < 604800) return `منذ ${Math.floor(diffInSeconds / 86400)} يوم`;
             if (diffInSeconds < 2592000) return `منذ ${Math.floor(diffInSeconds / 604800)} أسبوع`;
-            return past.toLocaleDateString('ar-EG', { 
+            return past.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric',
@@ -5608,7 +5723,7 @@
                         const weekEnd = employee.week_end_date ? new Date(employee.week_end_date) : null;
                         
                         if (weekStart && weekEnd) {
-                            const periodText = `من ${weekStart.toLocaleDateString('ar-EG')} إلى ${weekEnd.toLocaleDateString('ar-EG')}`;
+                            const periodText = `من ${weekStart.toLocaleDateString('en-US')} إلى ${weekEnd.toLocaleDateString('en-US')}`;
                             document.getElementById('employeeOfWeekPeriod').textContent = periodText;
                         } else {
                             document.getElementById('employeeOfWeekPeriod').textContent = '';
@@ -5972,7 +6087,7 @@
                     let lastSentDate = 'لا يوجد';
                     if (stats.lastSent) {
                         try {
-                            lastSentDate = new Date(stats.lastSent).toLocaleString('ar-EG');
+                            lastSentDate = new Date(stats.lastSent).toLocaleString('en-US');
                         } catch (e) {
                             lastSentDate = stats.lastSent;
                         }
@@ -6010,7 +6125,7 @@
                         employee: callEmployee,
                         department: callDepartment,
                         time: callDate,
-                        fullTime: new Date(callDate).toLocaleString('ar-EG'),
+                        fullTime: new Date(callDate).toLocaleString('en-US'),
                         color: callType === 'شكوى' || callType === 'ضعف بالخدمة' ? '#f87171' : '#60a5fa'
                     });
                 });
@@ -6036,7 +6151,7 @@
                         employee: customerEmployee,
                         agent: customerAgent,
                         time: customerDate,
-                        fullTime: new Date(customerDate).toLocaleString('ar-EG'),
+                        fullTime: new Date(customerDate).toLocaleString('en-US'),
                         color: '#4ade80'
                     });
                 });
@@ -6053,7 +6168,7 @@
                             customerName: msg.customer_name || '',
                             employee: loggedInUser,
                             time: msg.sent_at,
-                            fullTime: new Date(msg.sent_at).toLocaleString('ar-EG'),
+                            fullTime: new Date(msg.sent_at).toLocaleString('en-US'),
                             color: '#fbbf24'
                         });
                     });
@@ -6096,14 +6211,14 @@
             
             container.innerHTML = recentActivities.map((activity, index) => {
                 const timeAgoText = timeAgo(activity.time);
-                const fullTime = activity.fullTime || new Date(activity.time).toLocaleString('ar-EG');
+                const fullTime = activity.fullTime || new Date(activity.time).toLocaleString('en-US');
                 const activityDate = new Date(activity.time);
-                const dateText = activityDate.toLocaleDateString('ar-EG', { 
+                const dateText = activityDate.toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric' 
                 });
-                const timeText = activityDate.toLocaleTimeString('ar-EG', { 
+                const timeText = activityDate.toLocaleTimeString('en-US', { 
                     hour: '2-digit', 
                     minute: '2-digit' 
                 });
@@ -6198,7 +6313,7 @@
                     call.agent || '',
                     call.department || '',
                     call.shift_time || '',
-                    call.created_at ? new Date(call.created_at).toLocaleString('ar-EG') : ''
+                    call.created_at ? new Date(call.created_at).toLocaleString('en-US') : ''
                 ]);
                 
                 exportToExcel(headers, rows, 'المكالمات');
@@ -6227,7 +6342,7 @@
                     customer.notes || '',
                     customer.employee || '',
                     customer.agent || '',
-                    customer.created_at ? new Date(customer.created_at).toLocaleString('ar-EG') : ''
+                    customer.created_at ? new Date(customer.created_at).toLocaleString('en-US') : ''
                 ]);
                 
                 exportToExcel(headers, rows, 'المشتركين');
@@ -6359,21 +6474,21 @@
                 }
                 
                 const now = new Date();
-                const reportDate = now.toLocaleDateString('ar-EG');
-                const reportTime = now.toLocaleTimeString('ar-EG');
+                const reportDate = now.toLocaleDateString('en-US');
+                const reportTime = now.toLocaleTimeString('en-US');
                 
                 const headers = ['المحتوى', 'التفاصيل', 'القيمة'];
                 const rows = [];
                 
                 
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
-                rows.push(['📊 تقرير الإحصائيات الشامل', '', '']);
+                rows.push([' تقرير الإحصائيات ', '', '']);
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
                 rows.push(['', '', '']);
                 rows.push(['📅 تاريخ إنشاء التقرير', `${reportDate} ${reportTime}`, '']);
                 
                 if (!includeAll) {
-                    rows.push(['📆 الفترة المحددة', `من ${new Date(startDate).toLocaleDateString('ar-EG')} إلى ${new Date(endDate).toLocaleDateString('ar-EG')}`, '']);
+                    rows.push(['📆 الفترة المحددة', `من ${new Date(startDate).toLocaleDateString('en-US')} إلى ${new Date(endDate).toLocaleDateString('en-US')}`, '']);
                 } else {
                     rows.push(['📆 الفترة المحددة', 'جميع البيانات', '']);
                 }
@@ -6474,7 +6589,7 @@
                         call.details || '',
                         call.agent || '',
                             call.department || '',
-                        call.created_at ? new Date(call.created_at).toLocaleString('ar-EG') : ''
+                        call.created_at ? new Date(call.created_at).toLocaleString('en-US') : ''
                     ]);
                 });
                 
@@ -6495,7 +6610,7 @@
                             customer.region || '',
                             customer.closest_point || '',
                             customer.phone || '',
-                            customer.date || (customer.created_at ? new Date(customer.created_at).toLocaleDateString('ar-EG') : ''),
+                            customer.date || (customer.created_at ? new Date(customer.created_at).toLocaleDateString('en-US') : ''),
                             customer.notes || '',
                             customer.employee || '',
                             customer.agent || ''
@@ -6510,7 +6625,7 @@
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
                 
                 const fileName = includeAll 
-                    ? `تقرير_شامل_${reportDate.replace(/\//g, '_')}`
+                    ? `${reportDate.replace(/\//g, '_')}`
                     : `تقرير_${startDate.replace(/-/g, '_')}_${endDate.replace(/-/g, '_')}`;
                 
                 exportToExcel(headers, rows, fileName);
@@ -6686,10 +6801,10 @@
                     }
                 }
                 
-                const reportDate = now.toLocaleDateString('ar-EG');
-                const reportTime = now.toLocaleTimeString('ar-EG');
-                const weekStart = startDate.toLocaleDateString('ar-EG');
-                const weekEnd = new Date(endDate.getTime() - 1).toLocaleDateString('ar-EG');
+                const reportDate = now.toLocaleDateString('en-US');
+                const reportTime = now.toLocaleTimeString('en-US');
+                const weekStart = startDate.toLocaleDateString('en-US');
+                const weekEnd = new Date(endDate.getTime() - 1).toLocaleDateString('en-US');
                 
                 const headers = ['نوع البيانات', 'التفاصيل', 'العدد'];
                 const rows = [
@@ -6745,7 +6860,7 @@
                         call.phone || '',
                         call.details || '',
                         call.agent || '',
-                        call.created_at ? new Date(call.created_at).toLocaleString('ar-EG') : ''
+                        call.created_at ? new Date(call.created_at).toLocaleString('en-US') : ''
                     ]);
                 });
                 
@@ -6758,7 +6873,7 @@
                         customer.region || '',
                         customer.closest_point || '',
                         customer.phone || '',
-                        customer.date || customer.created_at ? new Date(customer.date || customer.created_at).toLocaleDateString('ar-EG') : '',
+                        customer.date || customer.created_at ? new Date(customer.date || customer.created_at).toLocaleDateString('en-US') : '',
                         customer.employee || '',
                         customer.agent || ''
                     ]);
@@ -6804,7 +6919,7 @@
                 const periodName = period === 'daily' ? 'يومية' : period === 'weekly' ? 'أسبوعية' : 'شهرية';
                 const headers = ['نوع البيانات', 'التفاصيل', 'العدد'];
                 const rows = [
-                    [`تقرير إحصائيات ${periodName}`, `من ${startDate.toLocaleDateString('ar-EG')} إلى ${endDate.toLocaleDateString('ar-EG')}`, ''],
+                    [`تقرير إحصائيات ${periodName}`, `من ${startDate.toLocaleDateString('en-US')} إلى ${endDate.toLocaleDateString('en-US')}`, ''],
                     ['', '', ''],
                     ['إجمالي المكالمات', '', calls.length],
                     ['إجمالي الشكاوى', '', calls.filter(c => c.call_type === 'شكوى' || c.call_type === 'ضعف بالخدمة').length],
@@ -6956,7 +7071,7 @@
                         <td>${escapeHtml(call.phone || '')}</td>
                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml((call.details || '').substring(0, 50))}${(call.details || '').length > 50 ? '...' : ''}</td>
                         <td>${escapeHtml(call.agent || '')}</td>
-                        <td>${call.created_at ? new Date(call.created_at).toLocaleString('ar-EG') : ''}</td>
+                        <td>${call.created_at ? new Date(call.created_at).toLocaleString('en-US') : ''}</td>
                         <td>
                             <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="showCallDetailsByIndex(${index})">عرض التفاصيل</button>
                         </td>
@@ -7013,7 +7128,7 @@
                         </div>
                         <div style="margin-bottom: 15px;">
                             <strong style="color: var(--text-primary);">تاريخ الإنشاء:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${call.created_at ? new Date(call.created_at).toLocaleString('ar-EG') : 'غير محدد'}</div>
+                            <div style="margin-top: 5px; color: var(--text-secondary);">${call.created_at ? new Date(call.created_at).toLocaleString('en-US') : 'غير محدد'}</div>
                         </div>
                     </div>
                 `;
@@ -7572,8 +7687,8 @@
                 const isSent = msg.sender_id === currentUserId;
                 const avatarText = isSent ? (loggedInUser ? loggedInUser.charAt(0).toUpperCase() : 'أ') : (msg.sender_name ? msg.sender_name.charAt(0).toUpperCase() : '?');
                 const messageDate = new Date(msg.created_at);
-                const messageTime = messageDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-                const messageDateStr = messageDate.toLocaleDateString('ar-EG', { 
+                const messageTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const messageDateStr = messageDate.toLocaleDateString('en-US', { 
                     weekday: 'long',
                     year: 'numeric', 
                     month: 'long', 
@@ -7947,8 +8062,8 @@
                 awardsList.innerHTML = allAwards.map((award, index) => {
                     const weekStart = award.week_start_date ? new Date(award.week_start_date) : null;
                     const weekEnd = award.week_end_date ? new Date(award.week_end_date) : null;
-                    const weekStartStr = weekStart ? weekStart.toLocaleDateString('ar-EG') : 'غير محدد';
-                    const weekEndStr = weekEnd ? weekEnd.toLocaleDateString('ar-EG') : 'غير محدد';
+                    const weekStartStr = weekStart ? weekStart.toLocaleDateString('en-US') : 'غير محدد';
+                    const weekEndStr = weekEnd ? weekEnd.toLocaleDateString('en-US') : 'غير محدد';
                     
                     return `
                         <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3);">
@@ -8094,10 +8209,10 @@
             }
             
             container.innerHTML = notes.map(note => {
-                const createdDate = new Date(note.created_at).toLocaleDateString('ar-EG');
-                const createdTime = new Date(note.created_at).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-                const updatedDate = note.updated_at ? new Date(note.updated_at).toLocaleDateString('ar-EG') : null;
-                const updatedTime = note.updated_at ? new Date(note.updated_at).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : null;
+                const createdDate = new Date(note.created_at).toLocaleDateString('en-US');
+                const createdTime = new Date(note.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const updatedDate = note.updated_at ? new Date(note.updated_at).toLocaleDateString('en-US') : null;
+                const updatedTime = note.updated_at ? new Date(note.updated_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : null;
                 const isUpdated = updatedDate && (updatedDate !== createdDate || updatedTime !== createdTime);
                 
                 
