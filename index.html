@@ -4452,7 +4452,9 @@
                         setTimeout(() => {
                             sendComplaintToDepartment(department, callData);
                             if (isOnline) {
-                                saveSentMessageToSupabase('complaint', department.id, department.name, callData.name);
+                                const employeeName = callData.agent || loggedInUser || 'غير معروف';
+                                console.log('Saving complaint - loggedInUser:', loggedInUser, 'callData.agent:', callData.agent, 'Using:', employeeName);
+                                saveSentMessageToSupabase('complaint', department.id, department.name, callData.name, employeeName);
                             }
                         }, 500);
                     }
@@ -5272,19 +5274,25 @@
             }
         }
 
-        async function saveSentMessageToSupabase(type, recipientId, recipientName, subject) {
+        async function saveSentMessageToSupabase(type, recipientId, recipientName, subject, employeeNameOverride = null) {
             try {
+                const employeeName = employeeNameOverride || loggedInUser || 'غير معروف';
                 const messageData = {
                     type: type,
                     agent_id: recipientId,
                     agent_name: recipientName,
                     customer_name: subject,
-                    employee_name: loggedInUser || 'غير معروف'
+                    employee_name: employeeName
                 };
-                await supabaseRequest('sent_messages', 'POST', messageData);
-                console.log('Sent message saved to Supabase');
+                console.log('Saving sent message with employee_name:', employeeName, 'loggedInUser:', loggedInUser, 'Full data:', messageData);
+                const result = await supabaseRequest('sent_messages', 'POST', messageData);
+                console.log('Sent message saved to Supabase:', result);
+                if (result && Array.isArray(result) && result.length > 0) {
+                    console.log('Saved message employee_name:', result[0].employee_name);
+                }
             } catch (error) {
                 console.error('Error saving sent message:', error);
+                console.error('Error details:', error.message, error.stack);
             }
         }
         
@@ -6076,7 +6084,7 @@
                             title: `إرسال ${msg.type === 'customer' ? 'مشترك' : 'شكوى'}`,
                             agentName: msg.agent_name || 'غير معروف',
                             customerName: msg.customer_name || '',
-                            employee: msg.employee_name || msg.agent_name || 'غير معروف',
+                            employee: msg.employee_name || 'غير محدد',
                             time: msg.sent_at,
                             fullTime: new Date(msg.sent_at).toLocaleString('en-US'),
                             color: '#fbbf24'
@@ -6157,6 +6165,7 @@
                     detailsHTML = `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light);">
                             ${activity.customerName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>👤</span><span>${activity.customerName}</span></div>` : ''}
+                            ${activity.agentName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>📤</span><span>إلى: ${activity.agentName}</span></div>` : ''}
                 </div>
                     `;
                 }
@@ -6181,12 +6190,12 @@
                                     </div>
                                 </div>
                                 <div style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 6px;">
-                                    ${activity.name || activity.agentName || ''}
+                                    ${activity.type === 'message' ? (activity.customerName || '') : (activity.name || activity.agentName || '')}
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;">
-                                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary);">
-                                        <span style="color: var(--primary-color);">👤</span>
-                                        <span>${activity.employee || 'غير معروف'}</span>
+                                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); background: var(--bg-tertiary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                                        <span style="color: var(--primary-color); font-weight: 600;">👤 الموظف:</span>
+                                        <span style="font-weight: 600; color: var(--text-primary);">${activity.employee || 'غير معروف'}</span>
                                     </div>
                                     ${activity.department ? `<div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary);"><span>🏢</span><span>${activity.department}</span></div>` : ''}
                                 </div>
