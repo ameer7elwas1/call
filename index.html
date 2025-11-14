@@ -681,7 +681,17 @@
             border: 3px solid #801c32;
             background: linear-gradient(135deg, #ffffff 0%, rgba(128, 28, 50, 0.02) 100%);
             font-weight: 600;
-            color: #801c32;
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] #selectAgent,
+        [data-theme="dark"] #selectDepartment {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(128, 28, 50, 0.1) 100%);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] #selectAgent option,
+        [data-theme="dark"] #selectDepartment option {
+            background: var(--card-bg);
+            color: var(--text-primary);
         }
         #selectAgent:focus,
         #selectDepartment:focus {
@@ -2461,11 +2471,11 @@
                             <input type="date" id="txtDate">
                         </div>
                         <div class="form-group" style="background: linear-gradient(135deg, rgba(128, 28, 50, 0.05) 0%, rgba(128, 28, 50, 0.02) 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
-                            <label for="selectAgent">اختر الوكيل *</label>
+                            <label for="selectAgent" style="color: var(--text-primary);">اختر الوكيل *</label>
                             <select id="selectAgent" required style="font-weight: 600;">
                                 <option value="">اختر الوكيل</option>
                             </select>
-                            <small style="color: #801c32; font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
+                            <small style="color: var(--text-primary); font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
                                 ⚠️ سيتم إرسال بيانات المشترك تلقائياً للوكيل المحدد عبر واتساب
                             </small>
                         </div>
@@ -2493,7 +2503,7 @@
                             <input type="text" id="txtSearch" placeholder="ابحث في المشتركين (اسم، رقم هاتف، منطقة...)" onkeyup="filterCustomers()">
                         </div>
                         <div class="btn-group" style="margin-bottom: 20px;">
-                            <button class="btn btn-primary" onclick="loadAllCustomers()">عرض جميع المشتركين</button>
+                            <button class="btn btn-primary" onclick="loadAllCustomers()" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-color: #28a745; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">عرض جميع المشتركين</button>
                             <button class="btn btn-secondary" onclick="searchCustomers()">بحث متقدم</button>
                         </div>
                         <div class="table-container">
@@ -2559,12 +2569,12 @@
                         <label for="txtIssueDetails">تفاصيل المكالمة *</label>
                         <textarea id="txtIssueDetails" placeholder="أدخل تفاصيل المكالمة"></textarea>
                     </div>
-                    <div class="form-group" style="background: linear-gradient(135deg, rgba(128, 28, 50, 0.05) 0%, rgba(128, 28, 50, 0.02) 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
-                        <label for="selectDepartment">اختر القسم (للشكاوى والمشاكل)</label>
+                    <div class="form-group" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
+                        <label for="selectDepartment" style="color: var(--text-primary);">اختر القسم (للشكاوى والمشاكل)</label>
                         <select id="selectDepartment" style="font-weight: 600;">
                             <option value="">لا يوجد</option>
                         </select>
-                        <small style="color: #801c32; font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
+                        <small style="color: var(--text-primary); font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
                             ⚠️ يتم إرسال الشكاوى تلقائياً للقسم المختار عبر واتساب
                         </small>
                     </div>
@@ -2573,7 +2583,7 @@
                         <button class="btn btn-secondary" onclick="clearCallForm()">مسح الحقول</button>
                     </div>
                     <div class="btn-group" style="margin-top: 20px;">
-                        <button class="btn btn-primary" onclick="loadAllCalls()">عرض جميع المكالمات</button>
+                        <button class="btn btn-primary" onclick="loadAllCalls()" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-color: #3b82f6; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">عرض جميع المكالمات</button>
                     </div>
                     <div class="form-group" style="margin-top: 15px;">
                         <label for="callSearchInput">بحث في المكالمات</label>
@@ -3163,23 +3173,21 @@
         const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
-        // WhatsApp variables for sending functions (fallback to wa.me)
         let WHATSAPP_SERVER_URL = null;
         let useWhatsAppAPI = false;
         
         const dataCache = {
-            calls: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
-            customers: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
+            calls: { data: null, timestamp: 0, ttl: 14400000 }, 
+            customers: { data: null, timestamp: 0, ttl: 14400000 }, 
             users: { data: null, timestamp: 0, ttl: 28800000 },
             allowedUsers: { data: null, timestamp: 0, ttl: 28800000 },
             agents: { data: null, timestamp: 0, ttl: 28800000 },
             departments: { data: null, timestamp: 0, ttl: 28800000 },
-            sentMessages: { data: null, timestamp: 0, ttl: 7200000 }, // ساعتان بدلاً من 1
-            messages: { data: null, timestamp: 0, ttl: 300000 }, // 5 دقائق بدلاً من 1
-            userProfiles: { data: null, timestamp: 0, ttl: 7200000 } // ساعتان بدلاً من 1
+            sentMessages: { data: null, timestamp: 0, ttl: 7200000 }, 
+            messages: { data: null, timestamp: 0, ttl: 300000 },
+            userProfiles: { data: null, timestamp: 0, ttl: 7200000 } 
         };
         
-        // قائمة الموظفين المستبعدين من الإحصائيات والعروض
         const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة'];
         
         let isTabActive = true;
@@ -3309,7 +3317,7 @@
         let clockInterval = null;
         let agents = [];
         let departments = [];
-        let employeeNameMap = {}; // خريطة لتوحيد أسماء الموظفين (الاسم القديم -> الاسم الجديد)
+        let employeeNameMap = {};
         let currentCustomerData = null;
         let statistics = {
             calls: [],
@@ -3418,7 +3426,7 @@
                 loadAgents(),
                 loadDepartments(),
                 isOnline ? syncOfflineData() : Promise.resolve(),
-                updateEmployeeNameMap() // تحديث خريطة الأسماء عند تحميل الصفحة
+                updateEmployeeNameMap()
             ]).catch(err => {
                 console.error('Error loading initial data:', err);
             });
@@ -3448,19 +3456,17 @@
                 txtCallName.addEventListener('blur', () => validateInput(txtCallName, 'name'));
             }
             
-            // تحديث موظف الأسبوع مرة واحدة يومياً (24 ساعة) بدلاً من كل 12 ساعة
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await updateEmployeeOfTheWeek();
                 }
-            }, 86400000); // 24 ساعة
+            }, 86400000);
             
-            // تحديث الإحصائيات كل 6 ساعات بدلاً من 4 ساعات
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 21600000); // 6 ساعات
+            }, 21600000);
         });
 
         async function handleLogin() {
@@ -3501,7 +3507,6 @@
                         
                         showMainApp();
                         
-                        // تحديث خريطة أسماء الموظفين بعد تسجيل الدخول
                         updateEmployeeNameMap();
                         
                         loadUserProfileForSidebar();
@@ -3795,21 +3800,16 @@
                     users.forEach(user => {
                         if (user.full_name) {
                             const currentName = user.full_name.trim();
-                            // ربط الاسم الحالي بجميع الأسماء المحتملة
                             employeeNameMap[currentName] = currentName;
                             
-                            // ربط username بالاسم الحالي إذا كان مختلفاً
                             if (user.username && user.username.trim() !== currentName) {
                                 employeeNameMap[user.username.trim()] = currentName;
                             }
                             
-                            // البحث في البيانات القديمة عن أسماء مشابهة وربطها
-                            // هذا يساعد في توحيد الأسماء القديمة مع الجديدة
                             if (callsData && callsData.length > 0) {
                                 callsData.forEach(call => {
                                     const oldName = (call.agent || '').trim();
                                     if (oldName && oldName !== currentName) {
-                                        // إذا كان الاسم القديم يحتوي على جزء من الاسم الجديد أو العكس
                                         if (oldName.includes(currentName) || currentName.includes(oldName) || 
                                             (user.username && oldName.includes(user.username))) {
                                             employeeNameMap[oldName] = currentName;
@@ -3845,17 +3845,15 @@
         function getUnifiedEmployeeName(oldName) {
             if (!oldName || typeof oldName !== 'string') return oldName || 'غير معروف';
             const trimmed = oldName.trim();
-            // البحث في الخريطة عن الاسم الموحد
             if (employeeNameMap[trimmed]) {
                 return employeeNameMap[trimmed];
             }
-            // إذا لم نجد، نبحث عن تطابق جزئي (للتعامل مع الأسماء القديمة)
             for (const [old, current] of Object.entries(employeeNameMap)) {
                 if (old.includes(trimmed) || trimmed.includes(old)) {
                     return current;
                 }
             }
-            return trimmed; // إرجاع الاسم الأصلي إذا لم نجد تطابق
+            return trimmed;
         }
         
         async function loadUsers() {
@@ -3933,7 +3931,6 @@
                 }
                 
                 displayUsers(filteredUsers);
-                // تحديث خريطة أسماء الموظفين بعد تحميل المستخدمين
                 await updateEmployeeNameMap();
             } catch (error) {
                 console.error('Error loading users:', error);
@@ -4371,7 +4368,8 @@
                     if (!callsByEmployee[emp]) {
                         callsByEmployee[emp] = {
                             total: 0,
-                            today: 0
+                            today: 0,
+                            customers: 0
                         };
                     }
                     callsByEmployee[emp].total++;
@@ -4383,6 +4381,21 @@
                             callsByEmployee[emp].today++;
                         }
                     }
+                }
+            });
+            
+            customersData.forEach(customer => {
+                const oldEmpName = customer.employee || 'غير محدد';
+                const emp = getUnifiedEmployeeName(oldEmpName);
+                if (emp && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                    if (!callsByEmployee[emp]) {
+                        callsByEmployee[emp] = {
+                            total: 0,
+                            today: 0,
+                            customers: 0
+                        };
+                    }
+                    callsByEmployee[emp].customers++;
                 }
             });
             
@@ -4434,47 +4447,268 @@
                             </div>
                         </div>
                     </div>
-                    <div class="chart-card">
-                        <h4>المكالمات حسب الموظف (${periodNameSafe})</h4>
-                        <div class="chart-container">
-                            <div class="table-container" style="margin-top: 15px;">
-                                <table class="agents-stats-table" style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>اسم الموظف</th>
-                                            <th>إجمالي المكالمات</th>
-                                            <th>المكالمات اليومية</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total).map(([emp, data]) => {
-                                            const empSafe = escapeHtml(emp);
+                    ${(() => {
+                        const sortedEmployees = Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total);
+                        const topEmployee = sortedEmployees[0];
+                        if (topEmployee && topEmployee[1].total > 0) {
+                            const topEmpName = escapeHtml(topEmployee[0]);
+                            const topEmpData = topEmployee[1];
                                             return `
-                                            <tr>
-                                                <td><strong>${empSafe}</strong></td>
-                                                <td><strong style="color: var(--primary-color);">${data.total}</strong></td>
-                                                <td><strong style="color: #28a745;">${data.today}</strong></td>
-                                            </tr>
-                                        `;
-                                        }).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="bar-chart" style="margin-top: 20px;">
-                                ${Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total).map(([emp, data]) => {
-                                    const maxCount = Math.max(...Object.values(callsByEmployee).map(d => d.total));
-                                    const empSafe = escapeHtml(emp);
-                                    return `
-                                    <div class="bar-item">
-                                        <div class="bar-label">${empSafe}</div>
-                                        <div class="bar-wrapper">
-                                            <div class="bar-fill" style="width: ${maxCount > 0 ? (data.total / maxCount) * 100 : 0}%;">${data.total}</div>
+                                <div class="employee-of-week-banner" style="margin-bottom: 30px; padding: 25px 30px;">
+                                    <div class="employee-of-week-content">
+                                        <div class="employee-of-week-icon" style="font-size: 3.5rem;">🏆</div>
+                                        <div class="employee-of-week-info" style="flex: 1;">
+                                            <div class="employee-of-week-label" style="font-size: 0.85rem; margin-bottom: 8px;">أعلى موظف في عدد المكالمات (${periodNameSafe})</div>
+                                            <div class="employee-of-week-name" style="font-size: 1.8rem; margin-bottom: 15px;">${topEmpName}</div>
+                                            <div class="employee-of-week-stats" style="gap: 15px;">
+                                                <span class="employee-stat-item" style="font-size: 0.95rem; padding: 8px 16px;">
+                                                    <span class="stat-icon" style="font-size: 1.1rem;">📞</span>
+                                                    <span style="font-weight: 700; font-size: 1.1rem;">${topEmpData.total}</span> مكالمة إجمالية
+                                                </span>
+                                                <span class="employee-stat-item" style="font-size: 0.95rem; padding: 8px 16px;">
+                                                    <span class="stat-icon" style="font-size: 1.1rem;">📅</span>
+                                                    <span style="font-weight: 700; font-size: 1.1rem;">${topEmpData.today}</span> مكالمة اليوم
+                                                </span>
+                                                <span class="employee-stat-item" style="font-size: 0.95rem; padding: 8px 16px;">
+                                                    <span class="stat-icon" style="font-size: 1.1rem;">👥</span>
+                                                    <span style="font-weight: 700; font-size: 1.1rem;">${topEmpData.customers || 0}</span> مشترك جديد
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="bar-value">${data.total}</div>
+                                        <div class="employee-of-week-badge" style="font-size: 3rem;">👑</div>
+                                    </div>
+                                    <div class="employee-of-week-shine"></div>
+                                </div>
+                            `;
+                        }
+                        return '';
+                    })()}
+                    
+                    <div class="chart-card" style="background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
+                        <div style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid var(--border-light);">
+                            <h4 style="
+                                font-size: 1.5rem;
+                                margin: 0;
+                                color: var(--text-primary);
+                                font-weight: 800;
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                            ">
+                                <span style="font-size: 2rem;">📊</span>
+                                <span>المكالمات حسب الموظف (${periodNameSafe})</span>
+                            </h4>
+                            <p style="
+                                margin: 10px 0 0 0;
+                                font-size: 0.9rem;
+                                color: var(--text-secondary);
+                                font-weight: 500;
+                            ">ترتيب الموظفين حسب عدد المكالمات</p>
+                            </div>
+                        
+                        <div class="chart-container">
+                            ${Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total).length > 0 ? `
+                                <div style="display: grid; gap: 15px;">
+                                    ${Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total).map(([emp, data], index) => {
+                                    const empSafe = escapeHtml(emp);
+                                        const maxCount = Object.entries(callsByEmployee).length > 0 ? Math.max(...Object.values(callsByEmployee).map(d => d.total)) : 1;
+                                        const percentage = maxCount > 0 ? (data.total / maxCount) * 100 : 0;
+                                        const rank = index + 1;
+                                        
+                                        let rankColor = '';
+                                        let rankBadge = '';
+                                        let cardBg = 'var(--card-bg)';
+                                        let borderColor = 'var(--border-color)';
+                                        
+                                        if (rank === 1) {
+                                            rankColor = '#FFD700';
+                                            rankBadge = '<span style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #8B4513; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);">🥇</span>';
+                                            cardBg = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%)';
+                                            borderColor = '#FFD700';
+                                        } else if (rank === 2) {
+                                            rankColor = '#C0C0C0';
+                                            rankBadge = '<span style="background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%); color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(192, 192, 192, 0.4);">🥈</span>';
+                                            cardBg = 'linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(160, 160, 160, 0.05) 100%)';
+                                            borderColor = '#C0C0C0';
+                                        } else if (rank === 3) {
+                                            rankColor = '#CD7F32';
+                                            rankBadge = '<span style="background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%); color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(205, 127, 50, 0.4);">🥉</span>';
+                                            cardBg = 'linear-gradient(135deg, rgba(205, 127, 50, 0.1) 0%, rgba(160, 82, 45, 0.05) 100%)';
+                                            borderColor = '#CD7F32';
+                                        } else {
+                                            rankColor = 'var(--primary-color)';
+                                            rankBadge = `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin-left: 10px;">#${rank}</span>`;
+                                        }
+                                        
+                                        const barColor = rank === 1 ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' :
+                                                         rank === 2 ? 'linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%)' :
+                                                         rank === 3 ? 'linear-gradient(135deg, #CD7F32 0%, #A0522D 100%)' :
+                                                         'linear-gradient(135deg, var(--primary-color) 0%, #4a90e2 100%)';
+                                        
+                                    return `
+                                            <div style="
+                                                background: ${cardBg};
+                                                border: 2px solid ${borderColor};
+                                                border-radius: 15px;
+                                                padding: 20px;
+                                                transition: all 0.3s ease;
+                                                box-shadow: ${rank <= 3 ? '0 4px 12px rgba(0, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.08)'};
+                                            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 16px rgba(0, 0, 0, 0.15)';" 
+                                               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${rank <= 3 ? '0 4px 12px rgba(0, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.08)'}';">
+                                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+                                                    <div style="display: flex; align-items: center; flex: 1; min-width: 200px;">
+                                                        ${rankBadge}
+                                                        <div>
+                                                            <div style="
+                                                                font-weight: ${rank <= 3 ? '700' : '600'};
+                                                                font-size: 1.1rem;
+                                                                color: ${rank <= 3 ? rankColor : 'var(--text-primary)'};
+                                                                margin-bottom: 4px;
+                                                            ">${empSafe}</div>
+                                                            ${data.today > 0 ? `
+                                                                <div style="
+                                                                    display: inline-block;
+                                                                    background: rgba(40, 167, 69, 0.1);
+                                                                    color: #28a745;
+                                                                    padding: 4px 10px;
+                                                                    border-radius: 8px;
+                                                                    font-size: 0.8rem;
+                                                                    font-weight: 600;
+                                                                ">
+                                                                    📞 ${data.today} مكالمة اليوم
+                                        </div>
+                                                            ` : ''}
+                                                        </div>
+                                                    </div>
+                                                    <div style="
+                                                        background: ${rank <= 3 ? 'rgba(255, 215, 0, 0.15)' : 'var(--bg-tertiary)'};
+                                                        border-radius: 12px;
+                                                        padding: 12px 20px;
+                                                        text-align: center;
+                                                        min-width: 120px;
+                                                    ">
+                                                        <div style="
+                                                            font-size: 2rem;
+                                                            font-weight: 800;
+                                                            color: ${rank <= 3 ? rankColor : 'var(--primary-color)'};
+                                                            margin-bottom: 4px;
+                                                        ">${data.total}</div>
+                                                        <div style="
+                                                            font-size: 0.85rem;
+                                                            color: var(--text-secondary);
+                                                            font-weight: 600;
+                                                        ">مكالمة إجمالية</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style="
+                                                    background: var(--bg-secondary);
+                                                    height: 18px;
+                                                    border-radius: 10px;
+                                                    overflow: hidden;
+                                                    margin-bottom: 12px;
+                                                    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+                                                    position: relative;
+                                                ">
+                                                    <div style="
+                                                        background: ${barColor};
+                                                        height: 100%;
+                                                        width: ${percentage}%;
+                                                        border-radius: 10px;
+                                                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                                                        transition: width 0.5s ease;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: flex-end;
+                                                        padding-right: 10px;
+                                                    ">
+                                                        ${percentage > 20 ? `<span style="color: white; font-size: 0.75rem; font-weight: 700;">${Math.round(percentage)}%</span>` : ''}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style="
+                                                    display: flex;
+                                                    gap: 20px;
+                                                    flex-wrap: wrap;
+                                                    font-size: 0.9rem;
+                                                    padding-top: 10px;
+                                                    border-top: 1px solid var(--border-light);
+                                                ">
+                                                    <div style="
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 8px;
+                                                        color: var(--text-primary);
+                                                    ">
+                                                        <span style="
+                                                            background: var(--primary-color);
+                                                            color: white;
+                                                            width: 32px;
+                                                            height: 32px;
+                                                            border-radius: 50%;
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: center;
+                                                            font-size: 1rem;
+                                                            font-weight: 700;
+                                                        ">${data.total}</span>
+                                                        <span><strong>إجمالي المكالمات</strong></span>
+                                                    </div>
+                                                    <div style="
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 8px;
+                                                        color: var(--text-primary);
+                                                    ">
+                                                        <span style="
+                                                            background: #28a745;
+                                                            color: white;
+                                                            width: 32px;
+                                                            height: 32px;
+                                                            border-radius: 50%;
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: center;
+                                                            font-size: 1rem;
+                                                            font-weight: 700;
+                                                        ">${data.today}</span>
+                                                        <span><strong>المكالمات اليومية</strong></span>
+                                                    </div>
+                                                    <div style="
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 8px;
+                                                        color: var(--text-primary);
+                                                    ">
+                                                        <span style="
+                                                            background: #17a2b8;
+                                                            color: white;
+                                                            width: 32px;
+                                                            height: 32px;
+                                                            border-radius: 50%;
+                                                            display: flex;
+                                                            align-items: center;
+                                                            justify-content: center;
+                                                            font-size: 1rem;
+                                                            font-weight: 700;
+                                                        ">${data.customers || 0}</span>
+                                                        <span><strong>مشترك جديد</strong></span>
+                                                    </div>
+                                                </div>
                                     </div>
                                 `;
                                 }).join('')}
                             </div>
+                            ` : `
+                                <div style="
+                                    text-align: center;
+                                    padding: 60px 20px;
+                                    color: var(--text-secondary);
+                                ">
+                                    <div style="font-size: 4rem; margin-bottom: 20px;">📞</div>
+                                    <p style="font-size: 1.1rem; font-weight: 600;">لا توجد مكالمات مسجلة</p>
+                                </div>
+                            `}
                         </div>
                     </div>
                 </div>
@@ -4628,7 +4862,6 @@
             try {
                 if (isOnline) {
                     const result = await supabaseRequest('customers', 'POST', customerData);
-                    // Customer data saved successfully
                     
                     const cached = getCachedData('customers');
                     if (cached && Array.isArray(cached)) {
@@ -4705,7 +4938,6 @@
             const phone = formatPhoneForWhatsApp(agent.phone);
             const alertDiv = document.getElementById('customerAlert');
             
-            // محاولة استخدام API إذا كان متاحاً
             if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
                 try {
                     const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
@@ -4731,7 +4963,6 @@
                 }
             }
             
-            // Fallback إلى wa.me
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
             showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
@@ -4862,7 +5093,6 @@
             try {
                 if (isOnline) {
                     const result = await supabaseRequest('calls', 'POST', callData);
-                    // Call data saved successfully
                     
                     const cached = getCachedData('calls');
                     if (cached && Array.isArray(cached)) {
@@ -4891,7 +5121,6 @@
                             sendComplaintToDepartment(department, callData);
                             if (isOnline) {
                                 const employeeName = callData.agent || loggedInUser || 'غير معروف';
-                                // Saving complaint with employee name
                                 saveSentMessageToSupabase('complaint', department.id, department.name, callData.name, employeeName);
                             }
                         }, 500);
@@ -4924,7 +5153,6 @@
             const phone = formatPhoneForWhatsApp(department.phone);
             const alertDiv = document.getElementById('callAlert');
             
-            // محاولة استخدام API إذا كان متاحاً
             if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
                 try {
                     const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
@@ -4950,7 +5178,6 @@
                 }
             }
             
-            // Fallback إلى wa.me
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
             showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
@@ -5641,7 +5868,17 @@
             
             const diffInSeconds = Math.floor((now - past) / 1000);
             
-            if (diffInSeconds < 60) return 'الآن';
+            if (diffInSeconds < 0) {
+                return past.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            if (diffInSeconds < 60 && diffInSeconds >= 0) return 'الآن';
             if (diffInSeconds < 3600) return `منذ ${Math.floor(diffInSeconds / 60)} دقيقة`;
             if (diffInSeconds < 86400) return `منذ ${Math.floor(diffInSeconds / 3600)} ساعة`;
             if (diffInSeconds < 604800) return `منذ ${Math.floor(diffInSeconds / 86400)} يوم`;
@@ -5907,11 +6144,9 @@
             
             
             updateCallsTypeChart();
-            // تحديث خريطة الأسماء قبل تحديث المخططات (غير متزامن)
             updateEmployeeNameMap().then(() => {
                 updateCallsByEmployeeChart();
             }).catch(() => {
-                // في حالة الخطأ، نحدث المخطط على أي حال
                 updateCallsByEmployeeChart();
             });
             
@@ -5931,6 +6166,24 @@
                 const now = new Date();
                 const dayOfWeek = now.getDay(); 
                 
+                const initialStartDate = new Date(2025, 10, 14);
+                initialStartDate.setHours(0, 0, 0, 0);
+                
+                const initialDayOfWeek = initialStartDate.getDay();
+                let daysToNextSaturday;
+                if (initialDayOfWeek === 6) {
+                    daysToNextSaturday = 7;
+                } else {
+                    daysToNextSaturday = (6 - initialDayOfWeek + 7) % 7;
+                    if (daysToNextSaturday === 0) daysToNextSaturday = 7;
+                }
+                const firstSaturday = new Date(initialStartDate);
+                firstSaturday.setDate(firstSaturday.getDate() + daysToNextSaturday);
+                firstSaturday.setHours(0, 0, 0, 0);
+                
+                const firstWeekEnd = new Date(firstSaturday);
+                firstWeekEnd.setDate(firstWeekEnd.getDate() - 1);
+                firstWeekEnd.setHours(23, 59, 59, 999);
                 
                 let diff;
                 if (dayOfWeek === 6) { 
@@ -5946,20 +6199,27 @@
                 const currentWeekEnd = new Date(currentWeekStart);
                 currentWeekEnd.setDate(currentWeekEnd.getDate() + 7);
                 
+                let lastWeekStart, lastWeekEnd;
                 
-                const lastWeekStart = new Date(currentWeekStart);
+                if (currentWeekStart.getTime() >= firstSaturday.getTime()) {
+                    lastWeekStart = new Date(currentWeekStart);
                 lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-                const lastWeekEnd = new Date(currentWeekStart);
-                
+                    lastWeekEnd = new Date(currentWeekStart);
+                    lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
+                    lastWeekEnd.setHours(23, 59, 59, 999);
+                } else {
+                    lastWeekStart = new Date(initialStartDate);
+                    lastWeekEnd = new Date(firstWeekEnd);
+                }
                 
                 const weekStartStr = lastWeekStart.toISOString().split('T')[0];
                 const existingFilter = `?week_start_date=eq.${weekStartStr}`;
                 const existing = await supabaseRequest('employee_of_the_week', 'GET', null, existingFilter);
                 
-                
                 const isSaturday = dayOfWeek === 6;
                 const currentHour = now.getHours();
-                const canCalculateNew = isSaturday && currentHour >= 8;
+                const canCalculateNew = (isSaturday && currentHour >= 8) || 
+                                       (currentWeekStart.getTime() >= firstSaturday.getTime() && !existing);
                 
                 if (existing && existing.length > 0) {
                     const employee = existing[0];
@@ -6503,10 +6763,25 @@
                             }
                             agentStats[agentId].count++;
                             const msgDate = new Date(msg.sent_at);
-                            if (!agentStats[agentId].lastSentDate || msgDate > new Date(agentStats[agentId].lastSentDate)) {
+                            const now = new Date();
+                            const maxFutureTime = new Date(now.getTime() + 60 * 60 * 1000); 
+                            if (!isNaN(msgDate.getTime()) && msgDate <= maxFutureTime) {
+                                if (!agentStats[agentId].lastSentDate) {
+                                    agentStats[agentId].lastSent = msg.sent_at;
+                                    agentStats[agentId].lastSentDate = msg.sent_at;
+                                    agentStats[agentId].lastEmployee = msg.employee_name || 'غير محدد';
+                                } else {
+                                    const existingDate = new Date(agentStats[agentId].lastSentDate);
+                                    if (!isNaN(existingDate.getTime()) && existingDate <= maxFutureTime && msgDate > existingDate) {
+                                        agentStats[agentId].lastSent = msg.sent_at;
+                                        agentStats[agentId].lastSentDate = msg.sent_at;
+                                        agentStats[agentId].lastEmployee = msg.employee_name || 'غير محدد';
+                                    } else if (isNaN(existingDate.getTime()) || existingDate > maxFutureTime) {
                                 agentStats[agentId].lastSent = msg.sent_at;
                                 agentStats[agentId].lastSentDate = msg.sent_at;
                                 agentStats[agentId].lastEmployee = msg.employee_name || 'غير محدد';
+                                    }
+                                }
                             }
                         }
                     });
@@ -6534,10 +6809,25 @@
                             const customerDate = customer.date || customer.created_at;
                             if (customerDate) {
                                 const dateObj = new Date(customerDate);
-                                if (!agentStats[agent.id].lastSentDate || dateObj > new Date(agentStats[agent.id].lastSentDate)) {
+                                const now = new Date();
+                                const maxFutureTime = new Date(now.getTime() + 60 * 60 * 1000);
+                                if (!isNaN(dateObj.getTime()) && dateObj <= maxFutureTime) {
+                                    if (!agentStats[agent.id].lastSentDate) {
+                                        agentStats[agent.id].lastSent = customerDate;
+                                        agentStats[agent.id].lastSentDate = customerDate;
+                                        agentStats[agent.id].lastEmployee = customer.employee || 'غير محدد';
+                                    } else {
+                                        const existingDate = new Date(agentStats[agent.id].lastSentDate);
+                                        if (!isNaN(existingDate.getTime()) && existingDate <= maxFutureTime && dateObj > existingDate) {
+                                            agentStats[agent.id].lastSent = customerDate;
+                                            agentStats[agent.id].lastSentDate = customerDate;
+                                            agentStats[agent.id].lastEmployee = customer.employee || 'غير محدد';
+                                        } else if (isNaN(existingDate.getTime()) || existingDate > maxFutureTime) {
                                     agentStats[agent.id].lastSent = customerDate;
                                     agentStats[agent.id].lastSentDate = customerDate;
                                     agentStats[agent.id].lastEmployee = customer.employee || 'غير محدد';
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -6553,7 +6843,20 @@
             
             tbody.innerHTML = Object.entries(agentStats)
                 .filter(([id, stats]) => !excludedAgents.includes(stats.name))
-                .sort((a, b) => b[1].count - a[1].count)
+                .sort((a, b) => {
+                    const dateA = a[1].lastSentDate ? new Date(a[1].lastSentDate) : null;
+                    const dateB = b[1].lastSentDate ? new Date(b[1].lastSentDate) : null;
+                    
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return 1;
+                    if (!dateB) return -1;
+                    
+                    if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+                    if (isNaN(dateA.getTime())) return 1;
+                    if (isNaN(dateB.getTime())) return -1;
+                    
+                    return dateB.getTime() - dateA.getTime();
+                })
                 .map(([id, stats]) => {
                     let lastSentDate = 'لا يوجد';
                     if (stats.lastSent) {
@@ -6562,11 +6865,21 @@
                             if (!isNaN(date.getTime())) {
                                 const now = new Date();
                                 const diffMs = now - date;
+                                
+                                if (diffMs < 0) {
+                                    lastSentDate = date.toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'short', 
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                } else {
                                 const diffMins = Math.floor(diffMs / 60000);
                                 const diffHours = Math.floor(diffMs / 3600000);
                                 const diffDays = Math.floor(diffMs / 86400000);
                                 
-                                if (diffMins < 1) {
+                                    if (diffMins < 1 && diffMs >= 0) {
                                     lastSentDate = 'الآن';
                                 } else if (diffMins < 60) {
                                     lastSentDate = `منذ ${diffMins} دقيقة`;
@@ -6582,6 +6895,7 @@
                                         hour: '2-digit',
                                         minute: '2-digit'
                                     });
+                                    }
                                 }
                             } else {
                                 lastSentDate = stats.lastSent;
@@ -6686,7 +7000,6 @@
         
         async function fetchRecentCallsForActivity() {
             try {
-                // استخدام البيانات المحلية إذا كانت متوفرة بدلاً من طلب قاعدة البيانات
                 if (callsData && Array.isArray(callsData) && callsData.length > 0) {
                     return callsData.slice(0, 8);
                 }
@@ -6700,7 +7013,6 @@
         
         async function fetchSentMessagesForActivity() {
             try {
-                // استخدام الكاش إذا كان متوفراً
                 const cached = getCachedData('sentMessages');
                 if (cached && Array.isArray(cached) && cached.length > 0) {
                     return cached.slice(0, 5);
@@ -7932,13 +8244,20 @@
         }
         
         function getTimeAgo(date) {
+            if (!date) return '';
             const now = new Date();
-            const diffMs = now - date;
+            const past = new Date(date);
+            if (isNaN(past.getTime())) return '';
+            
+            const diffMs = now - past;
+            
+            if (diffMs < 0) return '';
+            
             const diffMins = Math.floor(diffMs / 60000);
             const diffHours = Math.floor(diffMs / 3600000);
             const diffDays = Math.floor(diffMs / 86400000);
             
-            if (diffMins < 1) return 'الآن';
+            if (diffMins < 1 && diffMs >= 0) return 'الآن';
             if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
             if (diffHours < 24) return `منذ ${diffHours} ساعة`;
             if (diffDays < 7) return `منذ ${diffDays} يوم`;
@@ -7971,7 +8290,6 @@
         
         function showCallDetails(call) {
             try {
-                // حفظ بيانات المكالمة للوصول إليها عند المشاركة
                 window.currentCallDetails = call;
                 const callType = call.call_type || 'غير محدد';
                 const callTypeColors = {
@@ -8205,7 +8523,6 @@
         
         function closeCallDetailsModal() {
             document.getElementById('callDetailsModal').classList.remove('active');
-            // مسح بيانات المكالمة المحفوظة
             window.currentCallDetails = null;
         }
         
@@ -8215,7 +8532,6 @@
          */
         function shareCallTicket(method) {
             try {
-                // الحصول على بيانات المكالمة المحفوظة
                 const call = window.currentCallDetails;
                 if (!call) {
                     const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
@@ -8223,7 +8539,6 @@
                     return;
                 }
                 
-                // تنسيق التذكرة كرسالة
                 const callType = call.call_type || 'غير محدد';
                 const name = call.name || 'غير معروف';
                 const phone = call.phone || 'غير محدد';
@@ -8255,22 +8570,18 @@
                 ticketMessage += `*تاريخ الإنشاء:* ${formattedDate}\n`;
                 
                 if (method === 'whatsapp') {
-                    // مشاركة عبر واتساب
                     const whatsappText = encodeURIComponent(ticketMessage);
                     const whatsappUrl = `https://wa.me/?text=${whatsappText}`;
                     window.open(whatsappUrl, '_blank');
                 } else if (method === 'copy') {
-                    // نسخ الرسالة إلى الحافظة
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(ticketMessage).then(() => {
                             const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
                             showAlert(alertDiv, '✅ تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
                         }).catch(() => {
-                            // طريقة بديلة للنسخ
                             copyToClipboardFallback(ticketMessage);
                         });
                     } else {
-                        // طريقة بديلة للنسخ
                         copyToClipboardFallback(ticketMessage);
                     }
                 }
@@ -9295,7 +9606,7 @@
                 if (isTabActive && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     updateUnreadMessagesCount();
                 }
-            }, 3600000); // 60 دقيقة بدلاً من 30 
+            }, 3600000); 
         }
         
         
@@ -9307,7 +9618,7 @@
                     await loadChatMessages(currentChatUserId);
                     await loadChatUsers();
                 }
-            }, 3600000); // 60 دقيقة بدلاً من 30 
+            }, 3600000); 
         }
         
         function stopChatAutoUpdate() {
