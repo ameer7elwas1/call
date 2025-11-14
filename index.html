@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قسم خدمة الزبائن</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap">
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -22,7 +22,7 @@
             --shadow-md: rgba(128, 28, 50, 0.18);
             --shadow-lg: rgba(128, 28, 50, 0.28);
             --card-bg: #ffffff;
-            --sidebar-bg: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            --sidebar-bg: #f8f9fa;
             --nav-bg: rgba(255, 255, 255, 0.7);
             --nav-hover: rgba(128, 28, 50, 0.08);
             --input-bg: #ffffff;
@@ -57,7 +57,7 @@
             --shadow-md: rgba(0, 0, 0, 0.6);
             --shadow-lg: rgba(0, 0, 0, 0.8);
             --card-bg: #2d2d2d;
-            --sidebar-bg: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+            --sidebar-bg: #2d2d2d;
             --nav-bg: rgba(45, 45, 45, 0.85);
             --nav-hover: rgba(255, 71, 87, 0.18);
             --input-bg: #3a3a3a;
@@ -80,7 +80,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Tajawal', 'Segoe UI', 'Arial', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', 'Arial', sans-serif;
         }
         body {
             background: var(--bg-primary);
@@ -117,7 +117,7 @@
             transition: transform 0.3s ease;
         }
         [data-theme="dark"] .sidebar {
-            background: linear-gradient(180deg, var(--sidebar-bg) 0%, rgba(0, 0, 0, 0.2) 100%);
+            background: var(--sidebar-bg);
             box-shadow: 4px 0 25px rgba(0, 0, 0, 0.3);
         }
         .sidebar.hidden {
@@ -126,7 +126,7 @@
         .sidebar-header {
             padding: 20px 15px 15px 15px;
             border-bottom: 2px solid var(--border-color);
-            background: linear-gradient(135deg, rgba(128, 28, 50, 0.05) 0%, transparent 100%);
+            background: rgba(128, 28, 50, 0.05);
             flex-shrink: 0;
         }
         .sidebar-header h1 {
@@ -641,7 +641,7 @@
             color: var(--text-primary);
             font-size: 0.95rem;
             font-weight: 500;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             box-shadow: 0 2px 4px rgba(128, 28, 50, 0.1);
             transition: all 0.3s ease;
         }
@@ -659,7 +659,7 @@
             color: #801c32;
             font-weight: 800;
             font-size: 1rem;
-            background: linear-gradient(135deg, rgba(128, 28, 50, 0.08) 0%, rgba(128, 28, 50, 0.05) 100%);
+            background: rgba(128, 28, 50, 0.06);
             padding: 10px 14px;
             border-radius: 8px;
             border: 2.5px solid #801c32;
@@ -679,13 +679,13 @@
         #selectAgent,
         #selectDepartment {
             border: 3px solid #801c32;
-            background: linear-gradient(135deg, #ffffff 0%, rgba(128, 28, 50, 0.02) 100%);
+            background: #ffffff;
             font-weight: 600;
             color: var(--text-primary);
         }
         [data-theme="dark"] #selectAgent,
         [data-theme="dark"] #selectDepartment {
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(128, 28, 50, 0.1) 100%);
+            background: var(--card-bg);
             color: var(--text-primary);
         }
         [data-theme="dark"] #selectAgent option,
@@ -728,7 +728,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -1035,7 +1035,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: var(--bg-primary);
         }
         .login-card {
             background: var(--card-bg);
@@ -1133,42 +1133,42 @@
         }
         .stat-card:nth-child(1) {
             border-color: #3b82f6;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.05) 100%);
+            background: rgba(59, 130, 246, 0.08);
         }
         .stat-card:nth-child(1)::before {
             background: linear-gradient(90deg, #3b82f6, #2563eb);
         }
         .stat-card:nth-child(2) {
             border-color: #ef4444;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.05) 100%);
+            background: rgba(239, 68, 68, 0.08);
         }
         .stat-card:nth-child(2)::before {
             background: linear-gradient(90deg, #ef4444, #dc2626);
         }
         .stat-card:nth-child(3) {
             border-color: #10b981;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.05) 100%);
+            background: rgba(16, 185, 129, 0.08);
         }
         .stat-card:nth-child(3)::before {
             background: linear-gradient(90deg, #10b981, #059669);
         }
         .stat-card:nth-child(4) {
             border-color: #06b6d4;
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(6, 182, 212, 0.05) 100%);
+            background: rgba(6, 182, 212, 0.08);
         }
         .stat-card:nth-child(4)::before {
             background: linear-gradient(90deg, #06b6d4, #0891b2);
         }
         .stat-card:nth-child(5) {
             border-color: #f59e0b;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.05) 100%);
+            background: rgba(245, 158, 11, 0.08);
         }
         .stat-card:nth-child(5)::before {
             background: linear-gradient(90deg, #f59e0b, #d97706);
         }
         .stat-card:nth-child(6) {
             border-color: #8b5cf6;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.05) 100%);
+            background: rgba(139, 92, 246, 0.08);
         }
         .stat-card:nth-child(6)::before {
             background: linear-gradient(90deg, #8b5cf6, #7c3aed);
@@ -1213,7 +1213,7 @@
             font-weight: 900;
             margin-bottom: 0;
             line-height: 1.1;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             letter-spacing: -1px;
         }
         .stat-card:nth-child(1) .stat-card-value {
@@ -1249,23 +1249,18 @@
         /* Employee of the Week Banner */
         .employee-of-week-banner {
             position: relative;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            background: #ffd700;
             border: 2px solid #ffb300;
             border-radius: 12px;
             padding: 15px 20px;
             margin-bottom: 20px;
-            box-shadow: 0 6px 18px rgba(255, 179, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            box-shadow: 0 4px 12px rgba(255, 179, 0, 0.3);
             overflow: hidden;
-            animation: employeeBannerGlow 3s ease-in-out infinite;
         }
         [data-theme="dark"] .employee-of-week-banner {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            background: #2d2d2d;
             border-color: #ffd700;
-            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3), 0 0 0 1px rgba(255, 215, 0, 0.1) inset;
-        }
-        @keyframes employeeBannerGlow {
-            0%, 100% { box-shadow: 0 8px 24px rgba(255, 179, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
-            50% { box-shadow: 0 8px 32px rgba(255, 179, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2) inset; }
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
         }
         .employee-of-week-content {
             display: flex;
@@ -1321,11 +1316,9 @@
             font-size: 0.8rem;
             font-weight: 600;
             color: #8b6914;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             padding: 4px 10px;
             border-radius: 15px;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
         }
         [data-theme="dark"] .employee-stat-item {
             color: #ffd700;
@@ -1371,7 +1364,7 @@
             display: none !important;
         }
         .chat-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            background: var(--primary-color);
             color: white;
             padding: 18px 24px;
             display: flex;
@@ -1466,13 +1459,13 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .chat-user-item:hover {
-            background: linear-gradient(135deg, var(--nav-hover) 0%, var(--bg-secondary) 100%);
+            background: var(--nav-hover);
             border-color: var(--primary-color);
             transform: translateX(-4px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .chat-user-item.active {
-            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(59, 130, 246, 0.15) 100%);
+            background: var(--primary-light);
             border-color: var(--primary-color);
             border-width: 2px;
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
@@ -1481,7 +1474,7 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            background: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1645,7 +1638,7 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            background: #25D366;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1657,7 +1650,7 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
         .chat-message.received .chat-message-avatar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
         }
         .chat-message-content {
             position: relative;
@@ -1668,18 +1661,18 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .chat-message.sent .chat-message-content {
-            background: linear-gradient(135deg, #DCF8C6 0%, #C8E6C9 100%);
+            background: #DCF8C6;
             border-top-right-radius: 0;
             border-bottom-right-radius: 4px;
             margin-right: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         [data-theme="dark"] .chat-message.sent .chat-message-content {
-            background: linear-gradient(135deg, #056162 0%, #0a7c7c 100%);
+            background: #056162;
             color: #e9edef;
         }
         .chat-message.received .chat-message-content {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+            background: #f5f5f5;
             border-top-left-radius: 0;
             border-bottom-left-radius: 4px;
             margin-left: 8px;
@@ -1758,7 +1751,7 @@
             color: #111b21;
             font-size: 0.95rem;
             resize: none;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             transition: all 0.2s ease;
             min-height: 42px;
             max-height: 120px;
@@ -2044,7 +2037,7 @@
             font-size: 0.8rem;
             color: var(--text-primary);
             font-weight: 800;
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
         /* ألوان مختلفة للرسوم البيانية */
         .chart-card:nth-child(1) .bar-fill {
@@ -2238,7 +2231,7 @@
                 <div class="sidebar-user-info" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                     <div style="position: relative; width: 60px; height: 60px;">
                         <img id="sidebarUserAvatar" class="sidebar-user-avatar" src="" alt="صورة المستخدم" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary-color); display: none; object-fit: cover;">
-                        <div id="sidebarUserInitials" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; border: 2px solid var(--primary-color);"></div>
+                        <div id="sidebarUserInitials" style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; border: 2px solid var(--primary-color);"></div>
                     </div>
                     <div id="sidebarUser" class="sidebar-user-name" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); text-align: center; letter-spacing: 0.5px; border: 2px solid rgba(255, 255, 255, 0.2);">Ameer Helwas</div>
                 </div>
@@ -2640,7 +2633,7 @@
                     <!-- Export Report Card -->
                     <div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
-                            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
                                 📊
                             </div>
                             <div>
@@ -2735,7 +2728,7 @@
                     <div id="profileAlert"></div>
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px;">
                         <div style="position: relative; display: inline-block;">
-                            <div id="profilePictureContainer" style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 700; border: 4px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; position: relative; overflow: hidden;">
+                            <div id="profilePictureContainer" style="width: 150px; height: 150px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 700; border: 4px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; position: relative; overflow: hidden;">
                                 <img id="profilePicture" src="" alt="صورة الملف الشخصي" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                                 <span id="profileInitials" style="display: block;"></span>
                             </div>
@@ -4459,7 +4452,7 @@
                                         <div class="employee-of-week-icon" style="font-size: 3.5rem;">🏆</div>
                                         <div class="employee-of-week-info" style="flex: 1;">
                                             <div class="employee-of-week-label" style="font-size: 0.85rem; margin-bottom: 8px;">أعلى موظف في عدد المكالمات (${periodNameSafe})</div>
-                                            <div class="employee-of-week-name" style="font-size: 1.8rem; margin-bottom: 15px;">${topEmpName}</div>
+                                            <div class="employee-of-week-name" style="font-size: 1.8rem; margin-bottom: 15px; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; transition: all 0.2s ease;" onclick="viewEmployeeProfile('${topEmpName.replace(/'/g, "\\'")}')" onmouseover="this.style.textDecorationColor='#8b6914'; this.style.opacity='0.8';" onmouseout="this.style.textDecorationColor='transparent'; this.style.opacity='1';">${topEmpName}</div>
                                             <div class="employee-of-week-stats" style="gap: 15px;">
                                                 <span class="employee-stat-item" style="font-size: 0.95rem; padding: 8px 16px;">
                                                     <span class="stat-icon" style="font-size: 1.1rem;">📞</span>
@@ -4522,28 +4515,28 @@
                                         
                                         if (rank === 1) {
                                             rankColor = '#FFD700';
-                                            rankBadge = '<span style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #8B4513; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);">🥇</span>';
-                                            cardBg = 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%)';
+                                            rankBadge = '<span style="background: #FFD700; color: #8B4513; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);">🥇</span>';
+                                            cardBg = 'rgba(255, 215, 0, 0.08)';
                                             borderColor = '#FFD700';
                                         } else if (rank === 2) {
                                             rankColor = '#C0C0C0';
-                                            rankBadge = '<span style="background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%); color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(192, 192, 192, 0.4);">🥈</span>';
-                                            cardBg = 'linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(160, 160, 160, 0.05) 100%)';
+                                            rankBadge = '<span style="background: #C0C0C0; color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 2px 6px rgba(192, 192, 192, 0.3);">🥈</span>';
+                                            cardBg = 'rgba(192, 192, 192, 0.08)';
                                             borderColor = '#C0C0C0';
                                         } else if (rank === 3) {
                                             rankColor = '#CD7F32';
-                                            rankBadge = '<span style="background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%); color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 4px 8px rgba(205, 127, 50, 0.4);">🥉</span>';
-                                            cardBg = 'linear-gradient(135deg, rgba(205, 127, 50, 0.1) 0%, rgba(160, 82, 45, 0.05) 100%)';
+                                            rankBadge = '<span style="background: #CD7F32; color: white; padding: 6px 14px; border-radius: 50%; font-size: 1rem; font-weight: 800; margin-left: 10px; box-shadow: 0 2px 6px rgba(205, 127, 50, 0.3);">🥉</span>';
+                                            cardBg = 'rgba(205, 127, 50, 0.08)';
                                             borderColor = '#CD7F32';
                                         } else {
                                             rankColor = 'var(--primary-color)';
                                             rankBadge = `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin-left: 10px;">#${rank}</span>`;
                                         }
                                         
-                                        const barColor = rank === 1 ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)' :
-                                                         rank === 2 ? 'linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%)' :
-                                                         rank === 3 ? 'linear-gradient(135deg, #CD7F32 0%, #A0522D 100%)' :
-                                                         'linear-gradient(135deg, var(--primary-color) 0%, #4a90e2 100%)';
+                                        const barColor = rank === 1 ? '#FFD700' :
+                                                         rank === 2 ? '#C0C0C0' :
+                                                         rank === 3 ? '#CD7F32' :
+                                                         'var(--primary-color)';
                                         
                                     return `
                                             <div style="
@@ -4564,7 +4557,14 @@
                                                                 font-size: 1.1rem;
                                                                 color: ${rank <= 3 ? rankColor : 'var(--text-primary)'};
                                                                 margin-bottom: 4px;
-                                                            ">${empSafe}</div>
+                                                                cursor: pointer;
+                                                                text-decoration: underline;
+                                                                text-decoration-color: transparent;
+                                                                transition: all 0.2s ease;
+                                                            " onclick="viewEmployeeProfile('${empSafe.replace(/'/g, "\\'")}')" 
+                                                               onmouseover="this.style.textDecorationColor='${rank <= 3 ? rankColor : 'var(--primary-color)'}'; this.style.opacity='0.8';" 
+                                                               onmouseout="this.style.textDecorationColor='transparent'; this.style.opacity='1';"
+                                                            >${empSafe}</div>
                                                             ${data.today > 0 ? `
                                                                 <div style="
                                                                     display: inline-block;
@@ -4581,7 +4581,7 @@
                                                         </div>
                                                     </div>
                                                     <div style="
-                                                        background: ${rank <= 3 ? 'rgba(255, 215, 0, 0.15)' : 'var(--bg-tertiary)'};
+                                                        background: ${rank <= 3 ? 'rgba(255, 215, 0, 0.12)' : 'var(--bg-tertiary)'};
                                                         border-radius: 12px;
                                                         padding: 12px 20px;
                                                         text-align: center;
@@ -4615,7 +4615,7 @@
                                                         height: 100%;
                                                         width: ${percentage}%;
                                                         border-radius: 10px;
-                                                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                                                        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
                                                         transition: width 0.5s ease;
                                                         display: flex;
                                                         align-items: center;
@@ -9859,7 +9859,7 @@
                 let profileHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px;">
                         <div style="position: relative; display: inline-block;">
-                            <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 700; border: 4px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.15); overflow: hidden;">
+                            <div style="width: 150px; height: 150px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 700; border: 4px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.15); overflow: hidden;">
                                 ${profilePicture ? `<img src="${escapeHtml(profilePicture)}" alt="${escapeHtml(employeeName)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.textContent='${initials}';">` : `<span>${initials}</span>`}
                             </div>
                         </div>
