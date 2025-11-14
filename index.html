@@ -2418,7 +2418,7 @@
                     <!-- Recent Activity -->
                     <div class="card">
                         <h3>النشاطات الأخيرة</h3>
-                        <div id="recentActivity" style="padding: 20px; color: var(--text-secondary); text-align: center;">
+                        <div id="recentActivity" style="padding: 20px; color: var(--text-primary); text-align: center;">
                             جاري تحميل البيانات...
                         </div>
                     </div>
@@ -2863,6 +2863,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -2944,7 +2945,14 @@
             <div id="callDetailsContent" style="padding: 20px;">
                 <!-- سيتم ملؤها ديناميكياً -->
             </div>
-            <div class="btn-group" style="margin-top: 20px;">
+            <div id="callDetailsAlert" style="padding: 0 20px;"></div>
+            <div class="btn-group" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="shareCallTicket('whatsapp')" style="background: #25D366; border-color: #25D366;">
+                    📱 مشاركة عبر واتساب
+                </button>
+                <button class="btn btn-primary" onclick="shareCallTicket('copy')" style="background: var(--primary-color);">
+                    📋 نسخ كرسالة
+                </button>
                 <button class="btn btn-secondary" onclick="closeCallDetailsModal()">إغلاق</button>
             </div>
         </div>
@@ -3155,6 +3163,10 @@
         const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
+        // WhatsApp variables for sending functions (fallback to wa.me)
+        let WHATSAPP_SERVER_URL = null;
+        let useWhatsAppAPI = false;
+        
         const dataCache = {
             calls: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
             customers: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
@@ -3166,6 +3178,9 @@
             messages: { data: null, timestamp: 0, ttl: 300000 }, // 5 دقائق بدلاً من 1
             userProfiles: { data: null, timestamp: 0, ttl: 7200000 } // ساعتان بدلاً من 1
         };
+        
+        // قائمة الموظفين المستبعدين من الإحصائيات والعروض
+        const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة'];
         
         let isTabActive = true;
         document.addEventListener('visibilitychange', function() {
@@ -3294,6 +3309,7 @@
         let clockInterval = null;
         let agents = [];
         let departments = [];
+        let employeeNameMap = {}; // خريطة لتوحيد أسماء الموظفين (الاسم القديم -> الاسم الجديد)
         let currentCustomerData = null;
         let statistics = {
             calls: [],
@@ -3401,7 +3417,8 @@
             Promise.all([
                 loadAgents(),
                 loadDepartments(),
-                isOnline ? syncOfflineData() : Promise.resolve()
+                isOnline ? syncOfflineData() : Promise.resolve(),
+                updateEmployeeNameMap() // تحديث خريطة الأسماء عند تحميل الصفحة
             ]).catch(err => {
                 console.error('Error loading initial data:', err);
             });
@@ -3483,6 +3500,9 @@
                         localStorage.setItem('currentUserId', user.id);
                         
                         showMainApp();
+                        
+                        // تحديث خريطة أسماء الموظفين بعد تسجيل الدخول
+                        updateEmployeeNameMap();
                         
                         loadUserProfileForSidebar();
                     } else {
@@ -3763,6 +3783,81 @@
             }
         }
         
+        /**
+         * تحديث خريطة أسماء الموظفين لتوحيد الأسماء القديمة والجديدة
+         * يتم استدعاؤها عند تحميل المستخدمين
+         */
+        async function updateEmployeeNameMap() {
+            try {
+                const users = await supabaseRequest('users', 'GET', null, `?system_name=eq.${SYSTEM_NAME}&is_active=eq.true&select=id,username,full_name`);
+                if (Array.isArray(users)) {
+                    employeeNameMap = {};
+                    users.forEach(user => {
+                        if (user.full_name) {
+                            const currentName = user.full_name.trim();
+                            // ربط الاسم الحالي بجميع الأسماء المحتملة
+                            employeeNameMap[currentName] = currentName;
+                            
+                            // ربط username بالاسم الحالي إذا كان مختلفاً
+                            if (user.username && user.username.trim() !== currentName) {
+                                employeeNameMap[user.username.trim()] = currentName;
+                            }
+                            
+                            // البحث في البيانات القديمة عن أسماء مشابهة وربطها
+                            // هذا يساعد في توحيد الأسماء القديمة مع الجديدة
+                            if (callsData && callsData.length > 0) {
+                                callsData.forEach(call => {
+                                    const oldName = (call.agent || '').trim();
+                                    if (oldName && oldName !== currentName) {
+                                        // إذا كان الاسم القديم يحتوي على جزء من الاسم الجديد أو العكس
+                                        if (oldName.includes(currentName) || currentName.includes(oldName) || 
+                                            (user.username && oldName.includes(user.username))) {
+                                            employeeNameMap[oldName] = currentName;
+                                        }
+                                    }
+                                });
+                            }
+                            
+                            if (customersData && customersData.length > 0) {
+                                customersData.forEach(customer => {
+                                    const oldName = (customer.employee || '').trim();
+                                    if (oldName && oldName !== currentName) {
+                                        if (oldName.includes(currentName) || currentName.includes(oldName) || 
+                                            (user.username && oldName.includes(user.username))) {
+                                            employeeNameMap[oldName] = currentName;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating employee name map:', error);
+            }
+        }
+        
+        /**
+         * الحصول على الاسم الموحد للموظف
+         * @param {string} oldName - الاسم القديم المحفوظ في البيانات
+         * @returns {string} الاسم الحالي الموحد
+         */
+        function getUnifiedEmployeeName(oldName) {
+            if (!oldName || typeof oldName !== 'string') return oldName || 'غير معروف';
+            const trimmed = oldName.trim();
+            // البحث في الخريطة عن الاسم الموحد
+            if (employeeNameMap[trimmed]) {
+                return employeeNameMap[trimmed];
+            }
+            // إذا لم نجد، نبحث عن تطابق جزئي (للتعامل مع الأسماء القديمة)
+            for (const [old, current] of Object.entries(employeeNameMap)) {
+                if (old.includes(trimmed) || trimmed.includes(old)) {
+                    return current;
+                }
+            }
+            return trimmed; // إرجاع الاسم الأصلي إذا لم نجد تطابق
+        }
+        
         async function loadUsers() {
             if (currentUserRole !== 'admin') {
                 document.getElementById('usersList').innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">ليس لديك صلاحية للوصول إلى هذه الصفحة.</p>';
@@ -3838,6 +3933,8 @@
                 }
                 
                 displayUsers(filteredUsers);
+                // تحديث خريطة أسماء الموظفين بعد تحميل المستخدمين
+                await updateEmployeeNameMap();
             } catch (error) {
                 console.error('Error loading users:', error);
                 const errorMsg = error.message || 'خطأ غير معروف';
@@ -4242,6 +4339,12 @@
             }
         }
         
+        /**
+         * عرض الإحصائيات المتقدمة
+         * @param {Array} calls - بيانات المكالمات
+         * @param {Array} customers - بيانات المشتركين
+         * @param {string} period - الفترة الزمنية (daily/weekly/monthly)
+         */
         function displayAdvancedStatistics(calls, customers, period) {
             const periodName = period === 'daily' ? 'اليوم' : period === 'weekly' ? 'هذا الأسبوع' : 'هذا الشهر';
             const callsData = Array.isArray(calls) ? calls : [];
@@ -4262,20 +4365,23 @@
             today.setHours(0, 0, 0, 0);
             
             callsData.forEach(call => {
-                const emp = call.agent || 'غير محدد';
-                if (!callsByEmployee[emp]) {
-                    callsByEmployee[emp] = {
-                        total: 0,
-                        today: 0
-                    };
-                }
-                callsByEmployee[emp].total++;
-                
-                const callDate = call.created_at ? new Date(call.created_at) : null;
-                if (callDate) {
-                    callDate.setHours(0, 0, 0, 0);
-                    if (callDate.getTime() === today.getTime()) {
-                        callsByEmployee[emp].today++;
+                const oldEmpName = call.agent || 'غير محدد';
+                const emp = getUnifiedEmployeeName(oldEmpName);
+                if (emp && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                    if (!callsByEmployee[emp]) {
+                        callsByEmployee[emp] = {
+                            total: 0,
+                            today: 0
+                        };
+                    }
+                    callsByEmployee[emp].total++;
+                    
+                    const callDate = call.created_at ? new Date(call.created_at) : null;
+                    if (callDate) {
+                        callDate.setHours(0, 0, 0, 0);
+                        if (callDate.getTime() === today.getTime()) {
+                            callsByEmployee[emp].today++;
+                        }
                     }
                 }
             });
@@ -4453,6 +4559,10 @@
             }
         }
 
+        /**
+         * حفظ بيانات المشترك في قاعدة البيانات
+         * يتحقق من التكرار قبل الحفظ
+         */
         async function saveCustomerData() {
             const name = document.getElementById('txtName').value.trim();
             const region = document.getElementById('txtRegion').value.trim();
@@ -4518,7 +4628,7 @@
             try {
                 if (isOnline) {
                     const result = await supabaseRequest('customers', 'POST', customerData);
-                    console.log('Customer data saved to Supabase:', result);
+                    // Customer data saved successfully
                     
                     const cached = getCachedData('customers');
                     if (cached && Array.isArray(cached)) {
@@ -4583,7 +4693,7 @@
             return cleanPhone;
         }
 
-        function sendCustomerToWhatsApp(agent, customerData) {
+        async function sendCustomerToWhatsApp(agent, customerData) {
             const closestPoint = customerData.closest_point || customerData.closestPoint || 'غير محدد';
             const message = `*بيانات مشترك جديد*\n\n` +
                           `الاسم: ${customerData.username}\n` +
@@ -4593,10 +4703,37 @@
                           `التاريخ: ${customerData.date}`;
 
             const phone = formatPhoneForWhatsApp(agent.phone);
+            const alertDiv = document.getElementById('customerAlert');
+            
+            // محاولة استخدام API إذا كان متاحاً
+            if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
+                try {
+                    const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            phone: phone,
+                            message: message
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب بنجاح`, 'success');
+                        return;
+                    } else {
+                        console.warn('WhatsApp API failed, falling back to wa.me:', result.message);
+                    }
+                } catch (error) {
+                    console.warn('WhatsApp API error, falling back to wa.me:', error);
+                }
+            }
+            
+            // Fallback إلى wa.me
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
-            
-            const alertDiv = document.getElementById('customerAlert');
             showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
         }
 
@@ -4656,6 +4793,11 @@
             }
         }
 
+        /**
+         * حفظ تفاصيل المكالمة في قاعدة البيانات
+         * يتحقق من التكرار قبل الحفظ
+         * يرسل الشكاوى تلقائياً للقسم المختار
+         */
         async function saveCallDetails() {
             const callType = document.getElementById('cmbCallType').value.trim();
             const phone = document.getElementById('txtCallPhone').value.trim();
@@ -4720,7 +4862,7 @@
             try {
                 if (isOnline) {
                     const result = await supabaseRequest('calls', 'POST', callData);
-                    console.log('Call data saved to Supabase:', result);
+                    // Call data saved successfully
                     
                     const cached = getCachedData('calls');
                     if (cached && Array.isArray(cached)) {
@@ -4749,7 +4891,7 @@
                             sendComplaintToDepartment(department, callData);
                             if (isOnline) {
                                 const employeeName = callData.agent || loggedInUser || 'غير معروف';
-                                console.log('Saving complaint - loggedInUser:', loggedInUser, 'callData.agent:', callData.agent, 'Using:', employeeName);
+                                // Saving complaint with employee name
                                 saveSentMessageToSupabase('complaint', department.id, department.name, callData.name, employeeName);
                             }
                         }, 500);
@@ -4770,7 +4912,7 @@
             }
         }
 
-        function sendComplaintToDepartment(department, callData) {
+        async function sendComplaintToDepartment(department, callData) {
             const message = `*شكوى/مشكلة جديدة*\n\n` +
                           `نوع المكالمة: ${callData.call_type}\n` +
                           `اسم المتصل: ${callData.name}\n` +
@@ -4780,10 +4922,37 @@
                           `الوقت: ${callData.shift_time}`;
 
             const phone = formatPhoneForWhatsApp(department.phone);
+            const alertDiv = document.getElementById('callAlert');
+            
+            // محاولة استخدام API إذا كان متاحاً
+            if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
+                try {
+                    const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            phone: phone,
+                            message: message
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب بنجاح`, 'success');
+                        return;
+                    } else {
+                        console.warn('WhatsApp API failed, falling back to wa.me:', result.message);
+                    }
+                } catch (error) {
+                    console.warn('WhatsApp API error, falling back to wa.me:', error);
+                }
+            }
+            
+            // Fallback إلى wa.me
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
-            
-            const alertDiv = document.getElementById('callAlert');
             showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
         }
 
@@ -5489,6 +5658,11 @@
         let callsData = [];
         let customersData = [];
 
+        /**
+         * جلب بيانات المكالمات من قاعدة البيانات
+         * @param {boolean} forceRefresh - إجبار التحديث حتى لو كانت البيانات موجودة في الكاش
+         * @returns {Promise<Array>} بيانات المكالمات
+         */
         async function fetchCallsData(forceRefresh = false) {
             try {
                 
@@ -5564,6 +5738,11 @@
         }
         
 
+        /**
+         * جلب بيانات المشتركين من قاعدة البيانات
+         * @param {boolean} forceRefresh - إجبار التحديث حتى لو كانت البيانات موجودة في الكاش
+         * @returns {Promise<Array>} بيانات المشتركين
+         */
         async function fetchCustomersData(forceRefresh = false) {
             try {
                 
@@ -5728,7 +5907,13 @@
             
             
             updateCallsTypeChart();
-            updateCallsByEmployeeChart();
+            // تحديث خريطة الأسماء قبل تحديث المخططات (غير متزامن)
+            updateEmployeeNameMap().then(() => {
+                updateCallsByEmployeeChart();
+            }).catch(() => {
+                // في حالة الخطأ، نحدث المخطط على أي حال
+                updateCallsByEmployeeChart();
+            });
             
             
             updateAgentsStatistics();
@@ -5862,11 +6047,11 @@
                 
                 const employeeStats = {};
                 
-                
                 function isValidEmployeeName(name) {
                     if (!name || typeof name !== 'string') return false;
                     const trimmed = name.trim();
                     if (trimmed === '' || trimmed === 'غير محدد' || trimmed === 'null' || trimmed === 'undefined') return false;
+                    if (EXCLUDED_EMPLOYEES.includes(trimmed)) return false;
                     
                     const englishPattern = /^[A-Za-z\s]+$/;
                     if (englishPattern.test(trimmed) && trimmed.length < 20) return false;
@@ -5874,7 +6059,8 @@
                 }
                 
                 calls.forEach(call => {
-                    const employee = (call.agent || '').trim();
+                    const oldEmployeeName = (call.agent || '').trim();
+                    const employee = getUnifiedEmployeeName(oldEmployeeName);
                     if (isValidEmployeeName(employee)) {
                         if (!employeeStats[employee]) {
                             employeeStats[employee] = {
@@ -5890,7 +6076,8 @@
                 });
                 
                 customers.forEach(customer => {
-                    const employee = (customer.employee || '').trim();
+                    const oldEmployeeName = (customer.employee || '').trim();
+                    const employee = getUnifiedEmployeeName(oldEmployeeName);
                     if (isValidEmployeeName(employee)) {
                         if (!employeeStats[employee]) {
                             employeeStats[employee] = {
@@ -6149,7 +6336,7 @@
             
             const recentActivity = document.getElementById('recentActivity');
             if (recentActivity) {
-                recentActivity.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">لا توجد بيانات</p>';
+                recentActivity.innerHTML = '<p style="text-align: center; color: var(--text-primary); padding: 20px;">لا توجد بيانات</p>';
             }
         }
 
@@ -6205,6 +6392,11 @@
             `;
         }
 
+        /**
+         * تحديث مخطط المكالمات حسب الموظف
+         * يستبعد الموظفين المحددين في EXCLUDED_EMPLOYEES
+         * يوحد الأسماء القديمة والجديدة للموظفين
+         */
         function updateCallsByEmployeeChart() {
             if (!callsData || callsData.length === 0) {
                 document.getElementById('callsByEmployeeChart').innerHTML = 
@@ -6214,8 +6406,9 @@
             
             const callsByEmployee = {};
             callsData.forEach(call => {
-                const employee = call.agent || call[4] || 'غير معروف';
-                if (employee && employee !== 'غير معروف') {
+                const oldEmployeeName = call.agent || call[4] || 'غير معروف';
+                const employee = getUnifiedEmployeeName(oldEmployeeName);
+                if (employee && employee !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(employee)) {
                     callsByEmployee[employee] = (callsByEmployee[employee] || 0) + 1;
                 }
             });
@@ -6534,7 +6727,7 @@
             
             const container = document.getElementById('recentActivity');
             if (recentActivities.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);"><div style="font-size: 3rem; margin-bottom: 10px;">📋</div><p>لا توجد نشاطات حديثة</p></div>';
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-primary);"><div style="font-size: 3rem; margin-bottom: 10px;">📋</div><p>لا توجد نشاطات حديثة</p></div>';
                 return;
             }
             
@@ -6558,25 +6751,25 @@
                 if (activity.type === 'call') {
                     detailsHTML = `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light);">
-                            ${activity.phone ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>📱</span><span>${activity.phone}</span></div>` : ''}
-                            ${activity.details ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px; line-height: 1.4;">${activity.details.length > 60 ? activity.details.substring(0, 60) + '...' : activity.details}</div>` : ''}
-                            ${activity.department ? `<div style="display: inline-block; margin-top: 4px; padding: 2px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.7rem; color: var(--text-secondary);">🏢 ${activity.department}</div>` : ''}
+                            ${activity.phone ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>📱</span><span>${activity.phone}</span></div>` : ''}
+                            ${activity.details ? `<div style="font-size: 0.75rem; color: var(--text-primary); margin-top: 4px; line-height: 1.4;">${activity.details.length > 60 ? activity.details.substring(0, 60) + '...' : activity.details}</div>` : ''}
+                            ${activity.department ? `<div style="display: inline-block; margin-top: 4px; padding: 2px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.7rem; color: var(--text-primary);">🏢 ${activity.department}</div>` : ''}
                         </div>
                     `;
                 } else if (activity.type === 'customer') {
                     detailsHTML = `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light);">
-                            ${activity.phone ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>📱</span><span>${activity.phone}</span></div>` : ''}
-                            ${activity.region ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>📍</span><span>${activity.region}</span></div>` : ''}
-                            ${activity.point ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>🎯</span><span>${activity.point}</span></div>` : ''}
-                            ${activity.agent ? `<div style="display: inline-block; margin-top: 4px; padding: 2px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.7rem; color: var(--text-secondary);">👔 ${activity.agent}</div>` : ''}
+                            ${activity.phone ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>📱</span><span>${activity.phone}</span></div>` : ''}
+                            ${activity.region ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>📍</span><span>${activity.region}</span></div>` : ''}
+                            ${activity.point ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>🎯</span><span>${activity.point}</span></div>` : ''}
+                            ${activity.agent ? `<div style="display: inline-block; margin-top: 4px; padding: 2px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.7rem; color: var(--text-primary);">👔 ${activity.agent}</div>` : ''}
                     </div>
                     `;
                 } else if (activity.type === 'message') {
                     detailsHTML = `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light);">
-                            ${activity.customerName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>👤</span><span>${activity.customerName}</span></div>` : ''}
-                            ${activity.agentName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-secondary);"><span>📤</span><span>إلى: ${activity.agentName}</span></div>` : ''}
+                            ${activity.customerName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>👤</span><span>${activity.customerName}</span></div>` : ''}
+                            ${activity.agentName ? `<div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-primary);"><span>📤</span><span>إلى: ${activity.agentName}</span></div>` : ''}
                 </div>
                     `;
                 }
@@ -6595,20 +6788,20 @@
                                         <span style="color: ${activityColor}; font-weight: 700; font-size: 0.85rem; padding: 3px 10px; background: ${activityColor}15; border-radius: 6px; border: 1px solid ${activityColor}30;">${activity.title || 'نشاط'}</span>
                                     </div>
                                     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-                                        <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 500;" title="${fullTime}">${timeAgoText}</span>
-                                        <span style="font-size: 0.65rem; color: var(--text-tertiary);">📅 ${dateText}</span>
-                                        <span style="font-size: 0.65rem; color: var(--text-tertiary);">🕐 ${timeText}</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-primary); font-weight: 500;" title="${fullTime}">${timeAgoText}</span>
+                                        <span style="font-size: 0.65rem; color: var(--text-primary);">📅 ${dateText}</span>
+                                        <span style="font-size: 0.65rem; color: var(--text-primary);">🕐 ${timeText}</span>
                                     </div>
                                 </div>
                                 <div style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 6px;">
                                     ${activity.type === 'message' ? (activity.customerName || '') : (activity.name || activity.agentName || '')}
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px;">
-                                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); background: var(--bg-tertiary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                                    <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
                                         <span style="color: var(--primary-color); font-weight: 600;">👤 الموظف:</span>
                                         <span style="font-weight: 600; color: var(--text-primary); cursor: pointer; text-decoration: underline;" onclick="viewEmployeeProfile('${escapeHtml(activity.employee || '')}')" title="عرض الملف الشخصي">${activity.employee || 'غير معروف'}</span>
                                     </div>
-                                    ${activity.department ? `<div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary);"><span>🏢</span><span>${activity.department}</span></div>` : ''}
+                                    ${activity.department ? `<div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-primary);"><span>🏢</span><span>${activity.department}</span></div>` : ''}
                                 </div>
                                 ${detailsHTML}
                             </div>
@@ -7778,6 +7971,8 @@
         
         function showCallDetails(call) {
             try {
+                // حفظ بيانات المكالمة للوصول إليها عند المشاركة
+                window.currentCallDetails = call;
                 const callType = call.call_type || 'غير محدد';
                 const callTypeColors = {
                     'شكوى': '#f87171',
@@ -8010,6 +8205,118 @@
         
         function closeCallDetailsModal() {
             document.getElementById('callDetailsModal').classList.remove('active');
+            // مسح بيانات المكالمة المحفوظة
+            window.currentCallDetails = null;
+        }
+        
+        /**
+         * مشاركة تذكرة المكالمة عبر واتساب أو نسخها كرسالة
+         * @param {string} method - 'whatsapp' أو 'copy'
+         */
+        function shareCallTicket(method) {
+            try {
+                // الحصول على بيانات المكالمة المحفوظة
+                const call = window.currentCallDetails;
+                if (!call) {
+                    const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
+                    showAlert(alertDiv, 'خطأ: لم يتم العثور على بيانات المكالمة', 'error');
+                    return;
+                }
+                
+                // تنسيق التذكرة كرسالة
+                const callType = call.call_type || 'غير محدد';
+                const name = call.name || 'غير معروف';
+                const phone = call.phone || 'غير محدد';
+                const details = call.details || 'لا توجد تفاصيل';
+                const agent = call.agent || 'غير محدد';
+                const department = call.department ? getDepartmentName(call.department) : null;
+                const shiftTime = call.shift_time || '';
+                const callDate = call.created_at ? new Date(call.created_at) : null;
+                const formattedDate = callDate ? callDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'غير محدد';
+                
+                let ticketMessage = `🎫 *تذكرة تفاصيل المكالمة*\n\n`;
+                ticketMessage += `📞 *نوع المكالمة:* ${callType}\n`;
+                ticketMessage += `👤 *اسم المتصل:* ${name}\n`;
+                ticketMessage += `📱 *رقم الهاتف:* ${phone}\n`;
+                ticketMessage += `\n📝 *التفاصيل:*\n${details}\n`;
+                ticketMessage += `\n👨‍💼 *الموظف:* ${agent}\n`;
+                if (department) {
+                    ticketMessage += `🏢 *القسم:* ${department}\n`;
+                }
+                if (shiftTime) {
+                    ticketMessage += `⏰ *وقت الشفت:* ${shiftTime}\n`;
+                }
+                ticketMessage += `📅 *تاريخ الإنشاء:* ${formattedDate}\n`;
+                
+                if (method === 'whatsapp') {
+                    // مشاركة عبر واتساب
+                    const whatsappText = encodeURIComponent(ticketMessage);
+                    const whatsappUrl = `https://wa.me/?text=${whatsappText}`;
+                    window.open(whatsappUrl, '_blank');
+                } else if (method === 'copy') {
+                    // نسخ الرسالة إلى الحافظة
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(ticketMessage).then(() => {
+                            const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
+                            showAlert(alertDiv, '✅ تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
+                        }).catch(() => {
+                            // طريقة بديلة للنسخ
+                            copyToClipboardFallback(ticketMessage);
+                        });
+                    } else {
+                        // طريقة بديلة للنسخ
+                        copyToClipboardFallback(ticketMessage);
+                    }
+                }
+            } catch (error) {
+                console.error('Error sharing call ticket:', error);
+                const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
+                showAlert(alertDiv, 'حدث خطأ أثناء مشاركة التذكرة', 'error');
+            }
+        }
+        
+        /**
+         * طريقة بديلة لنسخ النص إلى الحافظة
+         * @param {string} text - النص المراد نسخه
+         */
+        function copyToClipboardFallback(text) {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.top = '0';
+                textArea.style.left = '0';
+                textArea.style.width = '2em';
+                textArea.style.height = '2em';
+                textArea.style.padding = '0';
+                textArea.style.border = 'none';
+                textArea.style.outline = 'none';
+                textArea.style.boxShadow = 'none';
+                textArea.style.background = 'transparent';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
+                if (successful) {
+                    showAlert(alertDiv, '✅ تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
+                } else {
+                    showAlert(alertDiv, '❌ فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
+                showAlert(alertDiv, '❌ فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
+            }
         }
         
         function editCallByIndex(index) {
