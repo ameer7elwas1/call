@@ -8240,19 +8240,19 @@
                     minute: '2-digit'
                 }) : 'غير محدد';
                 
-                let ticketMessage = `🎫 *تذكرة تفاصيل المكالمة*\n\n`;
-                ticketMessage += `📞 *نوع المكالمة:* ${callType}\n`;
-                ticketMessage += `👤 *اسم المتصل:* ${name}\n`;
-                ticketMessage += `📱 *رقم الهاتف:* ${phone}\n`;
-                ticketMessage += `\n📝 *التفاصيل:*\n${details}\n`;
-                ticketMessage += `\n👨‍💼 *الموظف:* ${agent}\n`;
+                let ticketMessage = `*تذكرة تفاصيل المكالمة*\n\n`;
+                ticketMessage += `*نوع المكالمة:* ${callType}\n`;
+                ticketMessage += `*اسم المتصل:* ${name}\n`;
+                ticketMessage += `*رقم الهاتف:* ${phone}\n`;
+                ticketMessage += `\n*التفاصيل:*\n${details}\n`;
+                ticketMessage += `\n*الموظف:* ${agent}\n`;
                 if (department) {
-                    ticketMessage += `🏢 *القسم:* ${department}\n`;
+                    ticketMessage += `*القسم:* ${department}\n`;
                 }
                 if (shiftTime) {
-                    ticketMessage += `⏰ *وقت الشفت:* ${shiftTime}\n`;
+                    ticketMessage += `*وقت الشفت:* ${shiftTime}\n`;
                 }
-                ticketMessage += `📅 *تاريخ الإنشاء:* ${formattedDate}\n`;
+                ticketMessage += `*تاريخ الإنشاء:* ${formattedDate}\n`;
                 
                 if (method === 'whatsapp') {
                     // مشاركة عبر واتساب
