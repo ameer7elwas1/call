@@ -2580,27 +2580,13 @@
                         <label for="callSearchInput">بحث في المكالمات</label>
                         <input type="text" id="callSearchInput" placeholder="ابحث في المكالمات (اسم، رقم هاتف، نوع المكالمة...)" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);" onkeyup="searchCalls()">
                     </div>
-                    <div id="callsListContainer" style="margin-top: 20px; max-height: 500px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                        <table class="agents-stats-table" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>نوع المكالمة</th>
-                                    <th>اسم المتصل</th>
-                                    <th>رقم الهاتف</th>
-                                    <th>التفاصيل</th>
-                                    <th>الموظف</th>
-                                    <th>التاريخ</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="callsListBody">
-                                <tr>
-                                    <td colspan="7" style="text-align: center; padding: 20px; color: var(--text-secondary);">
-                                        اضغط على "عرض جميع المكالمات" لعرض المكالمات
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="callsListContainer" style="margin-top: 20px; max-height: 600px; overflow-y: auto; padding: 15px;">
+                        <div id="callsListBody" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+                            <div style="text-align: center; padding: 40px; color: var(--text-secondary); grid-column: 1 / -1;">
+                                <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">📞</div>
+                                <p style="font-size: 1.1rem;">اضغط على "عرض جميع المكالمات" لعرض المكالمات</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3171,15 +3157,15 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
         const dataCache = {
-            calls: { data: null, timestamp: 0, ttl: 7200000 },
-            customers: { data: null, timestamp: 0, ttl: 7200000 },
+            calls: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
+            customers: { data: null, timestamp: 0, ttl: 14400000 }, // 4 ساعات بدلاً من 2
             users: { data: null, timestamp: 0, ttl: 28800000 },
             allowedUsers: { data: null, timestamp: 0, ttl: 28800000 },
             agents: { data: null, timestamp: 0, ttl: 28800000 },
             departments: { data: null, timestamp: 0, ttl: 28800000 },
-            sentMessages: { data: null, timestamp: 0, ttl: 3600000 },
-            messages: { data: null, timestamp: 0, ttl: 60000 },
-            userProfiles: { data: null, timestamp: 0, ttl: 3600000 }
+            sentMessages: { data: null, timestamp: 0, ttl: 7200000 }, // ساعتان بدلاً من 1
+            messages: { data: null, timestamp: 0, ttl: 300000 }, // 5 دقائق بدلاً من 1
+            userProfiles: { data: null, timestamp: 0, ttl: 7200000 } // ساعتان بدلاً من 1
         };
         
         let isTabActive = true;
@@ -3446,17 +3432,19 @@
                 txtCallName.addEventListener('blur', () => validateInput(txtCallName, 'name'));
             }
             
+            // تحديث موظف الأسبوع مرة واحدة يومياً (24 ساعة) بدلاً من كل 12 ساعة
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await updateEmployeeOfTheWeek();
                 }
-            }, 43200000);
+            }, 86400000); // 24 ساعة
             
+            // تحديث الإحصائيات كل 6 ساعات بدلاً من 4 ساعات
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 14400000);
+            }, 21600000); // 6 ساعات
         });
 
         async function handleLogin() {
@@ -6506,6 +6494,10 @@
         
         async function fetchRecentCallsForActivity() {
             try {
+                // استخدام البيانات المحلية إذا كانت متوفرة بدلاً من طلب قاعدة البيانات
+                if (callsData && Array.isArray(callsData) && callsData.length > 0) {
+                    return callsData.slice(0, 8);
+                }
                 const data = await supabaseRequest('calls', 'GET', null, '?order=created_at.desc&limit=8', {}, true);
                 return Array.isArray(data) ? data : [];
             } catch (error) {
@@ -6516,6 +6508,11 @@
         
         async function fetchSentMessagesForActivity() {
             try {
+                // استخدام الكاش إذا كان متوفراً
+                const cached = getCachedData('sentMessages');
+                if (cached && Array.isArray(cached) && cached.length > 0) {
+                    return cached.slice(0, 5);
+                }
                 const data = await supabaseRequest('sent_messages', 'GET', null, '?order=sent_at.desc&limit=5', {}, true);
                 return Array.isArray(data) ? data : [];
             } catch (error) {
@@ -7485,7 +7482,13 @@
                     displayCallsTable(allCallsData);
                     showAlert(alertDiv, `تم تحميل ${allCallsData.length} مكالمة`, 'success');
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-secondary);">لا توجد مكالمات</td></tr>';
+                    const container = document.getElementById('callsListBody');
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary); grid-column: 1 / -1;">
+                            <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">📞</div>
+                            <p style="font-size: 1.1rem;">لا توجد مكالمات</p>
+                        </div>
+                    `;
                     showAlert(alertDiv, 'لا توجد مكالمات', 'info');
                 }
             } catch (error) {
@@ -7495,27 +7498,259 @@
         }
         
         function displayCallsTable(calls) {
-            const tbody = document.getElementById('callsListBody');
-            tbody.innerHTML = calls.map((call, index) => {
+            const container = document.getElementById('callsListBody');
+            if (!calls || calls.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary); grid-column: 1 / -1;">
+                        <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">📞</div>
+                        <p style="font-size: 1.1rem;">لا توجد مكالمات</p>
+                    </div>
+                `;
+                window.currentCallsData = [];
+                return;
+            }
+            
+            const callTypeColors = {
+                'شكوى': '#f87171',
+                'ضعف بالخدمة': '#fb923c',
+                'استفسار': '#60a5fa',
+                'طلب': '#4ade80',
+                'شكر': '#a78bfa'
+            };
+            
+            const getCallTypeColor = (type) => {
+                if (!type) return '#94a3b8';
+                return callTypeColors[type] || '#60a5fa';
+            };
+            
+            container.innerHTML = calls.map((call, index) => {
+                const callType = call.call_type || 'غير محدد';
+                const callColor = getCallTypeColor(callType);
+                const callDate = call.created_at ? new Date(call.created_at) : null;
+                const formattedDate = callDate ? callDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'غير محدد';
+                const timeAgo = callDate ? getTimeAgo(callDate) : '';
+                const details = call.details || 'لا توجد تفاصيل';
+                const shortDetails = details.length > 100 ? details.substring(0, 100) + '...' : details;
+                
                 return `
-                    <tr>
-                        <td>${escapeHtml(call.call_type || '')}</td>
-                        <td>${escapeHtml(call.name || '')}</td>
-                        <td>${escapeHtml(call.phone || '')}</td>
-                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml((call.details || '').substring(0, 50))}${(call.details || '').length > 50 ? '...' : ''}</td>
-                        <td>${escapeHtml(call.agent || '')}</td>
-                        <td>${call.created_at ? new Date(call.created_at).toLocaleString('en-US') : ''}</td>
-                        <td>
-                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="showCallDetailsByIndex(${index})">عرض التفاصيل</button>
-                            ${currentUserRole === 'admin' ? `
-                            <button class="btn btn-warning" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="editCallByIndex(${index})">تعديل</button>
-                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="deleteCallByIndex(${index})">حذف</button>
+                    <div class="call-card" style="
+                        background: var(--bg-primary);
+                        border: 2px solid var(--border-color);
+                        border-radius: 16px;
+                        padding: 20px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 12px rgba(0, 0, 0, 0.15)';" 
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';">
+                        <div style="
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            width: 5px;
+                            height: 100%;
+                            background: ${callColor};
+                        "></div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div style="flex: 1;">
+                                <div style="
+                                    display: inline-block;
+                                    padding: 6px 12px;
+                                    background: ${callColor}20;
+                                    color: ${callColor};
+                                    border-radius: 8px;
+                                    font-weight: 600;
+                                    font-size: 0.9rem;
+                                    margin-bottom: 10px;
+                                ">${escapeHtml(callType)}</div>
+                                <h3 style="
+                                    margin: 0 0 8px 0;
+                                    color: var(--text-primary);
+                                    font-size: 1.2rem;
+                                    font-weight: 700;
+                                ">${escapeHtml(call.name || 'غير معروف')}</h3>
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    color: var(--text-secondary);
+                                    font-size: 0.95rem;
+                                    margin-bottom: 5px;
+                                ">
+                                    <span style="font-size: 1.1rem;">📱</span>
+                                    <a href="tel:${escapeHtml(call.phone || '')}" style="
+                                        color: var(--primary-color);
+                                        text-decoration: none;
+                                        font-weight: 600;
+                                    ">${escapeHtml(call.phone || 'غير محدد')}</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="
+                            background: var(--bg-secondary);
+                            padding: 12px;
+                            border-radius: 10px;
+                            margin-bottom: 15px;
+                            border-right: 3px solid ${callColor};
+                        ">
+                            <div style="
+                                color: var(--text-secondary);
+                                font-size: 0.85rem;
+                                margin-bottom: 5px;
+                                font-weight: 600;
+                            ">التفاصيل:</div>
+                            <div style="
+                                color: var(--text-primary);
+                                font-size: 0.95rem;
+                                line-height: 1.6;
+                                white-space: pre-wrap;
+                            ">${escapeHtml(shortDetails)}</div>
+                        </div>
+                        
+                        <div style="
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 12px;
+                            margin-bottom: 15px;
+                            padding-top: 15px;
+                            border-top: 1px solid var(--border-color);
+                        ">
+                            <div>
+                                <div style="
+                                    color: var(--text-secondary);
+                                    font-size: 0.8rem;
+                                    margin-bottom: 4px;
+                                    font-weight: 600;
+                                ">👤 الموظف</div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 0.9rem;
+                                    font-weight: 600;
+                                ">${escapeHtml(call.agent || 'غير محدد')}</div>
+                            </div>
+                            ${call.department ? `
+                            <div>
+                                <div style="
+                                    color: var(--text-secondary);
+                                    font-size: 0.8rem;
+                                    margin-bottom: 4px;
+                                    font-weight: 600;
+                                ">🏢 القسم</div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 0.9rem;
+                                    font-weight: 600;
+                                ">${escapeHtml(getDepartmentName(call.department) || 'غير محدد')}</div>
+                            </div>
                             ` : ''}
-                        </td>
-                    </tr>
+                        </div>
+                        
+                        <div style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding-top: 15px;
+                            border-top: 1px solid var(--border-color);
+                            margin-bottom: 15px;
+                        ">
+                            <div>
+                                <div style="
+                                    color: var(--text-secondary);
+                                    font-size: 0.8rem;
+                                    margin-bottom: 4px;
+                                    font-weight: 600;
+                                ">📅 التاريخ</div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                ">${formattedDate}</div>
+                                ${timeAgo ? `
+                                <div style="
+                                    color: var(--text-secondary);
+                                    font-size: 0.75rem;
+                                    margin-top: 4px;
+                                ">${timeAgo}</div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div style="
+                            display: flex;
+                            gap: 10px;
+                            flex-wrap: wrap;
+                        ">
+                            <button class="btn btn-primary" style="
+                                padding: 10px 20px;
+                                font-size: 0.9rem;
+                                border-radius: 8px;
+                                flex: 1;
+                                min-width: 120px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                border: none;
+                                transition: all 0.2s;
+                            " onclick="showCallDetailsByIndex(${index})" 
+                               onmouseover="this.style.opacity='0.9'; this.style.transform='scale(1.02)';" 
+                               onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
+                                📋 عرض التفاصيل
+                            </button>
+                            ${currentUserRole === 'admin' ? `
+                            <button class="btn btn-warning" style="
+                                padding: 10px 16px;
+                                font-size: 0.9rem;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                border: none;
+                                transition: all 0.2s;
+                            " onclick="editCallByIndex(${index})"
+                               onmouseover="this.style.opacity='0.9'; this.style.transform='scale(1.02)';" 
+                               onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
+                                ✏️ تعديل
+                            </button>
+                            <button class="btn btn-danger" style="
+                                padding: 10px 16px;
+                                font-size: 0.9rem;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                border: none;
+                                transition: all 0.2s;
+                            " onclick="deleteCallByIndex(${index})"
+                               onmouseover="this.style.opacity='0.9'; this.style.transform='scale(1.02)';" 
+                               onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
+                                🗑️ حذف
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
                 `;
             }).join('');
             window.currentCallsData = calls;
+        }
+        
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'الآن';
+            if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+            if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+            if (diffDays < 7) return `منذ ${diffDays} يوم`;
+            return '';
         }
         
         function showCallDetailsByIndex(index) {
@@ -7544,40 +7779,226 @@
         
         function showCallDetails(call) {
             try {
+                const callType = call.call_type || 'غير محدد';
+                const callTypeColors = {
+                    'شكوى': '#f87171',
+                    'ضعف بالخدمة': '#fb923c',
+                    'استفسار': '#60a5fa',
+                    'طلب': '#4ade80',
+                    'شكر': '#a78bfa'
+                };
+                const callColor = callTypeColors[callType] || '#60a5fa';
+                const callDate = call.created_at ? new Date(call.created_at) : null;
+                const formattedDate = callDate ? callDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    weekday: 'long'
+                }) : 'غير محدد';
+                
                 const content = document.getElementById('callDetailsContent');
                 content.innerHTML = `
-                    <div style="line-height: 1.8;">
-                        <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light);">
-                            <strong style="color: var(--primary-color); font-size: 1.1rem;">نوع المكالمة:</strong>
-                            <div style="margin-top: 5px; font-size: 1rem;">${escapeHtml(call.call_type || 'غير محدد')}</div>
+                    <div style="max-width: 700px; margin: 0 auto;">
+                        <div style="
+                            background: linear-gradient(135deg, ${callColor}15 0%, ${callColor}05 100%);
+                            border: 2px solid ${callColor}40;
+                            border-radius: 20px;
+                            padding: 30px;
+                            margin-bottom: 25px;
+                            position: relative;
+                            overflow: hidden;
+                        ">
+                            <div style="
+                                position: absolute;
+                                top: -50px;
+                                right: -50px;
+                                width: 200px;
+                                height: 200px;
+                                background: ${callColor}10;
+                                border-radius: 50%;
+                            "></div>
+                            <div style="position: relative; z-index: 1;">
+                                <div style="
+                                    display: inline-block;
+                                    padding: 10px 20px;
+                                    background: ${callColor};
+                                    color: white;
+                                    border-radius: 12px;
+                                    font-weight: 700;
+                                    font-size: 1.1rem;
+                                    margin-bottom: 20px;
+                                    box-shadow: 0 4px 12px ${callColor}40;
+                                ">${escapeHtml(callType)}</div>
+                                <h2 style="
+                                    margin: 0 0 15px 0;
+                                    color: var(--text-primary);
+                                    font-size: 1.8rem;
+                                    font-weight: 700;
+                                ">${escapeHtml(call.name || 'غير معروف')}</h2>
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                    margin-bottom: 10px;
+                                ">
+                                    <span style="font-size: 1.3rem;">📱</span>
+                                    <a href="tel:${escapeHtml(call.phone || '')}" style="
+                                        color: var(--primary-color);
+                                        text-decoration: none;
+                                        font-weight: 700;
+                                        font-size: 1.2rem;
+                                    ">${escapeHtml(call.phone || 'غير محدد')}</a>
+                                </div>
+                            </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">اسم المتصل:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${escapeHtml(call.name || 'غير محدد')}</div>
+                        
+                        <div style="
+                            background: var(--bg-secondary);
+                            border-radius: 16px;
+                            padding: 25px;
+                            margin-bottom: 20px;
+                            border-right: 4px solid ${callColor};
+                        ">
+                            <div style="
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                margin-bottom: 15px;
+                            ">
+                                <span style="font-size: 1.5rem;">📝</span>
+                                <h3 style="
+                                    margin: 0;
+                                    color: var(--text-primary);
+                                    font-size: 1.2rem;
+                                    font-weight: 700;
+                                ">التفاصيل</h3>
+                            </div>
+                            <div style="
+                                color: var(--text-primary);
+                                font-size: 1rem;
+                                line-height: 1.8;
+                                white-space: pre-wrap;
+                                padding: 15px;
+                                background: var(--bg-primary);
+                                border-radius: 12px;
+                            ">${escapeHtml(call.details || 'لا توجد تفاصيل')}</div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">رقم الهاتف:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${escapeHtml(call.phone || 'غير محدد')}</div>
+                        
+                        <div style="
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                            gap: 20px;
+                            margin-bottom: 20px;
+                        ">
+                            <div style="
+                                background: var(--bg-secondary);
+                                padding: 20px;
+                                border-radius: 12px;
+                                border-top: 3px solid var(--primary-color);
+                            ">
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    margin-bottom: 10px;
+                                ">
+                                    <span style="font-size: 1.3rem;">👤</span>
+                                    <div style="
+                                        color: var(--text-secondary);
+                                        font-size: 0.9rem;
+                                        font-weight: 600;
+                                    ">الموظف</div>
+                                </div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 1.1rem;
+                                    font-weight: 700;
+                                ">${escapeHtml(call.agent || 'غير محدد')}</div>
+                            </div>
+                            
+                            ${call.department ? `
+                            <div style="
+                                background: var(--bg-secondary);
+                                padding: 20px;
+                                border-radius: 12px;
+                                border-top: 3px solid var(--primary-color);
+                            ">
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    margin-bottom: 10px;
+                                ">
+                                    <span style="font-size: 1.3rem;">🏢</span>
+                                    <div style="
+                                        color: var(--text-secondary);
+                                        font-size: 0.9rem;
+                                        font-weight: 600;
+                                    ">القسم</div>
+                                </div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 1.1rem;
+                                    font-weight: 700;
+                                ">${escapeHtml(getDepartmentName(call.department) || 'غير محدد')}</div>
+                            </div>
+                            ` : ''}
+                            
+                            ${call.shift_time ? `
+                            <div style="
+                                background: var(--bg-secondary);
+                                padding: 20px;
+                                border-radius: 12px;
+                                border-top: 3px solid var(--primary-color);
+                            ">
+                                <div style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                    margin-bottom: 10px;
+                                ">
+                                    <span style="font-size: 1.3rem;">⏰</span>
+                                    <div style="
+                                        color: var(--text-secondary);
+                                        font-size: 0.9rem;
+                                        font-weight: 600;
+                                    ">وقت الشفت</div>
+                                </div>
+                                <div style="
+                                    color: var(--text-primary);
+                                    font-size: 1.1rem;
+                                    font-weight: 700;
+                                ">${escapeHtml(call.shift_time)}</div>
+                            </div>
+                            ` : ''}
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">التفاصيل:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary); padding: 10px; background: var(--bg-secondary); border-radius: 8px; white-space: pre-wrap;">${escapeHtml(call.details || 'لا توجد تفاصيل')}</div>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">الموظف:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${escapeHtml(call.agent || 'غير محدد')}</div>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">القسم:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${escapeHtml(getDepartmentName(call.department) || 'لا يوجد')}</div>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">وقت الشفت:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${escapeHtml(call.shift_time || 'غير محدد')}</div>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <strong style="color: var(--text-primary);">تاريخ الإنشاء:</strong>
-                            <div style="margin-top: 5px; color: var(--text-secondary);">${call.created_at ? new Date(call.created_at).toLocaleString('en-US') : 'غير محدد'}</div>
+                        
+                        <div style="
+                            background: var(--bg-secondary);
+                            padding: 20px;
+                            border-radius: 12px;
+                            border-top: 3px solid var(--primary-color);
+                        ">
+                            <div style="
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                margin-bottom: 10px;
+                            ">
+                                <span style="font-size: 1.3rem;">📅</span>
+                                <div style="
+                                    color: var(--text-secondary);
+                                    font-size: 0.9rem;
+                                    font-weight: 600;
+                                ">تاريخ الإنشاء</div>
+                            </div>
+                            <div style="
+                                color: var(--text-primary);
+                                font-size: 1.1rem;
+                                font-weight: 700;
+                            ">${formattedDate}</div>
                         </div>
                     </div>
                 `;
@@ -8568,7 +8989,7 @@
                 if (isTabActive && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     updateUnreadMessagesCount();
                 }
-            }, 1800000); 
+            }, 3600000); // 60 دقيقة بدلاً من 30 
         }
         
         
@@ -8580,7 +9001,7 @@
                     await loadChatMessages(currentChatUserId);
                     await loadChatUsers();
                 }
-            }, 1800000); 
+            }, 3600000); // 60 دقيقة بدلاً من 30 
         }
         
         function stopChatAutoUpdate() {
