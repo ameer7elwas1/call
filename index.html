@@ -2635,7 +2635,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cmbCallType">نوع المكالمة *</label>
-                            <select id="cmbCallType">
+                            <select id="cmbCallType" onchange="handleCallTypeChange()">
                                 <option value="">اختر نوع المكالمة</option>
                                 <option value="استفسار">استفسار</option>
                                 <option value="شكوى">شكوى</option>
@@ -2657,7 +2657,7 @@
                         <label for="txtIssueDetails">تفاصيل المكالمة *</label>
                         <textarea id="txtIssueDetails" placeholder="أدخل تفاصيل المكالمة"></textarea>
                     </div>
-                    <div class="form-group" style="background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
+                    <div class="form-group" id="departmentSection" style="background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px; display: none;">
                         <label for="selectDepartment" style="color: var(--text-primary);">اختر القسم (للشكاوى والمشاكل)</label>
                         <select id="selectDepartment" style="font-weight: 600;">
                             <option value="">لا يوجد</option>
@@ -5056,19 +5056,82 @@
                 if (isOnline) {
                     const result = await supabaseRequest('customers', 'POST', customerData);
                     
+                    // Ensure the saved customer has the employee field
+                    const savedCustomer = result && result[0] ? {
+                        ...result[0],
+                        employee: result[0].employee || customerData.employee || loggedInUser
+                    } : {
+                        ...customerData,
+                        employee: customerData.employee || loggedInUser
+                    };
+                    
                     const cached = getCachedData('customers');
                     if (cached && Array.isArray(cached)) {
-                        cached.unshift(result[0] || customerData);
+                        cached.unshift(savedCustomer);
                         setCachedData('customers', cached);
                     } else {
                         clearCache('customers');
                     }
                     
                     if (customersData && Array.isArray(customersData)) {
-                        customersData.unshift(result[0] || customerData);
+                        customersData.unshift(savedCustomer);
                     }
                     
                     updateStatistics();
+                    
+                    // Save call details automatically with type "طلب اشتراك"
+                    try {
+                        const now = new Date();
+                        const time = now.toLocaleTimeString('en-US', { 
+                            hour12: true, 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            second: '2-digit' 
+                        });
+                        const date = now.toLocaleDateString('en-US');
+                        const shift = getCurrentShift();
+                        const shiftAndTime = `${date} ${time} - ${shift}`;
+                        
+                        const callDetails = `مشترك جديد - المنطقة: ${region}، أقرب نقطة دالة: ${nearestPoint}${notes ? ' - ' + notes : ''}`;
+                        
+                        const callData = {
+                            call_type: 'طلب اشتراك',
+                            phone: phone,
+                            name: name,
+                            details: callDetails,
+                            agent: loggedInUser,
+                            shift_time: shiftAndTime,
+                            department: null
+                        };
+                        
+                        const callResult = await supabaseRequest('calls', 'POST', callData);
+                        
+                        // Ensure the saved call has the agent field
+                        const savedCall = callResult && callResult[0] ? {
+                            ...callResult[0],
+                            agent: callResult[0].agent || callData.agent || loggedInUser
+                        } : {
+                            ...callData,
+                            agent: callData.agent || loggedInUser
+                        };
+                        
+                        const cached = getCachedData('calls');
+                        if (cached && Array.isArray(cached)) {
+                            cached.unshift(savedCall);
+                            setCachedData('calls', cached);
+                        } else {
+                            clearCache('calls');
+                        }
+                        
+                        if (callsData && Array.isArray(callsData)) {
+                            callsData.unshift(savedCall);
+                        }
+                        
+                        updateStatistics();
+                    } catch (callError) {
+                        console.error('Error saving call details:', callError);
+                        // Don't show error to user, just log it
+                    }
                     
                     setTimeout(() => {
                         sendCustomerToWhatsApp(agent, customerData);
@@ -5078,6 +5141,37 @@
                     showAlert(alertDiv, `تم حفظ البيانات وإرسالها للوكيل ${agent.name} عبر واتساب بنجاح`, 'success');
                 } else {
                     saveToOfflineStorage('customer', customerData);
+                    
+                    // Save call details offline
+                    try {
+                        const now = new Date();
+                        const time = now.toLocaleTimeString('en-US', { 
+                            hour12: true, 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            second: '2-digit' 
+                        });
+                        const date = now.toLocaleDateString('en-US');
+                        const shift = getCurrentShift();
+                        const shiftAndTime = `${date} ${time} - ${shift}`;
+                        
+                        const callDetails = `مشترك جديد - المنطقة: ${region}، أقرب نقطة دالة: ${nearestPoint}${notes ? ' - ' + notes : ''}`;
+                        
+                        const callData = {
+                            call_type: 'طلب اشتراك',
+                            phone: phone,
+                            name: name,
+                            details: callDetails,
+                            agent: loggedInUser,
+                            shift_time: shiftAndTime,
+                            department: null
+                        };
+                        
+                        saveToOfflineStorage('call', callData);
+                    } catch (callError) {
+                        console.error('Error saving call details offline:', callError);
+                    }
+                    
                     sendCustomerToWhatsApp(agent, customerData);
                     showAlert(alertDiv, `⚠️ لا يوجد اتصال بالإنترنت. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة الاتصال.\n\nتم إرسال البيانات للوكيل ${agent.name} عبر واتساب.`, 'info');
                 }
@@ -5091,6 +5185,37 @@
                 
                 if (!isOnline || error.message.includes('fetch') || error.message.includes('network')) {
                     saveToOfflineStorage('customer', customerData);
+                    
+                    // Save call details offline
+                    try {
+                        const now = new Date();
+                        const time = now.toLocaleTimeString('en-US', { 
+                            hour12: true, 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            second: '2-digit' 
+                        });
+                        const date = now.toLocaleDateString('en-US');
+                        const shift = getCurrentShift();
+                        const shiftAndTime = `${date} ${time} - ${shift}`;
+                        
+                        const callDetails = `مشترك جديد - المنطقة: ${region}، أقرب نقطة دالة: ${nearestPoint}${notes ? ' - ' + notes : ''}`;
+                        
+                        const callData = {
+                            call_type: 'طلب اشتراك',
+                            phone: phone,
+                            name: name,
+                            details: callDetails,
+                            agent: loggedInUser,
+                            shift_time: shiftAndTime,
+                            department: null
+                        };
+                        
+                        saveToOfflineStorage('call', callData);
+                    } catch (callError) {
+                        console.error('Error saving call details offline:', callError);
+                    }
+                    
                     sendCustomerToWhatsApp(agent, customerData);
                     showAlert(alertDiv, `⚠️ لا يوجد اتصال بالإنترنت. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة الاتصال.\n\nتم إرسال البيانات للوكيل ${agent.name} عبر واتساب.`, 'info');
                 } else {
@@ -5326,6 +5451,21 @@
             showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
         }
 
+        function handleCallTypeChange() {
+            const callType = document.getElementById('cmbCallType').value;
+            const departmentSection = document.getElementById('departmentSection');
+            
+            // Show/hide department section for complaints
+            if (departmentSection) {
+                if (callType === 'شكوى' || callType === 'ضعف بالخدمة') {
+                    departmentSection.style.display = 'block';
+                } else {
+                    departmentSection.style.display = 'none';
+                    document.getElementById('selectDepartment').value = '';
+                }
+            }
+        }
+
         function clearCallForm() {
             if (confirm('هل أنت متأكد أنك تريد مسح تفاصيل المكالمة؟')) {
                 document.getElementById('cmbCallType').value = '';
@@ -5334,6 +5474,9 @@
                 document.getElementById('txtIssueDetails').value = '';
                 document.getElementById('selectDepartment').value = '';
                 document.getElementById('callAlert').innerHTML = '';
+                // Hide department section
+                const departmentSection = document.getElementById('departmentSection');
+                if (departmentSection) departmentSection.style.display = 'none';
             }
         }
 
@@ -5642,8 +5785,10 @@
 
         function updateAgentsSelect() {
             const select = document.getElementById('selectAgent');
-            select.innerHTML = '<option value="">لا يوجد</option>' + 
-                agents.map(agent => `<option value="${agent.id}">${agent.name}</option>`).join('');
+            if (select) {
+                select.innerHTML = '<option value="">اختر الوكيل</option>' + 
+                    agents.map(agent => `<option value="${agent.id}">${agent.name}</option>`).join('');
+            }
         }
 
         function openAddAgentModal() {
