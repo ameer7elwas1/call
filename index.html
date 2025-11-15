@@ -1679,7 +1679,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         [data-theme="dark"] .chat-message.received .chat-message-content {
-            background: linear-gradient(135deg, #202c33 0%, #2a3942 100%);
+            background: #202c33;
             color: #e9edef;
         }
         .chat-message-text {
@@ -2041,10 +2041,10 @@
         }
         /* ألوان مختلفة للرسوم البيانية */
         .chart-card:nth-child(1) .bar-fill {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: #3b82f6;
         }
         .chart-card:nth-child(2) .bar-fill {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #10b981;
         }
         /* Agents Stats Table */
         .agents-stats-table {
@@ -2233,7 +2233,7 @@
                         <img id="sidebarUserAvatar" class="sidebar-user-avatar" src="" alt="صورة المستخدم" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary-color); display: none; object-fit: cover;">
                         <div id="sidebarUserInitials" style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; border: 2px solid var(--primary-color);"></div>
                     </div>
-                    <div id="sidebarUser" class="sidebar-user-name" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); text-align: center; letter-spacing: 0.5px; border: 2px solid rgba(255, 255, 255, 0.2);">Ameer Helwas</div>
+                    <div id="sidebarUser" class="sidebar-user-name" style="background: #667eea; color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); text-align: center; letter-spacing: 0.5px; border: 2px solid rgba(255, 255, 255, 0.2);">Ameer Helwas</div>
                 </div>
             </div>
             <div class="sidebar-nav">
@@ -2463,7 +2463,7 @@
                             <label for="txtDate">التاريخ</label>
                             <input type="date" id="txtDate">
                         </div>
-                        <div class="form-group" style="background: linear-gradient(135deg, rgba(128, 28, 50, 0.05) 0%, rgba(128, 28, 50, 0.02) 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
+                        <div class="form-group" style="background: rgba(128, 28, 50, 0.04); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
                             <label for="selectAgent" style="color: var(--text-primary);">اختر الوكيل *</label>
                             <select id="selectAgent" required style="font-weight: 600;">
                                 <option value="">اختر الوكيل</option>
@@ -2562,7 +2562,7 @@
                         <label for="txtIssueDetails">تفاصيل المكالمة *</label>
                         <textarea id="txtIssueDetails" placeholder="أدخل تفاصيل المكالمة"></textarea>
                     </div>
-                    <div class="form-group" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
+                    <div class="form-group" style="background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px;">
                         <label for="selectDepartment" style="color: var(--text-primary);">اختر القسم (للشكاوى والمشاكل)</label>
                         <select id="selectDepartment" style="font-weight: 600;">
                             <option value="">لا يوجد</option>
@@ -2631,7 +2631,7 @@
             <div id="reports" class="tab-content">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
                     <!-- Export Report Card -->
-                    <div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
+                    <div class="card" style="background: rgba(59, 130, 246, 0.05); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
                                 📊
@@ -2693,9 +2693,9 @@
                     </div>
 
                     <!-- Quick Export Card -->
-                    <div class="card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%); border: 2px solid var(--success-color); box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);">
+                    <div class="card" style="background: rgba(34, 197, 94, 0.05); border: 2px solid var(--success-color); box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
-                            <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--success-color) 0%, #22c55e 100%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--success-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
                             
                             </div>
                             <div>
@@ -3166,8 +3166,6 @@
         const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
-        let WHATSAPP_SERVER_URL = null;
-        let useWhatsAppAPI = false;
         
         const dataCache = {
             calls: { data: null, timestamp: 0, ttl: 14400000 }, 
@@ -3847,6 +3845,17 @@
                 }
             }
             return trimmed;
+        }
+        
+        function isValidEmployeeName(name) {
+            if (!name || typeof name !== 'string') return false;
+            const trimmed = name.trim();
+            if (trimmed === '' || trimmed === 'غير محدد' || trimmed === 'null' || trimmed === 'undefined') return false;
+            if (EXCLUDED_EMPLOYEES.includes(trimmed)) return false;
+            
+            const englishPattern = /^[A-Za-z\s]+$/;
+            if (englishPattern.test(trimmed) && trimmed.length < 20) return false;
+            return true;
         }
         
         async function loadUsers() {
@@ -4938,31 +4947,6 @@
             const phone = formatPhoneForWhatsApp(agent.phone);
             const alertDiv = document.getElementById('customerAlert');
             
-            if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
-                try {
-                    const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            phone: phone,
-                            message: message
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    if (result.success) {
-                        showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب بنجاح`, 'success');
-                        return;
-                    } else {
-                        console.warn('WhatsApp API failed, falling back to wa.me:', result.message);
-                    }
-                } catch (error) {
-                    console.warn('WhatsApp API error, falling back to wa.me:', error);
-                }
-            }
-            
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
             showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
@@ -5153,31 +5137,6 @@
             const phone = formatPhoneForWhatsApp(department.phone);
             const alertDiv = document.getElementById('callAlert');
             
-            if (useWhatsAppAPI && WHATSAPP_SERVER_URL) {
-                try {
-                    const response = await fetch(`${WHATSAPP_SERVER_URL}/api/send`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            phone: phone,
-                            message: message
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    if (result.success) {
-                        showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب بنجاح`, 'success');
-                        return;
-                    } else {
-                        console.warn('WhatsApp API failed, falling back to wa.me:', result.message);
-                    }
-                } catch (error) {
-                    console.warn('WhatsApp API error, falling back to wa.me:', error);
-                }
-            }
-            
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
             showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
@@ -5252,7 +5211,7 @@
                         <td>${escapeHtml(customer.employee || '')}</td>
                         <td>${escapeHtml(customer.agent || '')}</td>
                         <td>
-                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="fillFormFromSearchResultByIndex(${index})">استخدام</button>
+                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="fillFormFromSearchResultByIndex(${index})">مشاركة</button>
                             ${customer.agent ? `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="resendCustomerToAgentByIndex(${index})">إعادة إرسال للوكيل</button>` : ''}
                             ${currentUserRole === 'admin' ? `
                             <button class="btn btn-warning" style="padding: 6px 12px; font-size: 0.85rem; margin-left: 5px;" onclick="editCustomerByIndex(${index})">تعديل</button>
@@ -6218,8 +6177,8 @@
                 
                 const isSaturday = dayOfWeek === 6;
                 const currentHour = now.getHours();
-                const canCalculateNew = (isSaturday && currentHour >= 8) || 
-                                       (currentWeekStart.getTime() >= firstSaturday.getTime() && !existing);
+                const isAfterFirstSaturday = now.getTime() >= firstSaturday.getTime();
+                const canCalculateNew = isAfterFirstSaturday && isSaturday && currentHour >= 8;
                 
                 if (existing && existing.length > 0) {
                     const employee = existing[0];
@@ -6242,6 +6201,7 @@
                         
                         try {
                             await supabaseRequest('employee_of_the_week', 'DELETE', null, `?id=eq.${employee.id}`);
+                            existing = [];
                         } catch (e) {
                             console.warn('Error deleting invalid employee record:', e);
                         }
@@ -6307,17 +6267,6 @@
                 
                 const employeeStats = {};
                 
-                function isValidEmployeeName(name) {
-                    if (!name || typeof name !== 'string') return false;
-                    const trimmed = name.trim();
-                    if (trimmed === '' || trimmed === 'غير محدد' || trimmed === 'null' || trimmed === 'undefined') return false;
-                    if (EXCLUDED_EMPLOYEES.includes(trimmed)) return false;
-                    
-                    const englishPattern = /^[A-Za-z\s]+$/;
-                    if (englishPattern.test(trimmed) && trimmed.length < 20) return false;
-                    return true;
-                }
-                
                 calls.forEach(call => {
                     const oldEmployeeName = (call.agent || '').trim();
                     const employee = getUnifiedEmployeeName(oldEmployeeName);
@@ -6379,14 +6328,51 @@
                         expires_at: expiresAt.toISOString()
                     };
                     
-                    if (existing && existing.length > 0) {
+                    
+                    let currentExisting = existing && existing.length > 0 ? existing : null;
+                    if (!currentExisting) {
+                        try {
+                            const recheckFilter = `?week_start_date=eq.${weekStartStr}`;
+                            const recheck = await supabaseRequest('employee_of_the_week', 'GET', null, recheckFilter);
+                            if (recheck && recheck.length > 0) {
+                                currentExisting = recheck;
+                            }
+                        } catch (e) {
+                            console.warn('Error rechecking existing record:', e);
+                        }
+                    }
+                    
+                    if (currentExisting && currentExisting.length > 0) {
                         
-                        await supabaseRequest('employee_of_the_week', 'PATCH', employeeData, `?id=eq.${existing[0].id}`);
-                        return { ...existing[0], ...employeeData };
+                        try {
+                            await supabaseRequest('employee_of_the_week', 'PATCH', employeeData, `?id=eq.${currentExisting[0].id}`);
+                            return { ...currentExisting[0], ...employeeData };
+                        } catch (e) {
+                            console.error('Error updating employee of the week:', e);
+                            return currentExisting[0];
+                        }
                     } else {
                         
-                        const result = await supabaseRequest('employee_of_the_week', 'POST', employeeData);
-                        return Array.isArray(result) ? result[0] : result;
+                        try {
+                            const result = await supabaseRequest('employee_of_the_week', 'POST', employeeData);
+                            return Array.isArray(result) ? result[0] : result;
+                        } catch (e) {
+                            if (e.message && e.message.includes('duplicate key') || e.message && e.message.includes('23505')) {
+                                
+                                try {
+                                    const recheckFilter = `?week_start_date=eq.${weekStartStr}`;
+                                    const recheck = await supabaseRequest('employee_of_the_week', 'GET', null, recheckFilter);
+                                    if (recheck && recheck.length > 0) {
+                                        const employeeDataUpdate = { ...employeeData };
+                                        await supabaseRequest('employee_of_the_week', 'PATCH', employeeDataUpdate, `?id=eq.${recheck[0].id}`);
+                                        return { ...recheck[0], ...employeeDataUpdate };
+                                    }
+                                } catch (e2) {
+                                    console.error('Error handling duplicate key:', e2);
+                                }
+                            }
+                            throw e;
+                        }
                     }
                 }
                 
@@ -6400,21 +6386,39 @@
         
         async function updateEmployeeOfTheWeek() {
             try {
+                const banner = document.getElementById('employeeOfTheWeekBanner');
+                banner.style.display = 'none';
+                return;
+                
                 const now = new Date();
-                    const employee = await calculateEmployeeOfTheWeek();
-                    const banner = document.getElementById('employeeOfTheWeekBanner');
-                    
+                const dayOfWeek = now.getDay();
+                const currentHour = now.getHours();
                 
-                function isValidEmployeeName(name) {
-                    if (!name || typeof name !== 'string') return false;
-                    const trimmed = name.trim();
-                    if (trimmed === '' || trimmed === 'غير محدد' || trimmed === 'null' || trimmed === 'undefined') return false;
-                    
-                    const englishPattern = /^[A-Za-z\s]+$/;
-                    if (englishPattern.test(trimmed) && trimmed.length < 20) return false;
-                    return true;
+                const initialStartDate = new Date(2025, 10, 14);
+                initialStartDate.setHours(0, 0, 0, 0);
+                
+                const initialDayOfWeek = initialStartDate.getDay();
+                let daysToNextSaturday;
+                if (initialDayOfWeek === 6) {
+                    daysToNextSaturday = 7;
+                } else {
+                    daysToNextSaturday = (6 - initialDayOfWeek + 7) % 7;
+                    if (daysToNextSaturday === 0) daysToNextSaturday = 7;
                 }
+                const firstSaturday = new Date(initialStartDate);
+                firstSaturday.setDate(firstSaturday.getDate() + daysToNextSaturday);
+                firstSaturday.setHours(8, 0, 0, 0);
                 
+                const isAfterFirstSaturday = now.getTime() >= firstSaturday.getTime();
+                const canShow = isAfterFirstSaturday && dayOfWeek === 6 && currentHour >= 8;
+                
+                const employee = await calculateEmployeeOfTheWeek();
+                
+                if (!canShow) {
+                    banner.style.display = 'none';
+                    return;
+                }
+                    
                 if (employee && employee.employee_name && isValidEmployeeName(employee.employee_name)) {
                     const expiresAt = employee.expires_at ? new Date(employee.expires_at) : null;
                     
@@ -6638,7 +6642,7 @@
                                 <span>${type}</span>
                             </div>
                             <div class="bar-wrapper">
-                                <div class="bar-fill" style="width: ${percentage}%; background: linear-gradient(135deg, ${typeColor} 0%, ${typeColor}dd 100%);">
+                                <div class="bar-fill" style="width: ${percentage}%; background: ${typeColor};">
                                     <span style="color: white; font-weight: 700; font-size: 0.7rem;">${count.toLocaleString('en-US')}</span>
                             </div>
                             </div>
@@ -6698,7 +6702,7 @@
                                 <span style="font-weight: 700; font-size: 0.75rem;">${employee}</span>
                             </div>
                             <div class="bar-wrapper" style="height: 18px;">
-                                <div class="bar-fill" style="width: ${percentage}%; background: linear-gradient(135deg, ${barColor} 0%, ${barColor}dd 100%); border-radius: 9px;">
+                                <div class="bar-fill" style="width: ${percentage}%; background: ${barColor}; border-radius: 9px;">
                                     <span style="color: white; font-weight: 700; font-size: 0.65rem;">${count.toLocaleString('en-US')}</span>
                                 </div>
                             </div>
@@ -8314,7 +8318,7 @@
                 content.innerHTML = `
                     <div style="max-width: 700px; margin: 0 auto;">
                         <div style="
-                            background: linear-gradient(135deg, ${callColor}15 0%, ${callColor}05 100%);
+                            background: ${callColor}10;
                             border: 2px solid ${callColor}40;
                             border-radius: 20px;
                             padding: 30px;
@@ -9747,6 +9751,23 @@
                     return;
                 }
                 
+                const initialStartDate = new Date(2025, 10, 14);
+                initialStartDate.setHours(0, 0, 0, 0);
+                
+                const initialDayOfWeek = initialStartDate.getDay();
+                let daysToNextSaturday;
+                if (initialDayOfWeek === 6) {
+                    daysToNextSaturday = 7;
+                } else {
+                    daysToNextSaturday = (6 - initialDayOfWeek + 7) % 7;
+                    if (daysToNextSaturday === 0) daysToNextSaturday = 7;
+                }
+                const firstSaturday = new Date(initialStartDate);
+                firstSaturday.setDate(firstSaturday.getDate() + daysToNextSaturday);
+                firstSaturday.setHours(8, 0, 0, 0);
+                
+                const minWeekStartDate = firstSaturday.toISOString().split('T')[0];
+                
                 let allAwards = [];
                 let from = 0;
                 const batchSize = 1000;
@@ -9755,7 +9776,7 @@
                 while (hasMore) {
                     const to = from + batchSize - 1;
                     try {
-                        const batch = await supabaseRequest('employee_of_the_week', 'GET', null, `?employee_name=eq.${encodeURIComponent(fullName)}&order=week_start_date.desc`, {
+                        const batch = await supabaseRequest('employee_of_the_week', 'GET', null, `?employee_name=eq.${encodeURIComponent(fullName)}&week_start_date=gte.${minWeekStartDate}&order=week_start_date.desc`, {
                             'Range': `${from}-${to}`
                         });
                         if (Array.isArray(batch) && batch.length > 0) {
@@ -9786,7 +9807,7 @@
                     const weekEndStr = weekEnd ? weekEnd.toLocaleDateString('en-US') : 'غير محدد';
                     
                     return `
-                        <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3);">
+                        <div style="background: #FFD700; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3);">
                             <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%;"></div>
                             <div style="position: absolute; bottom: -30px; left: -30px; width: 100px; height: 100px; background: rgba(255, 255, 255, 0.15); border-radius: 50%;"></div>
                             <div style="position: relative; z-index: 1;">
