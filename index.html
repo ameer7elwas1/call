@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قسم خدمة الزبائن</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -128,6 +129,8 @@
             border-bottom: 2px solid var(--border-color);
             background: rgba(128, 28, 50, 0.05);
             flex-shrink: 0;
+            position: relative;
+            overflow: visible;
         }
         .sidebar-header h1 {
             font-size: 1.1rem;
@@ -147,11 +150,84 @@
             color: var(--text-primary);
             margin-bottom: 0;
             padding: 6px 10px;
-            background: var(--bg-secondary);
-            border-radius: 6px;
-            border: 1.5px solid var(--border-light);
-            display: inline-block;
-            min-width: 120px;
+            cursor: pointer;
+            position: relative;
+            opacity: 1;
+        }
+        .user-contact-popup {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            min-width: 250px;
+            z-index: 10000;
+            display: none;
+            animation: popupFadeIn 0.2s ease;
+            pointer-events: auto;
+        }
+        .user-contact-popup.show {
+            display: block;
+        }
+        @keyframes popupFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .user-contact-popup::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-bottom-color: var(--card-bg);
+        }
+        .user-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+        .user-contact-item:last-child {
+            border-bottom: none;
+        }
+        .user-contact-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .user-contact-item a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        .user-contact-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-contact-icon i {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .sidebar-nav {
             flex: 1;
@@ -1201,15 +1277,15 @@
             color: #8b5cf6;
         }
         .stat-card-title {
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            margin-bottom: 6px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
             letter-spacing: 0.3px;
             text-transform: none;
         }
         .stat-card-value {
-            font-size: 1.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 0;
             line-height: 1.1;
@@ -1235,7 +1311,7 @@
             color: #8b5cf6;
         }
         .stat-card-change {
-            font-size: 0.65rem;
+            font-size: 0.85rem;
             color: var(--text-tertiary);
             margin-top: auto;
             min-height: 0;
@@ -1359,7 +1435,6 @@
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
-        /* Chat Window */
         .chat-window {
             display: none !important;
         }
@@ -1895,7 +1970,6 @@
                 text-align: center;
             }
         }
-        /* Charts Section */
         .charts-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2039,14 +2113,12 @@
             font-weight: 800;
             font-family: 'Cairo', sans-serif;
         }
-        /* ألوان مختلفة للرسوم البيانية */
         .chart-card:nth-child(1) .bar-fill {
             background: #3b82f6;
         }
         .chart-card:nth-child(2) .bar-fill {
             background: #10b981;
         }
-        /* Agents Stats Table */
         .agents-stats-table {
             width: 100%;
             margin-top: 20px;
@@ -2082,7 +2154,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px var(--shadow-md);
         }
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -2200,7 +2271,6 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <div class="login-card">
             <h1>قسم خدمة الزبائن</h1>
@@ -2233,7 +2303,26 @@
                         <img id="sidebarUserAvatar" class="sidebar-user-avatar" src="" alt="صورة المستخدم" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary-color); display: none; object-fit: cover;">
                         <div id="sidebarUserInitials" style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700; border: 2px solid var(--primary-color);"></div>
                     </div>
-                    <div id="sidebarUser" class="sidebar-user-name" style="background: #667eea; color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); text-align: center; letter-spacing: 0.5px; border: 2px solid rgba(255, 255, 255, 0.2);">Ameer Helwas</div>
+                    <div id="sidebarUser" class="sidebar-user-name" style="background: #667eea; color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); text-align: center; letter-spacing: 0.5px; border: 2px solid rgba(255, 255, 255, 0.2); position: relative;" onclick="toggleUserContactPopup(event)">Ameer Helwas
+                        <div id="userContactPopup" class="user-contact-popup">
+                            <div class="user-contact-item">
+                                <span class="user-contact-icon"><i class="fas fa-envelope" style="color: #0078d4;"></i></span>
+                                <a href="mailto:ameeralgaraawi@hotmail.com">ameeralgaraawi@hotmail.com</a>
+                            </div>
+                            <div class="user-contact-item">
+                                <span class="user-contact-icon"><i class="fab fa-instagram" style="color: #E4405F;"></i></span>
+                                <a href="https://instagram.com/ameer_7elwas" target="_blank">ameer_7elwas</a>
+                            </div>
+                            <div class="user-contact-item">
+                                <span class="user-contact-icon"><i class="fab fa-telegram" style="color: #0088cc;"></i></span>
+                                <a href="https://t.me/ameer_7elwas" target="_blank">ameer_7elwas</a>
+                            </div>
+                            <div class="user-contact-item">
+                                <span class="user-contact-icon"><i class="fab fa-whatsapp" style="color: #25D366;"></i></span>
+                                <a href="https://wa.me/9647701024143" target="_blank">واتساب</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="sidebar-nav">
@@ -2290,15 +2379,11 @@
             </div>
         </div>
 
-        <!-- Sidebar Toggle Button -->
         <button class="sidebar-toggle-btn" onclick="toggleSidebar()">☰</button>
         
-        <!-- Theme Toggle Button (Top Right) -->
         <button class="theme-toggle theme-toggle-top" onclick="toggleTheme()" id="themeToggle" title="تبديل الوضع">🌙</button>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Top Header -->
             <div class="top-header">
                 <h2 id="pageTitle">الاحصائيات</h2>
                 <div class="header-info">
@@ -2306,11 +2391,9 @@
                 </div>
             </div>
 
-            <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
                 <div class="card">
                     
-                    <!-- Employee of the Week Banner -->
                     <div id="employeeOfTheWeekBanner" class="employee-of-week-banner" style="display: none;">
                         <div class="employee-of-week-content">
                             <div class="employee-of-week-icon">🏆</div>
@@ -2381,7 +2464,7 @@
                     <!-- Charts Section -->
                     <div class="charts-section">
                         <div class="chart-card">
-                            <h4>توزيع أنواع المكالمات</h4>
+                            <h4> أنواع المكالمات</h4>
                             <div class="chart-container">
                                 <div class="bar-chart" id="callsTypeChart"></div>
                             </div>
@@ -2394,7 +2477,6 @@
                         </div>
                     </div>
 
-                    <!-- Agents Statistics -->
                     <div class="card">
                         <h3>إحصائيات الوكلاء</h3>
                         <div class="table-container">
@@ -2418,7 +2500,6 @@
                         </div>
                     </div>
 
-                    <!-- Recent Activity -->
                     <div class="card">
                         <h3>النشاطات الأخيرة</h3>
                         <div id="recentActivity" style="padding: 20px; color: var(--text-primary); text-align: center;">
@@ -2469,7 +2550,7 @@
                                 <option value="">اختر الوكيل</option>
                             </select>
                             <small style="color: var(--text-primary); font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
-                                ⚠️ سيتم إرسال بيانات المشترك تلقائياً للوكيل المحدد عبر واتساب
+                                 سيتم إرسال بيانات المشترك تلقائياً للوكيل المحدد عبر واتساب
                             </small>
                         </div>
                     </div>
@@ -2482,7 +2563,6 @@
                         <button class="btn btn-secondary" onclick="clearCustomerForm()">مسح الحقول</button>
                     </div>
                     
-                    <!-- البحث عن المشتركين -->
                     <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid var(--border-color);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h3 style="margin: 0; color: var(--primary-color);">البحث عن المشتركين</h3>
@@ -2517,7 +2597,7 @@
                                 <tbody id="searchResultsList">
                                     <tr>
                                         <td colspan="9" style="text-align: center; padding: 20px; color: var(--text-secondary);">
-                                            اضغط على "عرض جميع المشتركين" لعرض المشتركين
+                                           
                                         </td>
                                     </tr>
                                 </tbody>
@@ -2568,7 +2648,7 @@
                             <option value="">لا يوجد</option>
                         </select>
                         <small style="color: var(--text-primary); font-size: 0.9rem; display: block; margin-top: 8px; font-weight: 600;">
-                            ⚠️ يتم إرسال الشكاوى تلقائياً للقسم المختار عبر واتساب
+                             يتم إرسال الشكاوى تلقائياً للقسم المختار عبر واتساب
                         </small>
                     </div>
                     <div class="btn-group">
@@ -3458,6 +3538,35 @@
                     await refreshStatistics();
                 }
             }, 21600000);
+            
+            const sidebarUser = document.getElementById('sidebarUser');
+            const popup = document.getElementById('userContactPopup');
+            
+            if (sidebarUser && popup) {
+                sidebarUser.addEventListener('mouseenter', function() {
+                    if (!popup.classList.contains('show')) {
+                        this.style.opacity = '0.9';
+                    }
+                });
+                
+                sidebarUser.addEventListener('mouseleave', function() {
+                    if (!popup.classList.contains('show')) {
+                        this.style.opacity = '1';
+                    }
+                });
+                
+                popup.addEventListener('mouseenter', function() {
+                    if (sidebarUser) {
+                        sidebarUser.style.opacity = '1';
+                    }
+                });
+                
+                popup.addEventListener('mouseleave', function() {
+                    if (sidebarUser) {
+                        sidebarUser.style.opacity = '1';
+                    }
+                });
+            }
         });
 
         async function handleLogin() {
@@ -4339,12 +4448,44 @@
         }
         
         /**
+         * جلب صور الموظفين من قاعدة البيانات
+         * @param {Array} employeeNames - أسماء الموظفين
+         * @returns {Object} كائن يحتوي على أسماء الموظفين وصورهم
+         */
+        async function getEmployeePictures(employeeNames) {
+            const employeePictures = {};
+            if (!employeeNames || employeeNames.length === 0) return employeePictures;
+            
+            try {
+                const uniqueNames = [...new Set(employeeNames)];
+                await Promise.allSettled(uniqueNames.map(async (empName) => {
+                    try {
+                        const users = await supabaseRequest('users', 'GET', null, `?full_name=eq.${encodeURIComponent(empName)}`, {}, false);
+                        if (users && users.length > 0) {
+                            const userId = users[0].id;
+                            const profile = await supabaseRequest('user_profiles', 'GET', null, `?user_id=eq.${userId}`, {}, false);
+                            if (profile && profile.length > 0 && profile[0].profile_picture) {
+                                employeePictures[empName] = profile[0].profile_picture;
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('Error loading profile for employee:', empName, error);
+                    }
+                }));
+            } catch (error) {
+                console.error('Error loading employee pictures:', error);
+            }
+            
+            return employeePictures;
+        }
+        
+        /**
          * عرض الإحصائيات المتقدمة
          * @param {Array} calls - بيانات المكالمات
          * @param {Array} customers - بيانات المشتركين
          * @param {string} period - الفترة الزمنية (daily/weekly/monthly)
          */
-        function displayAdvancedStatistics(calls, customers, period) {
+        async function displayAdvancedStatistics(calls, customers, period) {
             const periodName = period === 'daily' ? 'اليوم' : period === 'weekly' ? 'هذا الأسبوع' : 'هذا الشهر';
             const callsData = Array.isArray(calls) ? calls : [];
             const customersData = Array.isArray(customers) ? customers : [];
@@ -4409,6 +4550,10 @@
             
             const contentDiv = document.getElementById('advancedStatsContent');
             const periodNameSafe = escapeHtml(periodName);
+            
+            const employeeNames = Object.keys(callsByEmployee);
+            const employeePictures = await getEmployeePictures(employeeNames);
+            
             contentDiv.innerHTML = `
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -4558,8 +4703,32 @@
                                             " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 16px rgba(0, 0, 0, 0.15)';" 
                                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${rank <= 3 ? '0 4px 12px rgba(0, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.08)'}';">
                                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
-                                                    <div style="display: flex; align-items: center; flex: 1; min-width: 200px;">
+                                                    <div style="display: flex; align-items: center; flex: 1; min-width: 200px; gap: 12px;">
                                                         ${rankBadge}
+                                                        ${(() => {
+                                                            const profilePicture = employeePictures[emp] || null;
+                                                            const initials = emp.charAt(0).toUpperCase();
+                                                            return `
+                                                                <div style="
+                                                                    width: 48px;
+                                                                    height: 48px;
+                                                                    border-radius: 50%;
+                                                                    background: ${rank <= 3 ? rankColor : 'var(--primary-color)'};
+                                                                    display: flex;
+                                                                    align-items: center;
+                                                                    justify-content: center;
+                                                                    color: white;
+                                                                    font-size: 1.2rem;
+                                                                    font-weight: 700;
+                                                                    border: 2px solid ${rank <= 3 ? rankColor : 'var(--primary-color)'};
+                                                                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                                                                    flex-shrink: 0;
+                                                                    overflow: hidden;
+                                                                ">
+                                                                    ${profilePicture ? `<img src="${escapeHtml(profilePicture)}" alt="${empSafe}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.textContent='${initials}';">` : `<span>${initials}</span>`}
+                                        </div>
+                                                            `;
+                                                        })()}
                                                         <div>
                                                             <div style="
                                                                 font-weight: ${rank <= 3 ? '700' : '600'};
@@ -6354,8 +6523,8 @@
                     } else {
                         
                         try {
-                            const result = await supabaseRequest('employee_of_the_week', 'POST', employeeData);
-                            return Array.isArray(result) ? result[0] : result;
+                        const result = await supabaseRequest('employee_of_the_week', 'POST', employeeData);
+                        return Array.isArray(result) ? result[0] : result;
                         } catch (e) {
                             if (e.message && e.message.includes('duplicate key') || e.message && e.message.includes('23505')) {
                                 
@@ -6386,7 +6555,7 @@
         
         async function updateEmployeeOfTheWeek() {
             try {
-                const banner = document.getElementById('employeeOfTheWeekBanner');
+                    const banner = document.getElementById('employeeOfTheWeekBanner');
                 banner.style.display = 'none';
                 return;
                 
@@ -6418,7 +6587,7 @@
                     banner.style.display = 'none';
                     return;
                 }
-                    
+                
                 if (employee && employee.employee_name && isValidEmployeeName(employee.employee_name)) {
                     const expiresAt = employee.expires_at ? new Date(employee.expires_at) : null;
                     
@@ -6656,12 +6825,8 @@
             `;
         }
 
-        /**
-         * تحديث مخطط المكالمات حسب الموظف
-         * يستبعد الموظفين المحددين في EXCLUDED_EMPLOYEES
-         * يوحد الأسماء القديمة والجديدة للموظفين
-         */
-        function updateCallsByEmployeeChart() {
+        
+        async function updateCallsByEmployeeChart() {
             if (!callsData || callsData.length === 0) {
                 document.getElementById('callsByEmployeeChart').innerHTML = 
                     '<div style="text-align: center; padding: 40px; color: var(--text-secondary);"><div style="font-size: 3rem; margin-bottom: 10px;">👤</div><p>لا توجد بيانات</p></div>';
@@ -6688,6 +6853,9 @@
             const sortedEntries = Object.entries(callsByEmployee).sort((a, b) => b[1] - a[1]).slice(0, 15);
             const chart = document.getElementById('callsByEmployeeChart');
             
+            const employeeNames = sortedEntries.map(([emp]) => emp);
+            const employeePictures = await getEmployeePictures(employeeNames);
+            
             chart.innerHTML = `
                 ${sortedEntries.map(([employee, count], index) => {
                     const percentage = maxValue > 0 ? (count / maxValue) * 100 : 0;
@@ -6696,10 +6864,31 @@
                     const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444'];
                     const colorIndex = index % colors.length;
                     const barColor = colors[colorIndex];
+                    const profilePicture = employeePictures[employee] || null;
+                    const initials = employee.charAt(0).toUpperCase();
+                    const empSafe = escapeHtml(employee);
                     return `
                         <div class="bar-item" style="padding: 4px 8px;">
-                            <div class="bar-label" style="display: flex; align-items: center; gap: 6px; min-width: 140px;">
-                                <span style="font-weight: 700; font-size: 0.75rem;">${employee}</span>
+                            <div class="bar-label" style="display: flex; align-items: center; gap: 10px; min-width: 140px;">
+                                <div style="
+                                    width: 36px;
+                                    height: 36px;
+                                    border-radius: 50%;
+                                    background: ${barColor};
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    color: white;
+                                    font-size: 0.9rem;
+                                    font-weight: 700;
+                                    border: 2px solid ${barColor};
+                                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+                                    flex-shrink: 0;
+                                    overflow: hidden;
+                                ">
+                                    ${profilePicture ? `<img src="${escapeHtml(profilePicture)}" alt="${empSafe}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.textContent='${initials}';">` : `<span>${initials}</span>`}
+                                </div>
+                                <span style="font-weight: 700; font-size: 0.85rem; cursor: pointer;" onclick="viewEmployeeProfile('${empSafe.replace(/'/g, "\\'")}')" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';">${empSafe}</span>
                             </div>
                             <div class="bar-wrapper" style="height: 18px;">
                                 <div class="bar-fill" style="width: ${percentage}%; background: ${barColor}; border-radius: 9px;">
@@ -8581,7 +8770,7 @@
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(ticketMessage).then(() => {
                             const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
-                            showAlert(alertDiv, '✅ تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
+                            showAlert(alertDiv, ' تم نسخ التذكرة إلى الحافظة !', 'success');
                         }).catch(() => {
                             copyToClipboardFallback(ticketMessage);
                         });
@@ -8596,10 +8785,6 @@
             }
         }
         
-        /**
-         * طريقة بديلة لنسخ النص إلى الحافظة
-         * @param {string} text - النص المراد نسخه
-         */
         function copyToClipboardFallback(text) {
             try {
                 const textArea = document.createElement('textarea');
@@ -8623,14 +8808,14 @@
                 
                 const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
                 if (successful) {
-                    showAlert(alertDiv, '✅ تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
+                    showAlert(alertDiv, ' تم نسخ التذكرة إلى الحافظة بنجاح!', 'success');
                 } else {
-                    showAlert(alertDiv, '❌ فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
+                    showAlert(alertDiv, ' فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
                 }
             } catch (err) {
                 console.error('Fallback copy failed:', err);
                 const alertDiv = document.getElementById('callDetailsAlert') || document.getElementById('callAlert');
-                showAlert(alertDiv, '❌ فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
+                showAlert(alertDiv, ' فشل نسخ التذكرة. يرجى نسخها يدوياً.', 'error');
             }
         }
         
@@ -10136,6 +10321,33 @@
                 showAlert(document.getElementById('notesAlert'), 'حدث خطأ أثناء حذف الملاحظة', 'error');
             }
         }
+        
+        function toggleUserContactPopup(event) {
+            event.stopPropagation();
+            const popup = document.getElementById('userContactPopup');
+            const sidebarUser = document.getElementById('sidebarUser');
+            if (popup && sidebarUser) {
+                if (popup.classList.contains('show')) {
+                    popup.classList.remove('show');
+                    sidebarUser.style.opacity = '1';
+                } else {
+                    popup.classList.add('show');
+                    sidebarUser.style.opacity = '1';
+                }
+            }
+        }
+        
+        
+        document.addEventListener('click', function(event) {
+            const popup = document.getElementById('userContactPopup');
+            const sidebarUser = document.getElementById('sidebarUser');
+            if (popup && sidebarUser) {
+                if (!sidebarUser.contains(event.target) && !popup.contains(event.target)) {
+                    popup.classList.remove('show');
+                    sidebarUser.style.opacity = '1';
+                }
+            }
+        });
         
     </script>
 </body>
