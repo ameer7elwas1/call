@@ -3365,8 +3365,38 @@
                 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(`Supabase error: ${response.status} - ${errorText}`);
+                    const error = new Error(`Supabase error: ${response.status} - ${errorText}`);
+                    
+                    // اكتشاف أخطاء قاعدة البيانات
+                    const isDatabaseError = response.status >= 500 || 
+                                          response.status === 503 || 
+                                          response.status === 502 || 
+                                          response.status === 504 ||
+                                          response.status === 429; // Rate limiting
+                    
+                    if (isDatabaseError) {
+                        databaseAvailable = false;
+                        
+                        // حفظ العمليات الكتابية (POST, PATCH, PUT, DELETE) محلياً
+                        if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
+                            saveToOfflineStorage({
+                                table: table,
+                                method: method,
+                                data: data,
+                                filters: filters,
+                                customHeaders: customHeaders
+                            });
+                        }
+                    }
+                    
+                    throw error;
                 }
+                
+                // إذا نجحت العملية، قاعدة البيانات متاحة
+                if (method !== 'GET') {
+                    databaseAvailable = true;
+                }
+                
                 const result = await response.json();
                 if (method === 'GET') {
                     if (table === 'messages') {
@@ -3390,11 +3420,64 @@
                 return result;
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    throw new Error('Request timeout - يرجى المحاولة مرة أخرى');
+                    const timeoutError = new Error('Request timeout - يرجى المحاولة مرة أخرى');
+                    
+                    // حفظ العمليات الكتابية عند timeout
+                    if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
+                        databaseAvailable = false;
+                        saveToOfflineStorage({
+                            table: table,
+                            method: method,
+                            data: data,
+                            filters: filters,
+                            customHeaders: customHeaders
+                        });
+                    }
+                    
+                    throw timeoutError;
                 }
+                
                 if (error.message && error.message.includes('Failed to fetch')) {
-                    throw new Error('خطأ في الاتصال بالإنترنت - يرجى التحقق من الاتصال');
+                    const networkError = new Error('خطأ في الاتصال بالإنترنت - يرجى التحقق من الاتصال');
+                    
+                    // حفظ العمليات الكتابية عند فشل الاتصال
+                    if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
+                        databaseAvailable = false;
+                        saveToOfflineStorage({
+                            table: table,
+                            method: method,
+                            data: data,
+                            filters: filters,
+                            customHeaders: customHeaders
+                        });
+                    }
+                    
+                    throw networkError;
                 }
+                
+                // إذا كان الخطأ يحتوي على معلومات عن قاعدة البيانات
+                if (error.message && (
+                    error.message.includes('503') ||
+                    error.message.includes('502') ||
+                    error.message.includes('504') ||
+                    error.message.includes('500') ||
+                    error.message.includes('database') ||
+                    error.message.includes('connection')
+                )) {
+                    databaseAvailable = false;
+                    
+                    // حفظ العمليات الكتابية
+                    if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
+                        saveToOfflineStorage({
+                            table: table,
+                            method: method,
+                            data: data,
+                            filters: filters,
+                            customHeaders: customHeaders
+                        });
+                    }
+                }
+                
                 throw error;
             }
         }
@@ -3414,18 +3497,99 @@
             sentMessages: []
         };
         let isOnline = navigator.onLine;
+        let databaseAvailable = true;
+        let lastDatabaseCheck = Date.now();
+        const DATABASE_CHECK_INTERVAL = 60000; // فحص قاعدة البيانات كل دقيقة
+        let databaseCheckInterval = null;
         
-        function saveToOfflineStorage(type, data) {
+        // فحص صحة قاعدة البيانات
+        async function checkDatabaseHealth() {
+            if (!isOnline) {
+                databaseAvailable = false;
+                return false;
+            }
+            
             try {
-                const key = `offline_${type}_${Date.now()}`;
+                // محاولة طلب بسيط للتحقق من حالة قاعدة البيانات
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/users?limit=1`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok || response.status === 200) {
+                    databaseAvailable = true;
+                    lastDatabaseCheck = Date.now();
+                    return true;
+                } else {
+                    // أخطاء قاعدة البيانات (503, 500, 502, إلخ)
+                    if (response.status >= 500 || response.status === 503 || response.status === 502 || response.status === 504) {
+                        databaseAvailable = false;
+                        return false;
+                    }
+                    databaseAvailable = true;
+                    return true;
+                }
+            } catch (error) {
+                // أي خطأ يعني أن قاعدة البيانات غير متاحة
+                databaseAvailable = false;
+                return false;
+            }
+        }
+        
+        // بدء الفحص الدوري لقاعدة البيانات
+        function startDatabaseHealthCheck() {
+            if (databaseCheckInterval) {
+                clearInterval(databaseCheckInterval);
+            }
+            
+            // فحص فوري
+            checkDatabaseHealth().then(available => {
+                if (available) {
+                    syncOfflineData();
+                }
+            });
+            
+            // فحص دوري
+            databaseCheckInterval = setInterval(() => {
+                checkDatabaseHealth().then(available => {
+                    if (available) {
+                        syncOfflineData();
+                    }
+                });
+            }, DATABASE_CHECK_INTERVAL);
+        }
+        
+        function saveToOfflineStorage(operation) {
+            try {
+                const key = `offline_${operation.table}_${operation.method}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 const offlineData = {
-                    type: type,
-                    data: data,
-                    timestamp: new Date().toISOString()
+                    table: operation.table,
+                    method: operation.method,
+                    data: operation.data,
+                    filters: operation.filters || '',
+                    customHeaders: operation.customHeaders || {},
+                    timestamp: new Date().toISOString(),
+                    retryCount: 0
                 };
                 localStorage.setItem(key, JSON.stringify(offlineData));
+                
+                // حفظ عدد العناصر المحفوظة محلياً
+                const offlineCount = getAllOfflineData().length;
+                localStorage.setItem('offline_data_count', offlineCount.toString());
+                
                 return key;
             } catch (error) {
+                console.error('Error saving to offline storage:', error);
                 return null;
             }
         }
@@ -3434,11 +3598,14 @@
             const offlineItems = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key && key.startsWith('offline_')) {
+                if (key && key.startsWith('offline_') && key.includes('_')) {
                     try {
                         const item = JSON.parse(localStorage.getItem(key));
-                        offlineItems.push({ key, ...item });
+                        if (item && item.table && item.method) {
+                            offlineItems.push({ key, ...item });
+                        }
                     } catch (e) {
+                        // تجاهل العناصر التالفة
                     }
                 }
             }
@@ -3446,34 +3613,101 @@
         }
         
         async function syncOfflineData() {
-            if (!isOnline) return;
+            if (!isOnline || !databaseAvailable) return;
             
             const offlineItems = getAllOfflineData();
-            if (offlineItems.length === 0) return;
+            if (offlineItems.length === 0) {
+                localStorage.removeItem('offline_data_count');
+                return;
+            }
+            
+            let syncedCount = 0;
+            let failedCount = 0;
             
             for (const item of offlineItems) {
                 try {
-                    if (item.type === 'customer') {
-                        await supabaseRequest('customers', 'POST', item.data);
-                        clearCache('customers');
-                        localStorage.removeItem(item.key);
-                    } else if (item.type === 'call') {
-                        await supabaseRequest('calls', 'POST', item.data);
-                        clearCache('calls'); 
-                        localStorage.removeItem(item.key);
+                    // التحقق من صحة قاعدة البيانات قبل كل عملية
+                    const isHealthy = await checkDatabaseHealth();
+                    if (!isHealthy) {
+                        console.log('Database unavailable, stopping sync');
+                        break;
                     }
+                    
+                    // تنفيذ العملية المحفوظة
+                    const result = await supabaseRequest(
+                        item.table,
+                        item.method,
+                        item.data,
+                        item.filters || '',
+                        item.customHeaders || {}
+                    );
+                    
+                    // حذف العنصر بعد النجاح
+                    localStorage.removeItem(item.key);
+                    syncedCount++;
+                    
+                    // مسح الكاش للجدول المحدث
+                    if (item.method !== 'GET') {
+                        clearCache(item.table);
+                    }
+                    
                 } catch (error) {
+                    // زيادة عدد المحاولات
+                    item.retryCount = (item.retryCount || 0) + 1;
+                    
+                    // إذا فشلت العملية أكثر من 5 مرات، تخطيها (قد تكون بيانات غير صالحة)
+                    if (item.retryCount > 5) {
+                        console.warn(`Skipping offline item after ${item.retryCount} failed attempts:`, item.key);
+                        localStorage.removeItem(item.key);
+                        failedCount++;
+                    } else {
+                        // حفظ عدد المحاولات
+                        localStorage.setItem(item.key, JSON.stringify(item));
+                        failedCount++;
+                        
+                        // إذا كان الخطأ بسبب قاعدة البيانات غير متاحة، توقف
+                        if (error.message && (
+                            error.message.includes('Failed to fetch') ||
+                            error.message.includes('timeout') ||
+                            error.message.includes('503') ||
+                            error.message.includes('502') ||
+                            error.message.includes('504') ||
+                            error.message.includes('500')
+                        )) {
+                            databaseAvailable = false;
+                            break;
+                        }
+                    }
                 }
+            }
+            
+            // تحديث عدد العناصر المحفوظة
+            const remainingCount = getAllOfflineData().length;
+            if (remainingCount > 0) {
+                localStorage.setItem('offline_data_count', remainingCount.toString());
+            } else {
+                localStorage.removeItem('offline_data_count');
+            }
+            
+            // إظهار إشعار إذا تمت المزامنة
+            if (syncedCount > 0) {
+                console.log(`تمت مزامنة ${syncedCount} عنصر من البيانات المحفوظة محلياً`);
+                // يمكن إضافة إشعار مرئي هنا إذا لزم الأمر
             }
         }
         
         window.addEventListener('online', function() {
             isOnline = true;
-            syncOfflineData();
+            checkDatabaseHealth().then(available => {
+                if (available) {
+                    syncOfflineData();
+                }
+            });
         });
         
         window.addEventListener('offline', function() {
             isOnline = false;
+            databaseAvailable = false;
         });
         
         async function hashPassword(password) {
@@ -3511,10 +3745,13 @@
                 }
             }
 
+            // بدء فحص صحة قاعدة البيانات
+            startDatabaseHealthCheck();
+            
             Promise.all([
                 loadAgents(),
                 loadDepartments(),
-                isOnline ? syncOfflineData() : Promise.resolve(),
+                isOnline && databaseAvailable ? syncOfflineData() : Promise.resolve(),
                 updateEmployeeNameMap()
             ]).catch(err => {
                 console.error('Error loading initial data:', err);
@@ -3803,7 +4040,7 @@
             document.getElementById('sidebar').classList.toggle('hidden');
         }
 
-        function switchTab(tabName) {
+        function switchTab(tabName, event) {
             if ((tabName === 'advanced-stats' || tabName === 'users') && currentUserRole !== 'admin') {
                 showToast('ليس لديك صلاحية للوصول إلى هذه الصفحة', 'error', 'غير مصرح');
                 return;
@@ -3835,11 +4072,23 @@
             }
             
             tabElement.classList.add('active');
-            if (event && event.target) {
-                const navItem = event.target.closest('.nav-item');
+            
+            // البحث عن العنصر النشط في القائمة الجانبية
+            const currentEvent = event || window.event;
+            if (currentEvent && currentEvent.target && typeof currentEvent.target.closest === 'function') {
+                const navItem = currentEvent.target.closest('.nav-item');
                 if (navItem) {
                     navItem.classList.add('active');
                 }
+            } else {
+                // إذا لم يكن هناك event، ابحث عن العنصر الذي يحتوي على onclick مع tabName
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    const onclickAttr = item.getAttribute('onclick');
+                    if (onclickAttr && (onclickAttr.includes(`switchTab('${tabName}')`) || onclickAttr.includes(`switchTab("${tabName}")`))) {
+                        item.classList.add('active');
+                    }
+                });
             }
 
             const titles = {
@@ -5017,7 +5266,7 @@
                 return;
             }
 
-            if (isOnline) {
+            if (isOnline && databaseAvailable) {
                 showAlert(alertDiv, 'جاري التحقق من البيانات...', 'info');
                 try {
                     const duplicate = await checkDuplicateCustomer(name, phone);
@@ -5056,7 +5305,7 @@
             showAlert(alertDiv, 'جاري حفظ البيانات...', 'info');
 
             try {
-                if (isOnline) {
+                if (isOnline && databaseAvailable) {
                     const result = await supabaseRequest('customers', 'POST', customerData);
                     
                     // Ensure the saved customer has the employee field
@@ -5143,7 +5392,7 @@
                     
                     showAlert(alertDiv, `تم حفظ البيانات وإرسالها للوكيل ${agent.name} عبر واتساب بنجاح`, 'success');
                 } else {
-                    saveToOfflineStorage('customer', customerData);
+                    saveToOfflineStorage({ table: 'customers', method: 'POST', data: customerData });
                     
                     // Save call details offline
                     try {
@@ -5170,7 +5419,7 @@
                             department: null
                         };
                         
-                        saveToOfflineStorage('call', callData);
+                        saveToOfflineStorage({ table: 'calls', method: 'POST', data: callData });
                     } catch (callError) {
                         console.error('Error saving call details offline:', callError);
                     }
@@ -5186,8 +5435,8 @@
             } catch (error) {
                 console.error('Error saving customer data:', error);
                 
-                if (!isOnline || error.message.includes('fetch') || error.message.includes('network')) {
-                    saveToOfflineStorage('customer', customerData);
+                if (!isOnline || error.message.includes('fetch') || error.message.includes('network') || !databaseAvailable) {
+                    saveToOfflineStorage({ table: 'customers', method: 'POST', data: customerData });
                     
                     // Save call details offline
                     try {
@@ -5214,7 +5463,7 @@
                             department: null
                         };
                         
-                        saveToOfflineStorage('call', callData);
+                        saveToOfflineStorage({ table: 'calls', method: 'POST', data: callData });
                     } catch (callError) {
                         console.error('Error saving call details offline:', callError);
                     }
@@ -5371,7 +5620,7 @@
                 return;
             }
 
-            if (isOnline) {
+            if (isOnline && databaseAvailable) {
                 showAlert(alertDiv, 'جاري التحقق من البيانات...', 'info');
                 try {
                     const duplicate = await checkDuplicateCall(phone, name, details);
@@ -5420,7 +5669,7 @@
             showAlert(alertDiv, 'جاري حفظ البيانات...', 'info');
 
             try {
-                if (isOnline) {
+                if (isOnline && databaseAvailable) {
                     const result = await supabaseRequest('calls', 'POST', callData);
                     
                     const cached = getCachedData('calls');
@@ -5440,8 +5689,8 @@
                     // Show success message that disappears quickly (2 seconds)
                     showAlert(alertDiv, 'تم حفظ تفاصيل المكالمة بنجاح', 'success', 2000);
                 } else {
-                    saveToOfflineStorage('call', callData);
-                    showAlert(alertDiv, '⚠️ لا يوجد اتصال بالإنترنت. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة الاتصال.', 'info');
+                    saveToOfflineStorage({ table: 'calls', method: 'POST', data: callData });
+                    showAlert(alertDiv, '⚠️ قاعدة البيانات غير متاحة حالياً. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة قاعدة البيانات.', 'info');
                 }
                 
                 if ((callType === 'شكوى' || callType === 'ضعف بالخدمة') && selectedDepartment) {
@@ -5450,7 +5699,7 @@
                         // Call immediately to ensure it's triggered by user interaction
                         // This prevents popup blockers from blocking the WhatsApp window
                         sendComplaintToDepartment(department, callData);
-                        if (isOnline) {
+                        if (isOnline && databaseAvailable) {
                             const employeeName = callData.agent || loggedInUser || 'غير معروف';
                             // Save message asynchronously without blocking
                             setTimeout(() => {
@@ -5466,9 +5715,9 @@
             } catch (error) {
                 console.error('Error saving call data:', error);
                 
-                if (!isOnline || error.message.includes('fetch') || error.message.includes('network')) {
-                    saveToOfflineStorage('call', callData);
-                    showAlert(alertDiv, '⚠️ لا يوجد اتصال بالإنترنت. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة الاتصال.', 'info');
+                if (!isOnline || !databaseAvailable || error.message.includes('fetch') || error.message.includes('network') || error.message.includes('503') || error.message.includes('502') || error.message.includes('504') || error.message.includes('500')) {
+                    saveToOfflineStorage({ table: 'calls', method: 'POST', data: callData });
+                    showAlert(alertDiv, '⚠️ قاعدة البيانات غير متاحة حالياً. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة قاعدة البيانات.', 'info');
                 } else {
                     showAlert(alertDiv, `حدث خطأ في حفظ البيانات: ${error.message}`, 'error');
                 }
