@@ -2732,7 +2732,7 @@
                     <div class="card" style="background: rgba(59, 130, 246, 0.05); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
-                                📊
+                                
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-primary); font-weight: 700;"> تقرير </h3>
@@ -2768,24 +2768,24 @@
                             </label>
                                 <label for="reportIncludeCalls" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
                                     <input type="checkbox" id="reportIncludeCalls" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
-                                    <span style="font-weight: 600; color: var(--text-primary);">📞 تفاصيل المكالمات</span>
+                                    <span style="font-weight: 600; color: var(--text-primary);"> تفاصيل المكالمات</span>
                             </label>
                                 <label for="reportIncludeCustomers" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
                                     <input type="checkbox" id="reportIncludeCustomers" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
-                                    <span style="font-weight: 600; color: var(--text-primary);">👤 تفاصيل المشتركين</span>
+                                    <span style="font-weight: 600; color: var(--text-primary);"> تفاصيل المشتركين</span>
                             </label>
                                 <label for="reportIncludeCharts" style="display: flex; align-items: center; padding: 12px; background: var(--card-bg); border-radius: 8px; cursor: pointer; border: 2px solid var(--border-light); transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.background='var(--card-bg)'">
                                     <input type="checkbox" id="reportIncludeCharts" checked style="margin-left: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);">
-                                    <span style="font-weight: 600; color: var(--text-primary);">📊 الرسوم البيانية</span>
+                                    <span style="font-weight: 600; color: var(--text-primary);"> الرسوم البيانية</span>
                             </label>
                         </div>
                     </div>
                         <div class="btn-group" style="display: flex; gap: 12px; margin-top: 8px;">
                             <button class="btn btn-primary" onclick="generateReport()" style="flex: 1; padding: 14px 24px; font-size: 1rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
-                                📥 تصدير التقرير
+                                 تصدير التقرير
                             </button>
                             <button class="btn btn-secondary" onclick="resetReportForm()" style="padding: 14px 24px; font-size: 1rem; font-weight: 600; border-radius: 12px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                                🔄 إعادة تعيين
+                                 إعادة تعيين
                             </button>
                         </div>
                     </div>
@@ -2798,7 +2798,7 @@
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 1.3rem; color: var(--text-primary); font-weight: 700;">تصدير سريع</h3>
-                                <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">تصدير البيانات مباشرة</p>
+                                <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);"></p>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -3277,7 +3277,7 @@
             userProfiles: { data: null, timestamp: 0, ttl: 7200000 } 
         };
         
-        const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة', 'حسين حيدر'];
+        const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة', 'حسين حيدر', 'Ameer helwas', 'Ameer Helwas'];
         
         let isTabActive = true;
         document.addEventListener('visibilitychange', function() {
@@ -5259,9 +5259,42 @@
             const phone = formatPhoneForWhatsApp(agent.phone);
             const alertDiv = document.getElementById('customerAlert');
             
+            if (!phone) {
+                showAlert(alertDiv, `خطأ: رقم الهاتف غير صحيح للوكيل ${agent.name}`, 'error');
+                return;
+            }
+            
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-            showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
+            
+            // Create a temporary anchor element and click it programmatically
+            // This method is more reliable and less likely to be blocked by popup blockers
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            
+            try {
+                link.click();
+                showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
+            } catch (error) {
+                console.error('Error opening WhatsApp:', error);
+                // Fallback: try window.open
+                const newWindow = window.open(whatsappUrl, '_blank');
+                if (newWindow) {
+                    showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
+                } else {
+                    showAlert(alertDiv, `⚠️ يرجى السماح للنوافذ المنبثقة لفتح واتساب. الرابط: ${whatsappUrl}`, 'warning');
+                }
+            } finally {
+                // Clean up: remove the temporary link after a short delay
+                setTimeout(() => {
+                    if (link.parentNode) {
+                        link.parentNode.removeChild(link);
+                    }
+                }, 100);
+            }
         }
 
         function clearCustomerForm(skipConfirm) {
@@ -5404,7 +5437,8 @@
                     
                     updateStatistics();
                     
-                    showAlert(alertDiv, 'تم حفظ تفاصيل المكالمة بنجاح', 'success');
+                    // Show success message that disappears quickly (2 seconds)
+                    showAlert(alertDiv, 'تم حفظ تفاصيل المكالمة بنجاح', 'success', 2000);
                 } else {
                     saveToOfflineStorage('call', callData);
                     showAlert(alertDiv, '⚠️ لا يوجد اتصال بالإنترنت. تم حفظ البيانات محلياً وسيتم رفعها تلقائياً عند عودة الاتصال.', 'info');
@@ -5413,17 +5447,21 @@
                 if ((callType === 'شكوى' || callType === 'ضعف بالخدمة') && selectedDepartment) {
                     const department = departments.find(d => d.id === selectedDepartment);
                     if (department) {
-                        setTimeout(() => {
-                            sendComplaintToDepartment(department, callData);
-                            if (isOnline) {
-                                const employeeName = callData.agent || loggedInUser || 'غير معروف';
+                        // Call immediately to ensure it's triggered by user interaction
+                        // This prevents popup blockers from blocking the WhatsApp window
+                        sendComplaintToDepartment(department, callData);
+                        if (isOnline) {
+                            const employeeName = callData.agent || loggedInUser || 'غير معروف';
+                            // Save message asynchronously without blocking
+                            setTimeout(() => {
                                 saveSentMessageToSupabase('complaint', department.id, department.name, callData.name, employeeName);
-                            }
-                        }, 500);
+                            }, 100);
+                        }
                     }
                 }
                 
-                clearCallForm();
+                // Clear form without confirmation when saving successfully
+                clearCallForm(true);
                 
             } catch (error) {
                 console.error('Error saving call data:', error);
@@ -5449,9 +5487,42 @@
             const phone = formatPhoneForWhatsApp(department.phone);
             const alertDiv = document.getElementById('callAlert');
             
+            if (!phone) {
+                showAlert(alertDiv, `خطأ: رقم الهاتف غير صحيح لقسم ${department.name}`, 'error');
+                return;
+            }
+            
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-            showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
+            
+            // Create a temporary anchor element and click it programmatically
+            // This method is more reliable and less likely to be blocked by popup blockers
+            const link = document.createElement('a');
+            link.href = whatsappUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            
+            try {
+                link.click();
+                showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
+            } catch (error) {
+                console.error('Error opening WhatsApp:', error);
+                // Fallback: try window.open
+                const newWindow = window.open(whatsappUrl, '_blank');
+                if (newWindow) {
+                    showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
+                } else {
+                    showAlert(alertDiv, `⚠️ يرجى السماح للنوافذ المنبثقة لفتح واتساب. الرابط: ${whatsappUrl}`, 'warning');
+                }
+            } finally {
+                // Clean up: remove the temporary link after a short delay
+                setTimeout(() => {
+                    if (link.parentNode) {
+                        link.parentNode.removeChild(link);
+                    }
+                }, 100);
+            }
         }
 
         function handleCallTypeChange() {
@@ -5469,8 +5540,8 @@
             }
         }
 
-        function clearCallForm() {
-            if (confirm('هل أنت متأكد أنك تريد مسح تفاصيل المكالمة؟')) {
+        function clearCallForm(skipConfirm) {
+            if (skipConfirm || confirm('هل أنت متأكد أنك تريد مسح تفاصيل المكالمة؟')) {
                 document.getElementById('cmbCallType').value = '';
                 document.getElementById('txtCallPhone').value = '';
                 document.getElementById('txtCallName').value = '';
@@ -6061,12 +6132,14 @@
             }
         }
 
-        function showAlert(container, message, type) {
+        function showAlert(container, message, type, autoHideDelay = 5000) {
             const alertClass = `alert-${type}`;
             container.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 5000);
+            if (autoHideDelay > 0) {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, autoHideDelay);
+            }
         }
         
         function showToast(message, type = 'info', title = '') {
@@ -6435,9 +6508,7 @@
             
             
             updateCallsTypeChart();
-            updateEmployeeNameMap().then(() => {
-                updateCallsByEmployeeChart();
-            }).catch(() => {
+            updateEmployeeNameMap().finally(() => {
                 updateCallsByEmployeeChart();
             });
             
@@ -6996,14 +7067,61 @@
                 return;
             }
             
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
             const callsByEmployee = {};
+            
+            // Process calls
             callsData.forEach(call => {
                 const oldEmployeeName = call.agent || call[4] || 'غير معروف';
                 const employee = getUnifiedEmployeeName(oldEmployeeName);
-                if (employee && employee !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(employee)) {
-                    callsByEmployee[employee] = (callsByEmployee[employee] || 0) + 1;
+                const isExcluded = EXCLUDED_EMPLOYEES.some(excluded => 
+                    excluded.toLowerCase() === employee.toLowerCase() || 
+                    employee.toLowerCase().includes(excluded.toLowerCase())
+                );
+                if (employee && employee !== 'غير معروف' && !isExcluded) {
+                    if (!callsByEmployee[employee]) {
+                        callsByEmployee[employee] = {
+                            total: 0,
+                            today: 0,
+                            customers: 0
+                        };
+                    }
+                    callsByEmployee[employee].total++;
+                    
+                    // Calculate today's calls
+                    const callDate = call.created_at ? new Date(call.created_at) : null;
+                    if (callDate) {
+                        callDate.setHours(0, 0, 0, 0);
+                        if (callDate.getTime() === today.getTime()) {
+                            callsByEmployee[employee].today++;
+                        }
+                    }
                 }
             });
+            
+            // Process customers (المشتركين الجدد)
+            if (customersData && Array.isArray(customersData) && customersData.length > 0) {
+                customersData.forEach(customer => {
+                    const oldEmployeeName = customer.employee || customer[6] || 'غير معروف';
+                    const employee = getUnifiedEmployeeName(oldEmployeeName);
+                    const isExcluded = EXCLUDED_EMPLOYEES.some(excluded => 
+                        excluded.toLowerCase() === employee.toLowerCase() || 
+                        employee.toLowerCase().includes(excluded.toLowerCase())
+                    );
+                    if (employee && employee !== 'غير معروف' && !isExcluded) {
+                        if (!callsByEmployee[employee]) {
+                            callsByEmployee[employee] = {
+                                total: 0,
+                                today: 0,
+                                customers: 0
+                            };
+                        }
+                        callsByEmployee[employee].customers++;
+                    }
+                });
+            }
             
             if (Object.keys(callsByEmployee).length === 0) {
                 document.getElementById('callsByEmployeeChart').innerHTML = 
@@ -7011,16 +7129,18 @@
                 return;
             }
             
-            const maxValue = Math.max(...Object.values(callsByEmployee));
+            const maxValue = Math.max(...Object.values(callsByEmployee).map(d => d.total));
             const totalCalls = callsData.length;
-            const sortedEntries = Object.entries(callsByEmployee).sort((a, b) => b[1] - a[1]).slice(0, 15);
+            const sortedEntries = Object.entries(callsByEmployee).sort((a, b) => b[1].total - a[1].total).slice(0, 15);
             const chart = document.getElementById('callsByEmployeeChart');
             
             const employeeNames = sortedEntries.map(([emp]) => emp);
             const employeePictures = await getEmployeePictures(employeeNames);
             
             chart.innerHTML = `
-                ${sortedEntries.map(([employee, count], index) => {
+                ${sortedEntries.map(([employee, data], index) => {
+                    const count = data.total;
+                    const todayCount = data.today || 0;
                     const percentage = maxValue > 0 ? (count / maxValue) * 100 : 0;
                     const employeePercentage = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) : 0;
                     const rank = index + 1;
@@ -7062,6 +7182,24 @@
                                 <span style="font-size: 0.8rem; font-weight: 800;">${count.toLocaleString('en-US')}</span>
                                 <span style="font-size: 0.65rem; color: var(--text-tertiary);">${employeePercentage}%</span>
                             </div>
+                            ${todayCount > 0 ? `
+                                <div style="
+                                    width: 24px;
+                                    height: 24px;
+                                    border-radius: 50%;
+                                    background: #28a745;
+                                    color: white;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 0.7rem;
+                                    font-weight: 800;
+                                    border: 2px solid white;
+                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                                    flex-shrink: 0;
+                                    margin-left: 8px;
+                                " title="عدد المكالمات اليوم: ${todayCount}">${todayCount > 99 ? '99+' : todayCount}</div>
+                            ` : ''}
                         </div>
                     `;
                 }).join('')}
@@ -7382,8 +7520,30 @@
         }
         
         function displayRecentActivity(activities) {
+            // Remove duplicates based on unique identifier (type + time + name + phone/details)
+            const seen = new Set();
+            const uniqueActivities = activities.filter(activity => {
+                const time = new Date(activity.time).getTime();
+                // Create a unique identifier based on activity type
+                let identifier;
+                if (activity.type === 'call') {
+                    identifier = `call_${time}_${activity.name || ''}_${activity.phone || ''}_${activity.details ? activity.details.substring(0, 20) : ''}`;
+                } else if (activity.type === 'customer') {
+                    identifier = `customer_${time}_${activity.name || ''}_${activity.phone || ''}_${activity.region || ''}`;
+                } else if (activity.type === 'message') {
+                    identifier = `message_${time}_${activity.agentName || ''}_${activity.customerName || ''}_${activity.employee || ''}`;
+                } else {
+                    identifier = `${activity.type}_${time}_${activity.name || activity.agentName || ''}_${activity.phone || ''}`;
+                }
+                
+                if (seen.has(identifier)) {
+                    return false;
+                }
+                seen.add(identifier);
+                return true;
+            });
             
-            activities.sort((a, b) => {
+            uniqueActivities.sort((a, b) => {
                 const timeA = new Date(a.time);
                 const timeB = new Date(b.time);
                 if (isNaN(timeA.getTime()) && isNaN(timeB.getTime())) return 0;
@@ -7391,7 +7551,7 @@
                 if (isNaN(timeB.getTime())) return -1;
                 return timeB - timeA;
             });
-            const recentActivities = activities.slice(0, 15);
+            const recentActivities = uniqueActivities.slice(0, 15);
             
             const container = document.getElementById('recentActivity');
             if (recentActivities.length === 0) {
@@ -7720,15 +7880,15 @@
                 
                 
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
-                rows.push(['📊 تقرير الإحصائيات الشامل', '', '']);
+                rows.push([' تقرير  ', '', '']);
                 rows.push(['═══════════════════════════════════════════════════════', '', '']);
                 rows.push(['', '', '']);
-                rows.push(['📅 تاريخ إنشاء التقرير', `${reportDate} ${reportTime}`, '']);
+                rows.push([' تاريخ إنشاء التقرير', `${reportDate} ${reportTime}`, '']);
                 
                 if (!includeAll) {
-                    rows.push(['📆 الفترة المحددة', `من ${new Date(startDate).toLocaleDateString('en-US')} إلى ${new Date(endDate).toLocaleDateString('en-US')}`, '']);
+                    rows.push([' الفترة المحددة', `من ${new Date(startDate).toLocaleDateString('en-US')} إلى ${new Date(endDate).toLocaleDateString('en-US')}`, '']);
                 } else {
-                    rows.push(['📆 الفترة المحددة', 'جميع البيانات', '']);
+                    rows.push([' الفترة المحددة', 'جميع البيانات', '']);
                 }
                 
                 rows.push(['', '', '']);
