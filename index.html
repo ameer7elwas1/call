@@ -98,6 +98,7 @@
             min-height: 100vh;
             position: relative;
         }
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--sidebar-bg);
@@ -122,6 +123,7 @@
         .sidebar.hidden {
             transform: translateX(100%);
         }
+        /* Overlay للقائمة الجانبية على الهاتف */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -320,7 +322,7 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
@@ -644,6 +646,7 @@
             background: var(--primary-hover);
             transform: scale(1.1);
         }
+        /* Main Content */
         .main-content {
             margin-right: 280px;
             padding: 20px;
@@ -708,6 +711,7 @@
             justify-content: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        /* Tab Content */
         .tab-content {
             display: none;
         }
@@ -1011,6 +1015,7 @@
             color: var(--info-color);
         }
         
+        /* Toast Notifications */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -1105,6 +1110,7 @@
             }
         }
         
+        /* Real-time Validation */
         .input-error {
             border-color: var(--error-color) !important;
             background: var(--error-light) !important;
@@ -1136,6 +1142,7 @@
             border-color: var(--success-color);
         }
         
+        /* تحسين المظهر الليلي - تحسين التباين */
         [data-theme="dark"] .card {
             background: var(--card-bg);
             border-color: var(--border-color);
@@ -1147,6 +1154,7 @@
         [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 {
             color: var(--text-primary);
         }
+        /* Tables */
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
@@ -1177,6 +1185,7 @@
         table tr:hover {
             background: var(--nav-hover);
         }
+        /* Search Results */
         
         .search-results {
             margin-top: 20px;
@@ -1198,6 +1207,7 @@
         .search-result-item:last-child {
             border-bottom: none;
         }
+        /* Login */
         .login-container {
             display: flex;
             justify-content: center;
@@ -1224,6 +1234,7 @@
         .hidden {
             display: none !important;
         }
+        /* Agent Management */
         .agent-card {
             background: var(--card-bg);
             border: 2px solid var(--border-color);
@@ -1336,6 +1347,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
+        /* Statistics Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1377,6 +1389,7 @@
             transform: scale(1.2);
             opacity: 0.8;
         }
+        /* Card Colors - مثل الصورة */
         .stat-card:nth-child(1) {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
@@ -1466,6 +1479,7 @@
         .stat-card-change.negative {
             color: rgba(255, 255, 255, 0.8);
         }
+        /* Employee of the Week Banner */
         .employee-of-week-banner {
             position: relative;
             background: #ffd700;
@@ -2467,9 +2481,12 @@
         </div>
     </div>
 
+    <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
+    <!-- Main Application -->
     <div id="mainApp" class="app-container hidden">
+        <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h1>قسم خدمة الزبائن</h1>
@@ -2486,7 +2503,7 @@
                                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#0078d4"/>
                                     </svg>
                                 </span>
-                                <a href="mailto:ameeralgaraawi@hotmail.com">Email</a>
+                                <a href="mailto:ameeralgaraawi@hotmail.com">ameeralgaraawi@hotmail.com</a>
                             </div>
                             <div class="user-contact-item">
                                 <span class="user-contact-icon">
@@ -2494,7 +2511,7 @@
                                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="#E4405F"/>
                                     </svg>
                                 </span>
-                                <a href="https://instagram.com/ameer_7elwas" target="_blank">instagram</a>
+                                <a href="https://instagram.com/ameer_7elwas" target="_blank">ameer_7elwas</a>
                             </div>
                             <div class="user-contact-item">
                                 <span class="user-contact-icon">
@@ -2502,7 +2519,7 @@
                                         <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" fill="#0088cc"/>
                                     </svg>
                                 </span>
-                                <a href="https://t.me/ameer_7elwas" target="_blank">Telegram</a>
+                                <a href="https://t.me/ameer_7elwas" target="_blank">ameer_7elwas</a>
                             </div>
                             <div class="user-contact-item">
                                 <span class="user-contact-icon">
@@ -2510,7 +2527,7 @@
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.98 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="#25D366"/>
                                     </svg>
                                 </span>
-                                <a href="https://wa.me/9647701024143" target="_blank">WhatsApp</a>
+                                <a href="https://wa.me/9647701024143" target="_blank">واتساب</a>
                             </div>
                         </div>
                     </div>
@@ -2570,6 +2587,7 @@
             </div>
         </div>
 
+        <!-- Overlay للقائمة الجانبية على الهاتف -->
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
         
         <button class="sidebar-toggle-btn" onclick="toggleSidebar()" id="sidebarToggleBtn" title="إظهار/إخفاء القائمة">☰</button>
@@ -2624,6 +2642,7 @@
                         <div class="employee-of-week-shine"></div>
                     </div>
                     
+                    <!-- Statistics Cards -->
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-card-icon"></div>
@@ -2663,6 +2682,7 @@
                         </div>
                     </div>
 
+                    <!-- Charts Section -->
                     <div class="charts-section">
                         <div class="chart-card">
                             <h4> أنواع المكالمات</h4>
@@ -2724,6 +2744,7 @@
                 </div>
             </div>
 
+            <!-- Customer Data Tab -->
             <div id="customer" class="tab-content">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -2817,6 +2838,7 @@
                                             overflow-y: auto;
                                             padding: 8px;
                                         ">
+                                            <!-- الخيارات ستظهر هنا -->
                                         </div>
                                     </div>
                                 </div>
@@ -2879,6 +2901,7 @@
                 </div>
             </div>
 
+            <!-- Call Details Tab -->
             <div id="call" class="tab-content">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -2945,17 +2968,20 @@
             </div>
 
 
+            <!-- Agents Management Tab -->
             <div id="agents" class="tab-content">
+                <!-- بطاقة إدارة الوكلاء -->
                 <div class="card" style="background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px var(--shadow-md);">
+                    <!-- رأس القسم -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border-light); flex-wrap: wrap; gap: 15px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
                                 
-                        </div>
+                            </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 1.5rem; color: var(--text-primary); font-weight: 800; letter-spacing: 0.3px;"></h3>
                                 <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;"></p>
-                    </div>
+                            </div>
                         </div>
                         <button class="btn btn-primary" onclick="openAddAgentModal()" style="padding: 12px 24px; font-size: 1rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
                             <span>➕</span>
@@ -2963,8 +2989,10 @@
                         </button>
                     </div>
 
+                    <!-- رسائل التنبيه -->
                     <div id="agentsAlert" style="margin-bottom: 20px;"></div>
 
+                    <!-- حقل البحث -->
                     <div style="margin-bottom: 24px;">
                         <div style="position: relative;">
                             <input type="text" id="agentsSearchInput" placeholder="🔍 ابحث عن وكيل (بالاسم، رقم الهاتف، العنوان)..." onkeyup="filterAgentsList()" style="width: 100%; padding: 14px 50px 14px 16px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-primary); font-size: 1rem; font-weight: 600; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 4px var(--primary-light)'" onblur="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'">
@@ -2973,10 +3001,12 @@
                         </div>
                     </div>
 
+                    <!-- قائمة الوكلاء -->
                     <div id="agentsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;"></div>
                 </div>
             </div>
 
+            <!-- Departments Management Tab -->
             <div id="departments" class="tab-content">
                 <div class="card">
                     <h3>إدارة أقسام الشركة</h3>
@@ -2988,8 +3018,10 @@
                 </div>
             </div>
 
+            <!-- Reports Tab -->
             <div id="reports" class="tab-content">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                    <!-- Export Report Card -->
                     <div class="card" style="background: rgba(59, 130, 246, 0.05); border: 2px solid var(--primary-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
@@ -3051,6 +3083,7 @@
                         </div>
                     </div>
 
+                    <!-- Quick Export Card -->
                     <div class="card" style="background: rgba(34, 197, 94, 0.05); border: 2px solid var(--success-color); box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-light);">
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--success-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
@@ -3079,6 +3112,7 @@
                 </div>
             </div>
 
+            <!-- Profile Tab -->
             <div id="profile" class="tab-content">
                 <div class="card">
                     <h3>الملف الشخصي</h3>
@@ -3130,6 +3164,7 @@
                 </div>
             </div>
 
+            <!-- Notes Tab -->
             <div id="notes" class="tab-content">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -3146,6 +3181,7 @@
                 </div>
             </div>
 
+            <!-- Advanced Statistics Tab (Admin Only) -->
             <div id="advanced-stats" class="tab-content">
                 <div class="card" style="min-height: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -3169,7 +3205,7 @@
             </div>
 
             <!-- Users Management Tab (Admin Only) -->
-
+            <!-- Chat Tab -->
             <div id="chat" class="tab-content">
                 <div style="display: flex; height: calc(100vh - 120px); gap: 0; border-radius: 12px; overflow: hidden; border: 2px solid var(--border-color); background: var(--card-bg);">
                     <div class="chat-sidebar" style="width: 300px; border-left: 2px solid var(--border-color); background: var(--bg-secondary); display: flex; flex-direction: column; overflow: hidden;">
@@ -3194,6 +3230,7 @@
                                 </div>
                             </div>
                             <div class="chat-messages" id="chatMessages" style="flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 2px;">
+                                <!-- الرسائل ستظهر هنا -->
                             </div>
                             <div class="chat-input-area" style="padding: 8px 12px; border-top: 1px solid rgba(0, 0, 0, 0.08); background: #f0f2f5; display: flex; gap: 8px; align-items: flex-end;">
                                 <textarea id="chatMessageInput" placeholder="اكتب رسالتك هنا..." rows="1" onkeydown="handleChatInputKeydown(event)" style="flex: 1; padding: 9px 12px; border: none; border-radius: 20px; background: white; color: var(--text-primary); font-size: 0.95rem; resize: none; max-height: 120px; overflow-y: auto; font-family: inherit;"></textarea>
@@ -3224,6 +3261,7 @@
         </div>
     </div>
 
+    <!-- Employee Profile Modal -->
     <div id="employeeProfileModal" class="modal">
         <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
@@ -3232,13 +3270,14 @@
             </div>
             <div id="employeeProfileModalContent" style="padding: 20px;">
                 <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                    <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></div>
+                    <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">👤</div>
                     <p>جاري تحميل البيانات...</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Add/Edit Agent Modal -->
     <div id="addAgentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -3266,6 +3305,7 @@
         </div>
     </div>
 
+    <!-- Add/Edit Department Modal -->
     <div id="addDepartmentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -3289,6 +3329,7 @@
         </div>
     </div>
 
+    <!-- Call Details Modal -->
     <div id="callDetailsModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
@@ -3296,6 +3337,7 @@
                 <button class="close-modal" onclick="closeCallDetailsModal()">&times;</button>
             </div>
             <div id="callDetailsContent" style="padding: 20px;">
+                <!-- سيتم ملؤها ديناميكياً -->
             </div>
             <div id="callDetailsAlert" style="padding: 0 20px;"></div>
             <div class="btn-group" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
@@ -3310,6 +3352,7 @@
         </div>
     </div>
 
+    <!-- Edit Call Modal -->
     <div id="editCallModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
@@ -3355,6 +3398,7 @@
         </div>
     </div>
 
+    <!-- Edit Customer Modal -->
     <div id="editCustomerModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
@@ -3404,6 +3448,7 @@
         </div>
     </div>
 
+    <!-- Chat Window -->
     <div id="chatWindow" class="chat-window">
         <div class="chat-header">
             <div class="chat-header-info">
@@ -3434,6 +3479,7 @@
                         </div>
                     </div>
                     <div class="chat-messages" id="chatWindowMessages">
+                        <!-- الرسائل ستظهر هنا -->
                     </div>
                     <div class="chat-input-area">
                         <textarea id="chatWindowMessageInput" placeholder="اكتب رسالتك هنا..." rows="1" onkeydown="handleChatInputKeydown(event)"></textarea>
@@ -3446,6 +3492,7 @@
         </div>
     </div>
 
+    <!-- Add/Edit Note Modal -->
     <div id="addNoteModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
@@ -3470,6 +3517,7 @@
     </div>
 
 
+    <!-- Add User Modal -->
     <div id="addUserModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -3505,21 +3553,26 @@
         </div>
     </div>
 
+    <!-- تحميل ملف الإعدادات -->
+    <script src="config.js"></script>
     <script>
-        const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
-        const SYSTEM_NAME = 'CallCenterApp';
+        // التحقق من وجود ملف الإعدادات
+        if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined') {
+            alert('خطأ: ملف الإعدادات (config.js) غير موجود أو غير صحيح.\n\nيرجى:\n1. نسخ config.example.js إلى config.js\n2. ملء المعلومات المطلوبة');
+            throw new Error('ملف الإعدادات غير موجود');
+        }
+        
         
         const dataCache = {
-            calls: { data: null, timestamp: 0, ttl: 36000000 }, 
-            customers: { data: null, timestamp: 0, ttl: 36000000 }, 
-            users: { data: null, timestamp: 0, ttl: 43200000 },
-            allowedUsers: { data: null, timestamp: 0, ttl: 43200000 },
-            agents: { data: null, timestamp: 0, ttl: 43200000 },
-            departments: { data: null, timestamp: 0, ttl: 43200000 },
-            sentMessages: { data: null, timestamp: 0, ttl: 36000000 }, 
-            messages: { data: null, timestamp: 0, ttl: 18000000 },
-            userProfiles: { data: null, timestamp: 0, ttl: 36000000 } 
+            calls: { data: null, timestamp: 0, ttl: 14400000 }, 
+            customers: { data: null, timestamp: 0, ttl: 14400000 }, 
+            users: { data: null, timestamp: 0, ttl: 28800000 },
+            allowedUsers: { data: null, timestamp: 0, ttl: 28800000 },
+            agents: { data: null, timestamp: 0, ttl: 28800000 },
+            departments: { data: null, timestamp: 0, ttl: 28800000 },
+            sentMessages: { data: null, timestamp: 0, ttl: 7200000 }, 
+            messages: { data: null, timestamp: 0, ttl: 300000 },
+            userProfiles: { data: null, timestamp: 0, ttl: 7200000 } 
         };
         
         const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة', 'حسين حيدر', 'Ameer helwas', 'Ameer Helwas'];
@@ -3555,6 +3608,8 @@
                 });
             }
         }
+        
+        const SYSTEM_NAME = 'customer_service';
         
         async function supabaseRequest(table, method = 'GET', data = null, filters = '', customHeaders = {}, useCache = false) {
             if (method === 'GET') {
@@ -3610,15 +3665,17 @@
                     const errorText = await response.text();
                     const error = new Error(`Supabase error: ${response.status} - ${errorText}`);
                     
+                    // اكتشاف أخطاء قاعدة البيانات
                     const isDatabaseError = response.status >= 500 || 
                                           response.status === 503 || 
                                           response.status === 502 || 
                                           response.status === 504 ||
-                                          response.status === 429; 
+                                          response.status === 429; // Rate limiting
                     
                     if (isDatabaseError) {
                         databaseAvailable = false;
                         
+                        // حفظ العمليات الكتابية (POST, PATCH, PUT, DELETE) محلياً
                         if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                             saveToOfflineStorage({
                                 table: table,
@@ -3633,6 +3690,7 @@
                     throw error;
                 }
                 
+                // إذا نجحت العملية، قاعدة البيانات متاحة
                 if (method !== 'GET') {
                     databaseAvailable = true;
                 }
@@ -3642,14 +3700,14 @@
                     if (table === 'messages') {
                         const cacheKey = `messages_${filters}`;
                         if (!dataCache[cacheKey]) {
-                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 18000000 };
+                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 60000 };
                         }
                         dataCache[cacheKey].data = result;
                         dataCache[cacheKey].timestamp = Date.now();
                     } else if (table === 'user_profiles') {
                         const cacheKey = `user_profiles_${filters}`;
                         if (!dataCache[cacheKey]) {
-                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 36000000 };
+                            dataCache[cacheKey] = { data: null, timestamp: 0, ttl: 3600000 };
                         }
                         dataCache[cacheKey].data = result;
                         dataCache[cacheKey].timestamp = Date.now();
@@ -3662,6 +3720,7 @@
                 if (error.name === 'AbortError') {
                     const timeoutError = new Error('Request timeout - يرجى المحاولة مرة أخرى');
                     
+                    // حفظ العمليات الكتابية عند timeout
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         databaseAvailable = false;
                         saveToOfflineStorage({
@@ -3679,6 +3738,7 @@
                 if (error.message && error.message.includes('Failed to fetch')) {
                     const networkError = new Error('خطأ في الاتصال بالإنترنت - يرجى التحقق من الاتصال');
                     
+                    // حفظ العمليات الكتابية عند فشل الاتصال
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         databaseAvailable = false;
                         saveToOfflineStorage({
@@ -3693,6 +3753,7 @@
                     throw networkError;
                 }
                 
+                // إذا كان الخطأ يحتوي على معلومات عن قاعدة البيانات
                 if (error.message && (
                     error.message.includes('503') ||
                     error.message.includes('502') ||
@@ -3703,6 +3764,7 @@
                 )) {
                     databaseAvailable = false;
                     
+                    // حفظ العمليات الكتابية
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         saveToOfflineStorage({
                             table: table,
@@ -3735,9 +3797,10 @@
         let isOnline = navigator.onLine;
         let databaseAvailable = true;
         let lastDatabaseCheck = Date.now();
-        const DATABASE_CHECK_INTERVAL = 3600000;
+        const DATABASE_CHECK_INTERVAL = 60000; // فحص قاعدة البيانات كل دقيقة
         let databaseCheckInterval = null;
         
+        // فحص صحة قاعدة البيانات
         async function checkDatabaseHealth() {
             if (!isOnline) {
                 databaseAvailable = false;
@@ -3745,6 +3808,7 @@
             }
             
             try {
+                // محاولة طلب بسيط للتحقق من حالة قاعدة البيانات
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
                 
@@ -3765,6 +3829,7 @@
                     lastDatabaseCheck = Date.now();
                     return true;
                 } else {
+                    // أخطاء قاعدة البيانات (503, 500, 502, إلخ)
                     if (response.status >= 500 || response.status === 503 || response.status === 502 || response.status === 504) {
                         databaseAvailable = false;
                         return false;
@@ -3773,22 +3838,26 @@
                     return true;
                 }
             } catch (error) {
+                // أي خطأ يعني أن قاعدة البيانات غير متاحة
                 databaseAvailable = false;
                 return false;
             }
         }
         
+        // بدء الفحص الدوري لقاعدة البيانات
         function startDatabaseHealthCheck() {
             if (databaseCheckInterval) {
                 clearInterval(databaseCheckInterval);
             }
             
+            // فحص فوري
             checkDatabaseHealth().then(available => {
                 if (available) {
                     syncOfflineData();
                 }
             });
             
+            // فحص دوري
             databaseCheckInterval = setInterval(() => {
                 checkDatabaseHealth().then(available => {
                     if (available) {
@@ -3798,77 +3867,28 @@
             }, DATABASE_CHECK_INTERVAL);
         }
         
-        function cleanOldOfflineData(maxItems = 50) {
-            try {
-                const allItems = getAllOfflineData();
-                if (allItems.length > maxItems) {
-                    const itemsToDelete = allItems.slice(0, allItems.length - maxItems);
-                    itemsToDelete.forEach(item => {
-                        try {
-                            localStorage.removeItem(item.key);
-                        } catch (e) {
-                            console.warn('Error removing offline item:', item.key, e);
-                        }
-                    });
-                    console.log(`تم حذف ${itemsToDelete.length} عنصر قديم من التخزين المحلي`);
-                }
-            } catch (error) {
-                console.error('Error cleaning old offline data:', error);
-            }
-        }
-        
         function saveToOfflineStorage(operation) {
-            const key = `offline_${operation.table}_${operation.method}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            const offlineData = {
-                table: operation.table,
-                method: operation.method,
-                data: operation.data,
-                filters: operation.filters || '',
-                customHeaders: operation.customHeaders || {},
-                timestamp: new Date().toISOString(),
-                retryCount: 0
-            };
-            
             try {
-                cleanOldOfflineData(50);
+                const key = `offline_${operation.table}_${operation.method}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                const offlineData = {
+                    table: operation.table,
+                    method: operation.method,
+                    data: operation.data,
+                    filters: operation.filters || '',
+                    customHeaders: operation.customHeaders || {},
+                    timestamp: new Date().toISOString(),
+                    retryCount: 0
+                };
                 localStorage.setItem(key, JSON.stringify(offlineData));
                 
+                // حفظ عدد العناصر المحفوظة محلياً
                 const offlineCount = getAllOfflineData().length;
                 localStorage.setItem('offline_data_count', offlineCount.toString());
                 
                 return key;
             } catch (error) {
-                if (error.name === 'QuotaExceededError' || error.message.includes('quota')) {
-                    console.warn('تم امتلاء التخزين المحلي، جاري تنظيف البيانات القديمة...');
-                    try {
-                        const allItems = getAllOfflineData();
-                        const itemsToDelete = allItems.slice(0, Math.floor(allItems.length * 0.5));
-                        itemsToDelete.forEach(item => {
-                            try {
-                                localStorage.removeItem(item.key);
-                            } catch (e) {
-                                console.warn('Error removing offline item:', item.key, e);
-                            }
-                        });
-                        console.log(`تم حذف ${itemsToDelete.length} عنصر قديم من التخزين المحلي`);
-                        
-                        try {
-                            localStorage.setItem(key, JSON.stringify(offlineData));
-                            const offlineCount = getAllOfflineData().length;
-                            localStorage.setItem('offline_data_count', offlineCount.toString());
-                            return key;
-                        } catch (retryError) {
-                            console.error('فشل الحفظ بعد التنظيف:', retryError);
-                            return null;
-                        }
-                    } catch (cleanError) {
-                        console.error('Error cleaning storage:', cleanError);
-                        return null;
-                    }
-                } else {
-                    console.error('Error saving to offline storage:', error);
-                    return null;
-                }
+                console.error('Error saving to offline storage:', error);
+                return null;
             }
         }
         
@@ -3883,6 +3903,7 @@
                             offlineItems.push({ key, ...item });
                         }
                     } catch (e) {
+                        // تجاهل العناصر التالفة
                     }
                 }
             }
@@ -3903,12 +3924,14 @@
             
             for (const item of offlineItems) {
                 try {
+                    // التحقق من صحة قاعدة البيانات قبل كل عملية
                     const isHealthy = await checkDatabaseHealth();
                     if (!isHealthy) {
                         console.log('Database unavailable, stopping sync');
                         break;
                     }
                     
+                    // تنفيذ العملية المحفوظة
                     const result = await supabaseRequest(
                         item.table,
                         item.method,
@@ -3917,24 +3940,30 @@
                         item.customHeaders || {}
                     );
                     
+                    // حذف العنصر بعد النجاح
                     localStorage.removeItem(item.key);
                     syncedCount++;
                     
+                    // مسح الكاش للجدول المحدث
                     if (item.method !== 'GET') {
                         clearCache(item.table);
                     }
                     
                 } catch (error) {
+                    // زيادة عدد المحاولات
                     item.retryCount = (item.retryCount || 0) + 1;
                     
+                    // إذا فشلت العملية أكثر من 5 مرات، تخطيها (قد تكون بيانات غير صالحة)
                     if (item.retryCount > 5) {
                         console.warn(`Skipping offline item after ${item.retryCount} failed attempts:`, item.key);
                         localStorage.removeItem(item.key);
                         failedCount++;
                     } else {
+                        // حفظ عدد المحاولات
                         localStorage.setItem(item.key, JSON.stringify(item));
                         failedCount++;
                         
+                        // إذا كان الخطأ بسبب قاعدة البيانات غير متاحة، توقف
                         if (error.message && (
                             error.message.includes('Failed to fetch') ||
                             error.message.includes('timeout') ||
@@ -3950,6 +3979,7 @@
                 }
             }
             
+            // تحديث عدد العناصر المحفوظة
             const remainingCount = getAllOfflineData().length;
             if (remainingCount > 0) {
                 localStorage.setItem('offline_data_count', remainingCount.toString());
@@ -3957,8 +3987,10 @@
                 localStorage.removeItem('offline_data_count');
             }
             
+            // إظهار إشعار إذا تمت المزامنة
             if (syncedCount > 0) {
                 console.log(`تمت مزامنة ${syncedCount} عنصر من البيانات المحفوظة محلياً`);
+                // يمكن إضافة إشعار مرئي هنا إذا لزم الأمر
             }
         }
         
@@ -3985,10 +4017,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            cleanOldOfflineData(50);
             const today = new Date();
             document.getElementById('txtDate').value = today.toISOString().split('T')[0];
             
+            // إخفاء القائمة الجانبية افتراضياً على الشاشات الصغيرة
             function checkScreenSize() {
                 const sidebar = document.getElementById('sidebar');
                 if (sidebar && window.innerWidth <= 768) {
@@ -4021,6 +4053,7 @@
                 }
             }
 
+            // بدء فحص صحة قاعدة البيانات
             startDatabaseHealthCheck();
             
             Promise.all([
@@ -4061,13 +4094,13 @@
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await updateEmployeeOfTheWeek();
                 }
-            }, 604800000);
+            }, 86400000);
             
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 86400000);
+            }, 21600000);
             
             const sidebarUser = document.getElementById('sidebarUser');
             const popup = document.getElementById('userContactPopup');
@@ -4141,6 +4174,7 @@
                         
                         loadUserProfileForSidebar();
                         
+                        // عرض رسالة الترحيب
                         showWelcomeMessage(user.full_name);
                     } else {
                         showAlert(alertDiv, 'اسم المستخدم أو كلمة المرور غير صحيحة.', 'error');
@@ -4174,6 +4208,7 @@
             
             updateAdminTabsVisibility();
             
+            // عرض رسالة الترحيب إذا كان المستخدم مسجل دخول جديد
             if (loggedInUser && !localStorage.getItem('welcomeShown_' + loggedInUser)) {
                 showWelcomeMessage(loggedInUser);
             }
@@ -4323,16 +4358,20 @@
             const isHidden = sidebar.classList.contains('hidden');
             
             if (isHidden) {
+                // إظهار القائمة
                 sidebar.classList.remove('hidden');
                 if (overlay) {
                     overlay.classList.add('active');
                 }
+                // منع التمرير في الخلفية
                 document.body.style.overflow = 'hidden';
             } else {
+                // إخفاء القائمة
                 sidebar.classList.add('hidden');
                 if (overlay) {
                     overlay.classList.remove('active');
                 }
+                // إعادة التمرير
                 document.body.style.overflow = '';
             }
         }
@@ -4353,6 +4392,7 @@
                 return;
             }
             
+            // إغلاق القائمة الجانبية على الهاتف بعد اختيار تبويب
             if (window.innerWidth <= 768) {
                 closeSidebar();
             }
@@ -4384,6 +4424,7 @@
             
             tabElement.classList.add('active');
             
+            // البحث عن العنصر النشط في القائمة الجانبية
             const currentEvent = event || window.event;
             if (currentEvent && currentEvent.target && typeof currentEvent.target.closest === 'function') {
                 const navItem = currentEvent.target.closest('.nav-item');
@@ -4391,6 +4432,7 @@
                     navItem.classList.add('active');
                 }
             } else {
+                // إذا لم يكن هناك event، ابحث عن العنصر الذي يحتوي على onclick مع tabName
                 const navItems = document.querySelectorAll('.nav-item');
                 navItems.forEach(item => {
                     const onclickAttr = item.getAttribute('onclick');
@@ -4422,15 +4464,15 @@
                 const cachedCalls = getCachedData('calls');
                 const cachedCustomers = getCachedData('customers');
                 
-                if (cachedCalls && cachedCustomers && cachedCalls.length > 0 && cachedCustomers.length > 0) {
+                if (cachedCalls && cachedCustomers) {
                     callsData = cachedCalls;
                     customersData = cachedCustomers;
                     updateStatistics();
-                } else {
+                }
+                
                 refreshStatistics().catch(err => {
                     console.error('Error refreshing statistics:', err);
                 });
-                }
             } else if (tabName === 'advanced-stats') {
                 loadAdvancedStatistics();
             } else if (tabName === 'users') {
@@ -4464,6 +4506,10 @@
             }
         }
         
+        /**
+         * تحديث خريطة أسماء الموظفين لتوحيد الأسماء القديمة والجديدة
+         * يتم استدعاؤها عند تحميل المستخدمين
+         */
         async function updateEmployeeNameMap() {
             try {
                 const users = await supabaseRequest('users', 'GET', null, `?system_name=eq.${SYSTEM_NAME}&is_active=eq.true&select=id,username,full_name`);
@@ -4509,6 +4555,11 @@
             }
         }
         
+        /**
+         * الحصول على الاسم الموحد للموظف
+         * @param {string} oldName - الاسم القديم المحفوظ في البيانات
+         * @returns {string} الاسم الحالي الموحد
+         */
         function getUnifiedEmployeeName(oldName) {
             if (!oldName || typeof oldName !== 'string') return oldName || 'غير معروف';
             const trimmed = oldName.trim();
@@ -4541,14 +4592,6 @@
             }
             
             try {
-                const cached = getCachedData('users');
-                if (cached !== null && Array.isArray(cached) && cached.length > 0) {
-                    displayUsers(cached);
-                    await updateEmployeeNameMap();
-                    loadUsersFromDB();
-                    return;
-                }
-                
                 let allUsers = [];
                 let from = 0;
                 const batchSize = 1000;
@@ -4616,7 +4659,6 @@
                     }
                 }
                 
-                setCachedData('users', filteredUsers);
                 displayUsers(filteredUsers);
                 await updateEmployeeNameMap();
             } catch (error) {
@@ -5080,6 +5122,7 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            // حساب تواريخ الفترة
             let periodStartDate, periodEndDate;
             const now = new Date();
             if (period === 'daily') {
@@ -5112,11 +5155,13 @@
                     }
                     callsByEmployee[emp].total++;
                     
+                    // حساب المكالمات في الفترة المحددة
                     const callDate = call.created_at ? new Date(call.created_at) : null;
                     if (callDate && callDate >= periodStartDate && callDate < periodEndDate) {
                         callsByEmployee[emp].periodCalls++;
                     }
                     
+                    // حساب المكالمات اليوم
                     if (callDate) {
                         callDate.setHours(0, 0, 0, 0);
                         if (callDate.getTime() === today.getTime()) {
@@ -5124,12 +5169,14 @@
                         }
                     }
                     
+                    // حساب أنواع المكالمات
                     const callType = call.call_type || 'غير محدد';
                     if (!callsByEmployee[emp].callsByType[callType]) {
                         callsByEmployee[emp].callsByType[callType] = 0;
                     }
                     callsByEmployee[emp].callsByType[callType]++;
                     
+                    // حساب الشكاوى
                     if (callType === 'شكوى' || callType === 'ضعف بالخدمة') {
                         callsByEmployee[emp].complaints++;
                     }
@@ -5545,9 +5592,11 @@
                                     const initials = emp.charAt(0).toUpperCase();
                                     const rank = index + 1;
                                     
+                                    // حساب النسبة المئوية
                                     const maxPeriodCalls = Math.max(...Object.values(callsByEmployee).map(d => d.periodCalls));
                                     const percentage = maxPeriodCalls > 0 ? ((data.periodCalls / maxPeriodCalls) * 100) : 0;
                                     
+                                    // ألوان الرتبة
                                     let rankColor = '#3b82f6';
                                     let rankBadge = '';
                                     if (rank === 1) {
@@ -5561,6 +5610,7 @@
                                         rankBadge = '🥉';
                                     }
                                     
+                                    // أنواع المكالمات
                                     const callsByTypeHTML = Object.entries(data.callsByType || {})
                                         .sort((a, b) => b[1] - a[1])
                                         .map(([type, count]) => {
@@ -5787,6 +5837,7 @@
                 if (isOnline && databaseAvailable) {
                     const result = await supabaseRequest('customers', 'POST', customerData);
                     
+                    // Ensure the saved customer has the employee field
                     const savedCustomer = result && result[0] ? {
                         ...result[0],
                         employee: result[0].employee || customerData.employee || loggedInUser
@@ -5809,6 +5860,7 @@
                     
                     updateStatistics();
                     
+                    // Save call details automatically with type "طلب اشتراك"
                     try {
                         const now = new Date();
                         const time = now.toLocaleTimeString('en-US', { 
@@ -5835,6 +5887,7 @@
                         
                         const callResult = await supabaseRequest('calls', 'POST', callData);
                         
+                        // Ensure the saved call has the agent field
                         const savedCall = callResult && callResult[0] ? {
                             ...callResult[0],
                             agent: callResult[0].agent || callData.agent || loggedInUser
@@ -5858,6 +5911,7 @@
                         updateStatistics();
                     } catch (callError) {
                         console.error('Error saving call details:', callError);
+                        // Don't show error to user, just log it
                     }
                     
                     setTimeout(() => {
@@ -5869,6 +5923,7 @@
                 } else {
                     saveToOfflineStorage({ table: 'customers', method: 'POST', data: customerData });
                     
+                    // Save call details offline
                     try {
                         const now = new Date();
                         const time = now.toLocaleTimeString('en-US', { 
@@ -5912,6 +5967,7 @@
                 if (!isOnline || error.message.includes('fetch') || error.message.includes('network') || !databaseAvailable) {
                     saveToOfflineStorage({ table: 'customers', method: 'POST', data: customerData });
                     
+                    // Save call details offline
                     try {
                         const now = new Date();
                         const time = now.toLocaleTimeString('en-US', { 
@@ -5988,6 +6044,8 @@
             
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             
+            // Create a temporary anchor element and click it programmatically
+            // This method is more reliable and less likely to be blocked by popup blockers
             const link = document.createElement('a');
             link.href = whatsappUrl;
             link.target = '_blank';
@@ -6000,6 +6058,7 @@
                 showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
             } catch (error) {
                 console.error('Error opening WhatsApp:', error);
+                // Fallback: try window.open
                 const newWindow = window.open(whatsappUrl, '_blank');
                 if (newWindow) {
                     showAlert(alertDiv, `تم إرسال البيانات للوكيل ${agent.name} عبر واتساب`, 'success');
@@ -6007,6 +6066,7 @@
                     showAlert(alertDiv, `⚠️ يرجى السماح للنوافذ المنبثقة لفتح واتساب. الرابط: ${whatsappUrl}`, 'warning');
                 }
             } finally {
+                // Clean up: remove the temporary link after a short delay
                 setTimeout(() => {
                     if (link.parentNode) {
                         link.parentNode.removeChild(link);
@@ -6023,11 +6083,13 @@
                 document.getElementById('txtPhone').value = '';
                 document.getElementById('txtNotes').value = '';
                 document.getElementById('selectAgent').value = '';
+                // إعادة تعيين عرض الوكيل
                 const selectText = document.getElementById('agentSelectText');
                 if (selectText) {
                     selectText.textContent = 'اختر الوكيل';
                     selectText.style.color = 'var(--text-secondary)';
                 }
+                // إزالة التحديد من الخيارات
                 document.querySelectorAll('.agent-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
@@ -6079,7 +6141,11 @@
             }
         }
 
-        
+        /**
+         * حفظ تفاصيل المكالمة في قاعدة البيانات
+         * يتحقق من التكرار قبل الحفظ
+         * يرسل الشكاوى تلقائياً للقسم المختار
+         */
         async function saveCallDetails() {
             const callType = document.getElementById('cmbCallType').value.trim();
             const phone = document.getElementById('txtCallPhone').value.trim();
@@ -6159,6 +6225,7 @@
                     
                     updateStatistics();
                     
+                    // Show success message that disappears quickly (2 seconds)
                     showAlert(alertDiv, 'تم حفظ تفاصيل المكالمة بنجاح', 'success', 2000);
                 } else {
                     saveToOfflineStorage({ table: 'calls', method: 'POST', data: callData });
@@ -6168,9 +6235,12 @@
                 if ((callType === 'شكوى' || callType === 'ضعف بالخدمة') && selectedDepartment) {
                     const department = departments.find(d => d.id === selectedDepartment);
                     if (department) {
+                        // Call immediately to ensure it's triggered by user interaction
+                        // This prevents popup blockers from blocking the WhatsApp window
                         sendComplaintToDepartment(department, callData);
                         if (isOnline && databaseAvailable) {
                             const employeeName = callData.agent || loggedInUser || 'غير معروف';
+                            // Save message asynchronously without blocking
                             setTimeout(() => {
                                 saveSentMessageToSupabase('complaint', department.id, department.name, callData.name, employeeName);
                             }, 100);
@@ -6178,6 +6248,7 @@
                     }
                 }
                 
+                // Clear form without confirmation when saving successfully
                 clearCallForm(true);
                 
             } catch (error) {
@@ -6211,6 +6282,8 @@
             
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             
+            // Create a temporary anchor element and click it programmatically
+            // This method is more reliable and less likely to be blocked by popup blockers
             const link = document.createElement('a');
             link.href = whatsappUrl;
             link.target = '_blank';
@@ -6223,6 +6296,7 @@
                 showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
             } catch (error) {
                 console.error('Error opening WhatsApp:', error);
+                // Fallback: try window.open
                 const newWindow = window.open(whatsappUrl, '_blank');
                 if (newWindow) {
                     showAlert(alertDiv, `تم إرسال الشكوى لقسم ${department.name} عبر واتساب`, 'success');
@@ -6230,6 +6304,7 @@
                     showAlert(alertDiv, `⚠️ يرجى السماح للنوافذ المنبثقة لفتح واتساب. الرابط: ${whatsappUrl}`, 'warning');
                 }
             } finally {
+                // Clean up: remove the temporary link after a short delay
                 setTimeout(() => {
                     if (link.parentNode) {
                         link.parentNode.removeChild(link);
@@ -6242,6 +6317,7 @@
             const callType = document.getElementById('cmbCallType').value;
             const departmentSection = document.getElementById('departmentSection');
             
+            // Show/hide department section for complaints
             if (departmentSection) {
                 if (callType === 'شكوى' || callType === 'ضعف بالخدمة') {
                     departmentSection.style.display = 'block';
@@ -6260,6 +6336,7 @@
                 document.getElementById('txtIssueDetails').value = '';
                 document.getElementById('selectDepartment').value = '';
                 document.getElementById('callAlert').innerHTML = '';
+                // Hide department section
                 const departmentSection = document.getElementById('departmentSection');
                 if (departmentSection) departmentSection.style.display = 'none';
             }
@@ -6477,7 +6554,7 @@
         
         async function loadAgentsFromDB() {
             try {
-                const data = await supabaseRequest('agents', 'GET', null, '?order=created_at.desc', {}, true);
+                const data = await supabaseRequest('agents', 'GET', null, '?order=created_at.desc');
                 agents = Array.isArray(data) ? data.map(agent => ({
                     id: agent.id.toString(),
                     name: agent.name,
@@ -6552,6 +6629,7 @@
                 return;
             }
 
+            // ترتيب الوكلاء حسب الاسم
             const sortedAgents = [...filteredAgents].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             
             container.innerHTML = sortedAgents.map(agent => {
@@ -6566,7 +6644,7 @@
                 <div class="agent-card">
                     <div class="agent-info">
                         <div class="agent-header">
-                            <div class="agent-icon"></div>
+                            <div class="agent-icon">👔</div>
                             <div class="agent-name">${nameEscaped}</div>
                         </div>
                         <div class="agent-details">
@@ -6596,12 +6674,13 @@
             `;
             }).join('');
             
+            // تحديث الإحصائيات
             updateAgentsStats();
         }
         
         function updateAgentsStats() {
             const totalCount = agents.length;
-            const activeCount = agents.length;
+            const activeCount = agents.length; // يمكن تحديثها لاحقاً لإضافة منطق للوكلاء النشطين
             
             const totalCountEl = document.getElementById('totalAgentsCount');
             const activeCountEl = document.getElementById('activeAgentsCount');
@@ -6621,11 +6700,13 @@
             
             if (!optionsList) return;
             
+            // تحديث القائمة
             if (agents.length === 0) {
                 optionsList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">لا يوجد وكلاء مسجلين</div>';
                 return;
             }
             
+            // ترتيب الوكلاء حسب الاسم
             const sortedAgents = [...agents].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             
             optionsList.innerHTML = sortedAgents.map(agent => {
@@ -6639,6 +6720,7 @@
                 `;
             }).join('');
             
+            // إذا كان هناك وكيل محدد مسبقاً، عرضه
             if (hiddenInput && hiddenInput.value) {
                 const selectedAgent = agents.find(a => a.id.toString() === hiddenInput.value);
                 if (selectedAgent) {
@@ -6663,6 +6745,7 @@
                 dropdown.classList.add('active');
                 display.classList.add('active');
                 if (arrow) arrow.classList.add('active');
+                // التركيز على حقل البحث
                 setTimeout(() => {
                     if (searchInput) searchInput.focus();
                 }, 100);
@@ -6670,6 +6753,7 @@
                 dropdown.classList.remove('active');
                 display.classList.remove('active');
                 if (arrow) arrow.classList.remove('active');
+                // مسح البحث
                 if (searchInput) searchInput.value = '';
                 filterAgentOptions();
             }
@@ -6690,6 +6774,7 @@
                 selectText.style.color = 'var(--text-primary)';
             }
             
+            // تحديث الخيار المحدد
             document.querySelectorAll('.agent-option').forEach(opt => {
                 opt.classList.remove('selected');
                 if (opt.getAttribute('data-agent-id') === agentId.toString()) {
@@ -6697,11 +6782,13 @@
                 }
             });
             
+            // إغلاق القائمة
             agentDropdownOpen = false;
             if (dropdown) dropdown.classList.remove('active');
             if (display) display.classList.remove('active');
             if (arrow) arrow.classList.remove('active');
             
+            // مسح البحث
             const searchInput = document.getElementById('agentSearchInput');
             if (searchInput) {
                 searchInput.value = '';
@@ -6728,6 +6815,7 @@
             });
         }
         
+        // إغلاق القائمة عند الضغط خارجها
         document.addEventListener('click', function(event) {
             const container = document.getElementById('agentSelectContainer');
             const dropdown = document.getElementById('agentDropdown');
@@ -6773,9 +6861,12 @@
                 return;
             }
 
+            // التحقق من تكرار رقم الهاتف قبل الحفظ
             if (editId) {
+                // عند التعديل: التحقق من أن رقم الهاتف غير مستخدم لوكيل آخر
                 const existingAgent = agents.find(a => a.id === editId);
                 if (existingAgent && existingAgent.phone !== phone) {
+                    // رقم الهاتف تغير، التحقق من عدم تكراره
                     const phoneExists = agents.some(a => a.id !== editId && a.phone === phone);
                     if (phoneExists) {
                         showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل لوكيل آخر. يرجى استخدام رقم آخر.', 'error');
@@ -6783,6 +6874,7 @@
                     }
                 }
             } else {
+                // عند الإضافة: التحقق من عدم تكرار رقم الهاتف
                 const phoneExists = agents.some(a => a.phone === phone);
                 if (phoneExists) {
                     showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل. يرجى استخدام رقم آخر.', 'error');
@@ -6816,6 +6908,7 @@
             } catch (error) {
                 console.error('Error saving agent:', error);
                 
+                // معالجة خطأ تكرار رقم الهاتف
                 if (error.message && (error.message.includes('agents_phone_key') || error.message.includes('duplicate key') || error.message.includes('23505'))) {
                     showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل لوكيل آخر. يرجى استخدام رقم آخر.', 'error');
                     return;
@@ -7089,7 +7182,7 @@
             if (type === 'phone') {
                 const phoneRegex = /^(\+964|0)?[7][0-9]{9}$/;
                 isValid = phoneRegex.test(value);
-                message = isValid ? '' : 'رقم الهاتف غير صحيح  ';
+                message = isValid ? '' : 'رقم الهاتف غير صحيح. يجب أن يبدأ بـ 07 ويحتوي على 10 أرقام';
             } else if (type === 'required') {
                 isValid = value.length > 0;
                 message = isValid ? '' : 'هذا الحقل مطلوب';
@@ -7126,22 +7219,15 @@
         function timeAgo(date) {
             if (!date) return 'غير محدد';
             
-            let dateObj;
-            if (typeof date === 'string') {
-                dateObj = new Date(date);
-            } else if (date instanceof Date) {
-                dateObj = date;
-            } else {
-                dateObj = new Date(date);
-            }
-            
-            if (isNaN(dateObj.getTime())) return 'غير محدد';
-            
             const now = new Date();
-            const diffInSeconds = Math.floor((now - dateObj) / 1000);
+            const past = new Date(date);
+            
+            if (isNaN(past.getTime())) return 'غير محدد';
+            
+            const diffInSeconds = Math.floor((now - past) / 1000);
             
             if (diffInSeconds < 0) {
-                return dateObj.toLocaleDateString('en-US', { 
+                return past.toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric',
@@ -7150,12 +7236,12 @@
                 });
             }
             
-            if (diffInSeconds < 60) return 'الآن';
+            if (diffInSeconds < 60 && diffInSeconds >= 0) return 'الآن';
             if (diffInSeconds < 3600) return `منذ ${Math.floor(diffInSeconds / 60)} دقيقة`;
             if (diffInSeconds < 86400) return `منذ ${Math.floor(diffInSeconds / 3600)} ساعة`;
             if (diffInSeconds < 604800) return `منذ ${Math.floor(diffInSeconds / 86400)} يوم`;
             if (diffInSeconds < 2592000) return `منذ ${Math.floor(diffInSeconds / 604800)} أسبوع`;
-            return dateObj.toLocaleDateString('en-US', { 
+            return past.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric',
@@ -7332,45 +7418,17 @@
         let isRefreshing = false; 
 
         async function refreshStatistics() {
+            
             if (isRefreshing) {
                 return;
             }
             
             isRefreshing = true;
             
+            
             const totalCallsEl = document.getElementById('totalCalls');
             const totalComplaintsEl = document.getElementById('totalComplaints');
             const totalCustomersEl = document.getElementById('totalCustomers');
-            
-            const cachedCalls = getCachedData('calls');
-            const cachedCustomers = getCachedData('customers');
-            
-            if (cachedCalls && cachedCustomers && cachedCalls.length > 0 && cachedCustomers.length > 0) {
-                callsData = cachedCalls;
-                customersData = cachedCustomers;
-                updateStatistics();
-                isRefreshing = false;
-                
-                setTimeout(async () => {
-                    try {
-                        const [callsResult, customersResult] = await Promise.all([
-                            fetchCallsData(false),
-                            fetchCustomersData(false)
-                        ]);
-                        
-                        if (callsResult && callsResult.length > 0) {
-                            callsData = callsResult;
-                        }
-                        if (customersResult && customersResult.length > 0) {
-                            customersData = customersResult;
-                        }
-                        updateStatistics();
-                    } catch (error) {
-                        console.error('Error refreshing statistics in background:', error);
-                    }
-                }, 1000);
-                return;
-            }
             
             if (!totalCallsEl.textContent || totalCallsEl.textContent === '0' || totalCallsEl.textContent === '...') {
                 totalCallsEl.textContent = '...';
@@ -7379,6 +7437,7 @@
             }
             
             try {
+                
                 const [callsResult, customersResult] = await Promise.all([
                         fetchCallsData(false),
                         fetchCustomersData(false)
@@ -7395,6 +7454,8 @@
             } catch (error) {
                 console.error('Error refreshing statistics:', error);
                 
+                const cachedCalls = getCachedData('calls');
+                const cachedCustomers = getCachedData('customers');
                 if (cachedCalls && cachedCustomers) {
                     callsData = cachedCalls;
                     customersData = cachedCustomers;
@@ -7414,10 +7475,12 @@
                 nameSpan.textContent = employeeName;
                 welcomeDiv.style.display = 'block';
                 
+                // إخفاء الرسالة بعد 15 دقيقة (900000 مللي ثانية)
                 setTimeout(() => {
                     closeWelcomeMessage();
                 }, 15 * 60 * 1000);
                 
+                // حفظ في localStorage لتجنب إظهارها مرة أخرى في نفس الجلسة
                 localStorage.setItem('welcomeShown_' + employeeName, 'true');
             }
         }
@@ -7449,6 +7512,7 @@
             const totalCustomersEl = document.getElementById('totalCustomers');
             if (totalCustomersEl) totalCustomersEl.textContent = totalCustomers.toLocaleString('en-US');
             
+            // التحقق من حساب المكالمات لكل الموظفين
             verifyEmployeeCallsCount();
             
             
@@ -7484,6 +7548,7 @@
         }
         
         function verifyEmployeeCallsCount() {
+            // التحقق من حساب المكالمات لكل الموظفين (دون طباعة في console)
             if (!callsData || !Array.isArray(callsData) || callsData.length === 0) {
                 return;
             }
@@ -7491,10 +7556,12 @@
             const employeeCalls = {};
             const employeeCustomers = {};
             
+            // حساب المكالمات لكل موظف
             callsData.forEach(call => {
                 const oldEmployeeName = call.agent || call[4] || 'غير معروف';
                 let employee = oldEmployeeName;
                 
+                // محاولة توحيد الاسم إذا كانت الدالة موجودة
                 if (typeof getUnifiedEmployeeName === 'function') {
                     employee = getUnifiedEmployeeName(oldEmployeeName);
                 }
@@ -7507,11 +7574,13 @@
                 }
             });
             
+            // حساب المشتركين لكل موظف
             if (customersData && Array.isArray(customersData)) {
                 customersData.forEach(customer => {
                     const oldEmployeeName = customer.employee || customer[6] || 'غير معروف';
                     let employee = oldEmployeeName;
                     
+                    // محاولة توحيد الاسم إذا كانت الدالة موجودة
                     if (typeof getUnifiedEmployeeName === 'function') {
                         employee = getUnifiedEmployeeName(oldEmployeeName);
                     }
@@ -8076,6 +8145,7 @@
             
             const callsByEmployee = {};
             
+            // Process calls
             callsData.forEach(call => {
                 const oldEmployeeName = call.agent || call[4] || 'غير معروف';
                 const employee = getUnifiedEmployeeName(oldEmployeeName);
@@ -8093,6 +8163,7 @@
                     }
                     callsByEmployee[employee].total++;
                     
+                    // Calculate today's calls
                     const callDate = call.created_at ? new Date(call.created_at) : null;
                     if (callDate) {
                         callDate.setHours(0, 0, 0, 0);
@@ -8103,6 +8174,7 @@
                 }
             });
             
+            // Process customers (المشتركين الجدد)
             if (customersData && Array.isArray(customersData) && customersData.length > 0) {
                 customersData.forEach(customer => {
                     const oldEmployeeName = customer.employee || customer[6] || 'غير معروف';
@@ -8416,21 +8488,14 @@
             const activities = [];
             
             if (customersData && customersData.length > 0) {
-                customersData.slice(-100).reverse().forEach(customer => {
+                customersData.slice(-30).reverse().forEach(customer => {
                     const customerName = customer[0] || customer.username || 'غير معروف';
                     const customerPhone = customer.phone || customer[3] || '';
                     const customerRegion = customer.region || customer[1] || '';
                     const customerPoint = customer.closest_point || customer[2] || '';
                     const customerEmployee = customer.employee || customer[6] || 'غير معروف';
                     const customerAgent = customer.agent || '';
-                    let customerDate = customer.created_at || customer[4] || customer.date;
-                    if (!customerDate) {
-                        return;
-                    }
-                    const dateObj = new Date(customerDate);
-                    if (isNaN(dateObj.getTime())) {
-                        return;
-                    }
+                    const customerDate = customer.created_at || customer[4] || customer.date || new Date();
                     activities.push({
                         type: 'customer',
                         icon: '👤',
@@ -8441,16 +8506,8 @@
                         point: customerPoint,
                         employee: customerEmployee,
                         agent: customerAgent,
-                        time: dateObj.toISOString(),
-                        fullTime: dateObj.toLocaleString('ar-IQ', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric',
-                            hour: '2-digit', 
-                            minute: '2-digit',
-                            second: '2-digit',
-                            timeZone: 'Asia/Baghdad'
-                        }),
+                        time: customerDate,
+                        fullTime: new Date(customerDate).toLocaleString('en-US'),
                         color: '#4ade80'
                     });
                 });
@@ -8461,21 +8518,14 @@
                 fetchRecentCallsForActivity()
             ]).then(([sentMessages, recentCalls]) => {
                 if (recentCalls && recentCalls.length > 0) {
-                    recentCalls.slice(-100).reverse().forEach(call => {
+                    recentCalls.slice(-20).reverse().forEach(call => {
                         const callType = call.call_type || 'غير محدد';
                         const callName = call.name || 'غير معروف';
                         const callPhone = call.phone || '';
                         const callDetails = call.details || '';
                         const callEmployee = call.agent || 'غير معروف';
                         const callDepartment = getDepartmentName(call.department) || '';
-                        let callDate = call.created_at;
-                        if (!callDate) {
-                            return;
-                        }
-                        const dateObj = new Date(callDate);
-                        if (isNaN(dateObj.getTime())) {
-                            return;
-                        }
+                        const callDate = call.created_at || new Date();
                         activities.push({
                             type: 'call',
                             icon: '📞',
@@ -8485,31 +8535,15 @@
                             details: callDetails,
                             employee: callEmployee,
                             department: callDepartment,
-                            time: dateObj.toISOString(),
-                            fullTime: dateObj.toLocaleString('ar-IQ', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric',
-                                hour: '2-digit', 
-                                minute: '2-digit',
-                                second: '2-digit',
-                                timeZone: 'Asia/Baghdad'
-                            }),
+                            time: callDate,
+                            fullTime: new Date(callDate).toLocaleString('en-US'),
                             color: callType === 'شكوى' || callType === 'ضعف بالخدمة' ? '#f87171' : '#60a5fa'
                         });
                     });
                 }
                 
                 if (sentMessages && sentMessages.length > 0) {
-                    sentMessages.slice(-50).reverse().forEach(msg => {
-                        let msgDate = msg.sent_at || msg.created_at;
-                        if (!msgDate) {
-                            return;
-                        }
-                        const dateObj = new Date(msgDate);
-                        if (isNaN(dateObj.getTime())) {
-                            return;
-                        }
+                    sentMessages.slice(-15).reverse().forEach(msg => {
                         activities.push({
                             type: 'message',
                             icon: '📨',
@@ -8517,16 +8551,8 @@
                             agentName: msg.agent_name || 'غير معروف',
                             customerName: msg.customer_name || '',
                             employee: msg.employee_name || 'غير محدد',
-                            time: dateObj.toISOString(),
-                            fullTime: dateObj.toLocaleString('ar-IQ', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric',
-                                hour: '2-digit', 
-                                minute: '2-digit',
-                                second: '2-digit',
-                                timeZone: 'Asia/Baghdad'
-                            }),
+                            time: msg.sent_at,
+                            fullTime: new Date(msg.sent_at).toLocaleString('en-US'),
                             color: '#fbbf24'
                         });
                     });
@@ -8542,9 +8568,9 @@
         async function fetchRecentCallsForActivity() {
             try {
                 if (callsData && Array.isArray(callsData) && callsData.length > 0) {
-                    return callsData.slice(0, 100);
+                    return callsData.slice(0, 25);
                 }
-                const data = await supabaseRequest('calls', 'GET', null, '?order=created_at.desc&limit=100', {}, true);
+                const data = await supabaseRequest('calls', 'GET', null, '?order=created_at.desc&limit=25', {}, true);
                 return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching recent calls for activity:', error);
@@ -8556,9 +8582,9 @@
             try {
                 const cached = getCachedData('sentMessages');
                 if (cached && Array.isArray(cached) && cached.length > 0) {
-                    return cached.slice(0, 50);
+                    return cached.slice(0, 20);
                 }
-                const data = await supabaseRequest('sent_messages', 'GET', null, '?order=sent_at.desc&limit=50', {}, true);
+                const data = await supabaseRequest('sent_messages', 'GET', null, '?order=sent_at.desc&limit=20', {}, true);
                 return Array.isArray(data) ? data : [];
             } catch (error) {
                 console.error('Error fetching sent messages for activity:', error);
@@ -8567,28 +8593,22 @@
         }
         
         function displayRecentActivity(activities) {
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            const cutoffTime = oneWeekAgo.getTime();
+            // Calculate the cutoff time (2 days ago)
+            const twoDaysAgo = new Date();
+            twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+            const cutoffTime = twoDaysAgo.getTime();
             
+            // Remove duplicates based on unique identifier (type + time + name + phone/details)
             const seen = new Set();
             const uniqueActivities = activities.filter(activity => {
-                if (!activity.time) {
-                    return false;
-                }
-                let time;
-                if (typeof activity.time === 'string') {
-                    time = new Date(activity.time).getTime();
-                } else if (activity.time instanceof Date) {
-                    time = activity.time.getTime();
-                } else {
-                    time = new Date(activity.time).getTime();
-                }
+                const time = new Date(activity.time).getTime();
                 
+                // Filter out activities older than 2 days
                 if (isNaN(time) || time < cutoffTime) {
                     return false;
                 }
                 
+                // Create a unique identifier based on activity type
                 let identifier;
                 if (activity.type === 'call') {
                     identifier = `call_${time}_${activity.name || ''}_${activity.phone || ''}_${activity.details ? activity.details.substring(0, 20) : ''}`;
@@ -8615,7 +8635,7 @@
                 if (isNaN(timeB.getTime())) return -1;
                 return timeB - timeA;
             });
-            const recentActivities = uniqueActivities.slice(0, 100);
+            const recentActivities = uniqueActivities.slice(0, 25);
             
             const container = document.getElementById('recentActivity');
             if (recentActivities.length === 0) {
@@ -8630,187 +8650,160 @@
             }
             
             container.innerHTML = recentActivities.map((activity, index) => {
-                let activityDate;
-                if (typeof activity.time === 'string') {
-                    activityDate = new Date(activity.time);
-                } else if (activity.time instanceof Date) {
-                    activityDate = activity.time;
-                } else {
-                    activityDate = new Date(activity.time);
-                }
-                
-                if (isNaN(activityDate.getTime())) {
-                    return '';
-                }
-                
-                const timeAgoText = timeAgo(activityDate);
-                const fullTime = activity.fullTime || activityDate.toLocaleString('ar-IQ', { 
+                const timeAgoText = timeAgo(activity.time);
+                const fullTime = activity.fullTime || new Date(activity.time).toLocaleString('en-US');
+                const activityDate = new Date(activity.time);
+                const dateText = activityDate.toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 
-                    day: 'numeric',
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZone: 'Asia/Baghdad'
+                    day: 'numeric' 
                 });
-                const dateText = activityDate.toLocaleDateString('ar-IQ', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    timeZone: 'Asia/Baghdad'
-                });
-                const timeText = activityDate.toLocaleTimeString('ar-IQ', { 
+                const timeText = activityDate.toLocaleTimeString('en-US', { 
                     hour: '2-digit', 
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZone: 'Asia/Baghdad'
+                    minute: '2-digit' 
                 });
                 const activityColor = activity.color || 'var(--primary-color)';
                 
-                let cardGradient = `linear-gradient(135deg, ${activityColor}15 0%, ${activityColor}08 100%)`;
-                let iconBg = `${activityColor}20`;
-                let iconBorder = `${activityColor}60`;
-                let badgeBg = `${activityColor}18`;
-                let badgeBorder = `${activityColor}50`;
-                let cardBorder = `${activityColor}70`;
+                // Determine color scheme based on activity type
+                let cardGradient = `linear-gradient(135deg, ${activityColor}08 0%, ${activityColor}03 100%)`;
+                let iconBg = `${activityColor}15`;
+                let iconBorder = `${activityColor}40`;
+                let badgeBg = `${activityColor}12`;
+                let badgeBorder = `${activityColor}35`;
                 
                 let detailsHTML = '';
                 
                 if (activity.type === 'call') {
                     detailsHTML = `
-                        <div style="margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 10px; border: 2px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1.5px solid var(--border-light); background: var(--bg-tertiary); border-radius: 6px; padding: 8px;">
                             ${activity.phone ? `
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color);">
-                                    <span style="font-size: 1.1rem; font-weight: 900;">📱</span>
-                                    <span style="font-size: 0.95rem; font-weight: 800; color: var(--text-primary); direction: ltr; text-align: right; letter-spacing: 0.5px;">${activity.phone}</span>
+                                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light);">
+                                    <span style="font-size: 0.95rem;">📱</span>
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); direction: ltr; text-align: right;">${activity.phone}</span>
                                 </div>
                             ` : ''}
                             ${activity.details ? `
-                                <div style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); margin-top: ${activity.phone ? '8px' : '0'};">
-                                    <strong style="color: ${activityColor}; display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 900; letter-spacing: 0.3px;">التفاصيل:</strong>
-                                    <span style="font-weight: 700;">${activity.details.length > 60 ? activity.details.substring(0, 60) + '...' : activity.details}</span>
+                                <div style="font-size: 0.75rem; color: var(--text-primary); line-height: 1.5; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); margin-top: ${activity.phone ? '6px' : '0'};">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 3px; font-size: 0.7rem;">التفاصيل:</strong>
+                                    ${activity.details.length > 60 ? activity.details.substring(0, 60) + '...' : activity.details}
+                                </div>
+                            ` : ''}
+                            ${activity.department ? `
+                                <div style="display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 4px 8px; background: ${activityColor}15; border-radius: 5px; font-size: 0.7rem; color: ${activityColor}; font-weight: 600; border: 1px solid ${activityColor}30;">
+                                    <span>🏢</span>
+                                    <span>${activity.department}</span>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                 } else if (activity.type === 'customer') {
                     detailsHTML = `
-                        <div style="margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 10px; border: 2px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1.5px solid var(--border-light); background: var(--bg-tertiary); border-radius: 6px; padding: 8px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 ${activity.phone ? `
-                                    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); flex: 1; min-width: 160px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 1.1rem; font-weight: 900;">📱</span>
+                                    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); flex: 1; min-width: 150px;">
+                                        <span style="font-size: 0.95rem;">📱</span>
                                         <div style="flex: 1;">
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 800; letter-spacing: 0.2px;">رقم الهاتف</div>
-                                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-primary); direction: ltr; text-align: right; letter-spacing: 0.5px;">${activity.phone}</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 2px;">رقم الهاتف</div>
+                                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); direction: ltr; text-align: right;">${activity.phone}</div>
                                         </div>
                                     </div>
                                 ` : ''}
                                 ${activity.region ? `
-                                    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); flex: 1; min-width: 160px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 1.1rem; font-weight: 900;">📍</span>
+                                    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); flex: 1; min-width: 150px;">
+                                        <span style="font-size: 0.95rem;">📍</span>
                                         <div style="flex: 1;">
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 800; letter-spacing: 0.2px;">المنطقة</div>
-                                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-primary);">${activity.region}</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 2px;">المنطقة</div>
+                                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${activity.region}</div>
                                         </div>
                                     </div>
                                 ` : ''}
                                 ${activity.point ? `
-                                    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); flex: 1; min-width: 160px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 1.1rem; font-weight: 900;">🎯</span>
+                                    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); flex: 1; min-width: 150px;">
+                                        <span style="font-size: 0.95rem;">🎯</span>
                                         <div style="flex: 1;">
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 800; letter-spacing: 0.2px;">نقطة الدالة</div>
-                                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-primary);">${activity.point}</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 2px;">نقطة الدالة</div>
+                                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${activity.point}</div>
                                         </div>
                                     </div>
                                 ` : ''}
                             </div>
                             ${activity.agent ? `
-                                <div style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 12px; background: ${activityColor}20; border-radius: 8px; font-size: 0.9rem; color: ${activityColor}; font-weight: 900; border: 2px solid ${activityColor}50; box-shadow: 0 2px 6px ${activityColor}25;">
-                                    <span style="font-size: 1rem; font-weight: 900;">👔</span>
+                                <div style="display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 5px 10px; background: ${activityColor}15; border-radius: 5px; font-size: 0.75rem; color: ${activityColor}; font-weight: 700; border: 1px solid ${activityColor}30;">
+                                    <span style="font-size: 0.9rem;">👔</span>
                                     <span>الوكيل: ${activity.agent}</span>
                                 </div>
                             ` : ''}
-                    </div>
+                        </div>
                     `;
                 } else if (activity.type === 'message') {
                     detailsHTML = `
-                        <div style="margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 10px; border: 2px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1.5px solid var(--border-light); background: var(--bg-tertiary); border-radius: 6px; padding: 8px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 ${activity.customerName ? `
-                                    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); flex: 1; min-width: 160px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 1.1rem; font-weight: 900;">👤</span>
+                                    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); flex: 1; min-width: 150px;">
+                                        <span style="font-size: 0.95rem;">👤</span>
                                         <div style="flex: 1;">
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 800; letter-spacing: 0.2px;">المشترك</div>
-                                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-primary);">${activity.customerName}</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 2px;">المشترك</div>
+                                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${activity.customerName}</div>
                                         </div>
                                     </div>
                                 ` : ''}
                                 ${activity.agentName ? `
-                                    <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 8px; border: 2px solid var(--border-color); flex: 1; min-width: 160px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 1.1rem; font-weight: 900;">📤</span>
+                                    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--card-bg); border-radius: 5px; border: 1px solid var(--border-light); flex: 1; min-width: 150px;">
+                                        <span style="font-size: 0.95rem;">📤</span>
                                         <div style="flex: 1;">
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 800; letter-spacing: 0.2px;">إرسال إلى</div>
-                                            <div style="font-size: 0.95rem; font-weight: 900; color: var(--text-primary);">${activity.agentName}</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 2px;">إرسال إلى</div>
+                                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${activity.agentName}</div>
                                         </div>
                                     </div>
                                 ` : ''}
                             </div>
-                </div>
+                        </div>
                     `;
                 }
                 
                 return `
-                    <div style="background: ${cardGradient}; border: 3px solid ${cardBorder}; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; transition: all 0.3s ease; box-shadow: 0 3px 12px ${activityColor}25, 0 1px 3px rgba(0,0,0,0.1); position: relative; overflow: hidden;" 
-                         onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px ${activityColor}35, 0 2px 6px rgba(0,0,0,0.15)'; this.style.borderColor='${activityColor}';" 
-                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 12px ${activityColor}25, 0 1px 3px rgba(0,0,0,0.1)'; this.style.borderColor='${cardBorder}';">
-                        <!-- شريط جانبي ملون واضح -->
-                        <div style="position: absolute; top: 0; right: 0; width: 5px; height: 100%; background: linear-gradient(180deg, ${activityColor} 0%, ${activityColor}CC 50%, ${activityColor}99 100%); border-radius: 0 14px 14px 0; box-shadow: -2px 0 8px ${activityColor}40;"></div>
-                        
-                        <div style="display: flex; align-items: flex-start; gap: 14px; position: relative; z-index: 1;">
-                            <!-- أيقونة واضحة -->
-                            <div style="width: 48px; height: 48px; background: ${iconBg}; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; border: 3px solid ${iconBorder}; box-shadow: 0 3px 10px ${activityColor}30, inset 0 1px 2px rgba(255,255,255,0.2);">
+                    <div style="background: var(--card-bg); border: 2px solid ${activityColor}40; border-radius: 10px; padding: 12px; margin-bottom: 10px; transition: all 0.3s ease; box-shadow: 0 2px 8px var(--shadow-sm); position: relative; overflow: hidden;" 
+                         onmouseover="this.style.transform='translateY(-2px) translateX(-3px)'; this.style.boxShadow='0 4px 16px var(--shadow-md)'; this.style.borderColor='${activityColor}60';" 
+                         onmouseout="this.style.transform='translateY(0) translateX(0)'; this.style.boxShadow='0 2px 8px var(--shadow-sm)'; this.style.borderColor='${activityColor}40';">
+                        <div style="position: absolute; top: 0; right: 0; width: 3px; height: 100%; background: linear-gradient(180deg, ${activityColor} 0%, ${activityColor}80 100%); border-radius: 0 10px 10px 0;"></div>
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="width: 40px; height: 40px; background: ${iconBg}; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; border: 2px solid ${iconBorder}; box-shadow: 0 2px 6px ${activityColor}20;">
                                 ${activity.icon || '📋'}
                             </div>
-                            
-                            <!-- المحتوى الرئيسي -->
                             <div style="flex: 1; min-width: 0;">
-                                <!-- الصف الأول: نوع النشاط والوقت -->
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                                <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
                                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                        <span style="color: ${activityColor}; font-weight: 900; font-size: 0.95rem; padding: 6px 14px; background: ${badgeBg}; border-radius: 8px; border: 2px solid ${badgeBorder}; letter-spacing: 0.3px; box-shadow: 0 2px 6px ${activityColor}25, inset 0 1px 2px rgba(255,255,255,0.1);">
+                                        <span style="color: ${activityColor}; font-weight: 700; font-size: 0.8rem; padding: 4px 10px; background: ${badgeBg}; border-radius: 6px; border: 1.5px solid ${badgeBorder}; letter-spacing: 0.2px; box-shadow: 0 1px 3px ${activityColor}15;">
                                             ${activity.title || 'نشاط'}
                                         </span>
                                     </div>
-                                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; background: var(--card-bg); padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border-color); min-width: 130px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="font-size: 0.8rem; color: ${activityColor}; font-weight: 900; margin-bottom: 2px; letter-spacing: 0.2px;" title="${fullTime}">${timeAgoText}</span>
-                                        <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-primary); font-weight: 700;">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; background: var(--bg-tertiary); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-light); min-width: 120px;">
+                                        <span style="font-size: 0.7rem; color: var(--primary-color); font-weight: 700; margin-bottom: 1px;" title="${fullTime}">${timeAgoText}</span>
+                                        <div style="display: flex; align-items: center; gap: 4px; font-size: 0.65rem; color: var(--text-secondary);">
                                             <span>📅</span>
-                                            <span>${dateText}</span>
-                                    </div>
-                                        <div style="display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-primary); font-weight: 700;">
+                                            <span style="font-weight: 500;">${dateText}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 4px; font-size: 0.65rem; color: var(--text-secondary);">
                                             <span>🕐</span>
-                                            <span>${timeText}</span>
-                                </div>
+                                            <span style="font-weight: 500;">${timeText}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <!-- الاسم الرئيسي -->
-                                <div style="color: var(--text-primary); font-weight: 900; font-size: 1.1rem; margin-bottom: 10px; padding: 10px 14px; background: var(--card-bg); border-radius: 8px; border-right: 4px solid ${activityColor}; border: 2px solid var(--border-color); border-right: 4px solid ${activityColor}; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                                <div style="color: var(--text-primary); font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; padding: 8px 10px; background: var(--bg-tertiary); border-radius: 6px; border-right: 3px solid ${activityColor};">
                                     ${activity.type === 'message' ? (activity.customerName || '') : (activity.name || activity.agentName || '')}
                                 </div>
-                                
-                                <!-- معلومات الموظف والقسم -->
                                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
-                                    <div style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-primary); background: var(--card-bg); padding: 7px 12px; border-radius: 8px; border: 2px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                        <span style="color: var(--primary-color); font-weight: 900; font-size: 1rem;">👤</span>
-                                        <span style="color: var(--primary-color); font-weight: 900; margin-left: 4px;">الموظف:</span>
-                                        <span style="font-weight: 800; color: var(--text-primary); cursor: pointer; text-decoration: underline; transition: color 0.2s;" onclick="viewEmployeeProfile('${escapeHtml(activity.employee || '')}')" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-primary)'" title="عرض الملف الشخصي">${activity.employee || 'غير معروف'}</span>
+                                    <div style="display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                                        <span style="color: var(--primary-color); font-weight: 700; font-size: 0.85rem;">👤</span>
+                                        <span style="color: var(--primary-color); font-weight: 700; margin-left: 3px;">الموظف:</span>
+                                        <span style="font-weight: 600; color: var(--text-primary); cursor: pointer; text-decoration: underline; transition: color 0.2s;" onclick="viewEmployeeProfile('${escapeHtml(activity.employee || '')}')" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-primary)'" title="عرض الملف الشخصي">${activity.employee || 'غير معروف'}</span>
                                     </div>
                                     ${activity.department ? `
-                                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-primary); background: var(--card-bg); padding: 7px 12px; border-radius: 8px; border: 2px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                                            <span style="font-size: 1rem; font-weight: 900;">🏢</span>
-                                            <span style="font-weight: 800;">${activity.department}</span>
+                                        <div style="display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-light);">
+                                            <span style="font-size: 0.85rem;">🏢</span>
+                                            <span style="font-weight: 600;">${activity.department}</span>
                                         </div>
                                     ` : ''}
                                 </div>
@@ -10715,50 +10708,10 @@
                     return;
                 }
                 
-                const cached = getCachedData('users');
+                
+                
                 let allUsers = [];
                 
-                if (cached !== null && Array.isArray(cached) && cached.length > 0) {
-                    allUsers = cached.filter(u => u.is_active === true);
-                    displayChatUsersList(allUsers);
-                    
-                    setTimeout(async () => {
-                        try {
-                            let from = 0;
-                            const batchSize = 1000;
-                            let hasMore = true;
-                            
-                            while (hasMore) {
-                                const to = from + batchSize - 1;
-                                const batch = await supabaseRequest('users', 'GET', null, `?is_active=eq.true&system_name=eq.${SYSTEM_NAME}&order=full_name.asc`, {
-                                    'Range': `${from}-${to}`
-                                }, {}, true);
-                                if (Array.isArray(batch) && batch.length > 0) {
-                                    allUsers = allUsers.concat(batch);
-                                    if (batch.length < batchSize) {
-                                        hasMore = false;
-                                    } else {
-                                        from += batchSize;
-                                    }
-                                } else {
-                                    hasMore = false;
-                                }
-                            }
-                            displayChatUsersList(allUsers);
-                        } catch (rangeError) {
-                            try {
-                                const simpleUsers = await supabaseRequest('users', 'GET', null, `?is_active=eq.true&system_name=eq.${SYSTEM_NAME}&order=full_name.asc`, {}, {}, true);
-                                if (Array.isArray(simpleUsers)) {
-                                    allUsers = simpleUsers;
-                                    displayChatUsersList(allUsers);
-                                }
-                            } catch (simpleError) {
-                                console.error('Simple query also failed:', simpleError);
-                            }
-                        }
-                    }, 500);
-                    return;
-                }
                 
                 try {
                     let from = 0;
@@ -10769,7 +10722,7 @@
                         const to = from + batchSize - 1;
                         const batch = await supabaseRequest('users', 'GET', null, `?is_active=eq.true&system_name=eq.${SYSTEM_NAME}&order=full_name.asc`, {
                             'Range': `${from}-${to}`
-                        }, {}, true);
+                        });
                         if (Array.isArray(batch) && batch.length > 0) {
                             allUsers = allUsers.concat(batch);
                             if (batch.length < batchSize) {
@@ -10785,7 +10738,7 @@
                     console.log('Range method failed, trying simple query:', rangeError);
                     
                     try {
-                        const simpleUsers = await supabaseRequest('users', 'GET', null, `?is_active=eq.true&system_name=eq.${SYSTEM_NAME}&order=full_name.asc`, {}, {}, true);
+                        const simpleUsers = await supabaseRequest('users', 'GET', null, `?is_active=eq.true&system_name=eq.${SYSTEM_NAME}&order=full_name.asc`);
                         if (Array.isArray(simpleUsers)) {
                             allUsers = simpleUsers;
                         }
@@ -11050,45 +11003,13 @@
                     return;
                 }
                 
-                const sentCacheKey = `messages_?sender_id=eq.${currentUserId}&receiver_id=eq.${userId}&order=created_at.asc`;
-                const receivedCacheKey = `messages_?sender_id=eq.${userId}&receiver_id=eq.${currentUserId}&order=created_at.asc`;
                 
-                const cachedSent = getCachedData(sentCacheKey);
-                const cachedReceived = getCachedData(receivedCacheKey);
-                
-                if (cachedSent !== null && cachedReceived !== null && Array.isArray(cachedSent) && Array.isArray(cachedReceived)) {
-                    const sent = cachedSent;
-                    const received = cachedReceived;
-                    allChatMessages = [...sent, ...received].sort((a, b) => {
-                        return new Date(a.created_at) - new Date(b.created_at);
-                    });
-                    displayChatMessages(allChatMessages);
-                    
-                    setTimeout(async () => {
-                        try {
-                            const sentMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${currentUserId}&receiver_id=eq.${userId}&order=created_at.asc`, {}, {}, true);
-                            const receivedMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${userId}&receiver_id=eq.${currentUserId}&order=created_at.asc`, {}, {}, true);
+                const sentMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${currentUserId}&receiver_id=eq.${userId}&order=created_at.asc`);
+                const receivedMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${userId}&receiver_id=eq.${currentUserId}&order=created_at.asc`);
                 
                 const sent = Array.isArray(sentMessages) ? sentMessages : [];
                 const received = Array.isArray(receivedMessages) ? receivedMessages : [];
                 
-                            allChatMessages = [...sent, ...received].sort((a, b) => {
-                                return new Date(a.created_at) - new Date(b.created_at);
-                            });
-                            
-                            displayChatMessages(allChatMessages);
-                        } catch (error) {
-                            console.error('Error refreshing messages in background:', error);
-                        }
-                    }, 1000);
-                    return;
-                }
-                
-                const sentMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${currentUserId}&receiver_id=eq.${userId}&order=created_at.asc`, {}, {}, true);
-                const receivedMessages = await supabaseRequest('messages', 'GET', null, `?sender_id=eq.${userId}&receiver_id=eq.${currentUserId}&order=created_at.asc`, {}, {}, true);
-                
-                const sent = Array.isArray(sentMessages) ? sentMessages : [];
-                const received = Array.isArray(receivedMessages) ? receivedMessages : [];
                 
                 allChatMessages = [...sent, ...received].sort((a, b) => {
                     return new Date(a.created_at) - new Date(b.created_at);
@@ -11110,24 +11031,16 @@
             const uniqueUserIds = [...new Set(messages.map(m => m.sender_id))];
             const userProfiles = {};
             
-            const profilePromises = uniqueUserIds.map(async (userId) => {
+            await Promise.allSettled(uniqueUserIds.map(async (userId) => {
                 try {
-                    const cacheKey = `user_profiles_?user_id=eq.${userId}`;
-                    const cached = getCachedData(cacheKey);
-                    if (cached !== null && Array.isArray(cached) && cached.length > 0 && cached[0].profile_picture) {
-                        userProfiles[userId] = cached[0].profile_picture;
-                        return;
-                    }
-                    const profile = await supabaseRequest('user_profiles', 'GET', null, `?user_id=eq.${userId}`, {}, {}, true);
+                    const profile = await supabaseRequest('user_profiles', 'GET', null, `?user_id=eq.${userId}`);
                     if (profile && profile.length > 0 && profile[0].profile_picture) {
                         userProfiles[userId] = profile[0].profile_picture;
                     }
                 } catch (error) {
                     console.warn('Error loading profile for user', userId, error);
                 }
-            });
-            
-            await Promise.allSettled(profilePromises);
+            }));
             
             const currentUserProfile = userProfiles[currentUserId] || null;
             
@@ -11343,31 +11256,14 @@
         
         async function updateUnreadMessagesCount() {
             try {
-                const cacheKey = `messages_?receiver_id=eq.${currentUserId}&is_read=eq.false`;
-                const cached = getCachedData(cacheKey);
-                if (cached !== null && Array.isArray(cached)) {
-                    const count = cached.filter(m => m.is_read === false || m.is_read === null).length;
-                    const badge = document.getElementById('unreadMessagesBadge');
-                    if (badge) {
-                        if (count > 0) {
-                            badge.textContent = count > 99 ? '99+' : count;
-                            badge.style.display = 'inline-block';
-                        } else {
-                            badge.style.display = 'none';
-                        }
-                    }
-                }
-                
-                const messages = await supabaseRequest('messages', 'GET', null, `?receiver_id=eq.${currentUserId}&is_read=eq.false`, {}, {}, true);
+                const messages = await supabaseRequest('messages', 'GET', null, `?receiver_id=eq.${currentUserId}&is_read=eq.false`);
                 const count = Array.isArray(messages) ? messages.length : 0;
                 const badge = document.getElementById('unreadMessagesBadge');
-                if (badge) {
                 if (count > 0) {
                     badge.textContent = count > 99 ? '99+' : count;
                     badge.style.display = 'inline-block';
                 } else {
                     badge.style.display = 'none';
-                    }
                 }
             } catch (error) {
                 console.error('Error updating unread count:', error);
@@ -11398,7 +11294,7 @@
                 if (isTabActive && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     updateUnreadMessagesCount();
                 }
-            }, 36000000); 
+            }, 3600000); 
         }
         
         
@@ -11410,7 +11306,7 @@
                     await loadChatMessages(currentChatUserId);
                     await loadChatUsers();
                 }
-            }, 36000000); 
+            }, 3600000); 
         }
         
         function stopChatAutoUpdate() {
