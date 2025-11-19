@@ -3798,18 +3798,39 @@
             }, DATABASE_CHECK_INTERVAL);
         }
         
-        function saveToOfflineStorage(operation) {
+        function cleanOldOfflineData(maxItems = 50) {
             try {
-                const key = `offline_${operation.table}_${operation.method}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-                const offlineData = {
-                    table: operation.table,
-                    method: operation.method,
-                    data: operation.data,
-                    filters: operation.filters || '',
-                    customHeaders: operation.customHeaders || {},
-                    timestamp: new Date().toISOString(),
-                    retryCount: 0
-                };
+                const allItems = getAllOfflineData();
+                if (allItems.length > maxItems) {
+                    const itemsToDelete = allItems.slice(0, allItems.length - maxItems);
+                    itemsToDelete.forEach(item => {
+                        try {
+                            localStorage.removeItem(item.key);
+                        } catch (e) {
+                            console.warn('Error removing offline item:', item.key, e);
+                        }
+                    });
+                    console.log(`تم حذف ${itemsToDelete.length} عنصر قديم من التخزين المحلي`);
+                }
+            } catch (error) {
+                console.error('Error cleaning old offline data:', error);
+            }
+        }
+        
+        function saveToOfflineStorage(operation) {
+            const key = `offline_${operation.table}_${operation.method}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const offlineData = {
+                table: operation.table,
+                method: operation.method,
+                data: operation.data,
+                filters: operation.filters || '',
+                customHeaders: operation.customHeaders || {},
+                timestamp: new Date().toISOString(),
+                retryCount: 0
+            };
+            
+            try {
+                cleanOldOfflineData(50);
                 localStorage.setItem(key, JSON.stringify(offlineData));
                 
                 const offlineCount = getAllOfflineData().length;
@@ -3817,8 +3838,37 @@
                 
                 return key;
             } catch (error) {
-                console.error('Error saving to offline storage:', error);
-                return null;
+                if (error.name === 'QuotaExceededError' || error.message.includes('quota')) {
+                    console.warn('تم امتلاء التخزين المحلي، جاري تنظيف البيانات القديمة...');
+                    try {
+                        const allItems = getAllOfflineData();
+                        const itemsToDelete = allItems.slice(0, Math.floor(allItems.length * 0.5));
+                        itemsToDelete.forEach(item => {
+                            try {
+                                localStorage.removeItem(item.key);
+                            } catch (e) {
+                                console.warn('Error removing offline item:', item.key, e);
+                            }
+                        });
+                        console.log(`تم حذف ${itemsToDelete.length} عنصر قديم من التخزين المحلي`);
+                        
+                        try {
+                            localStorage.setItem(key, JSON.stringify(offlineData));
+                            const offlineCount = getAllOfflineData().length;
+                            localStorage.setItem('offline_data_count', offlineCount.toString());
+                            return key;
+                        } catch (retryError) {
+                            console.error('فشل الحفظ بعد التنظيف:', retryError);
+                            return null;
+                        }
+                    } catch (cleanError) {
+                        console.error('Error cleaning storage:', cleanError);
+                        return null;
+                    }
+                } else {
+                    console.error('Error saving to offline storage:', error);
+                    return null;
+                }
             }
         }
         
@@ -3935,6 +3985,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            cleanOldOfflineData(50);
             const today = new Date();
             document.getElementById('txtDate').value = today.toISOString().split('T')[0];
             
