@@ -3505,20 +3505,10 @@
         </div>
     </div>
 
-    <script src="config.js" onerror="console.error('فشل تحميل config.js - تأكد من وجود الملف في نفس المجلد')"></script>
     <script>
-        (function checkConfig() {
-            if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined') {
-                const errorMsg = 'خطأ: ملف الإعدادات (config.js) غير موجود أو غير صحيح.\n\nيرجى:\n1. التأكد من وجود ملف config.js في نفس المجلد\n2. إذا كنت تفتح الملف مباشرة (file://)، استخدم خادم محلي بدلاً من ذلك\n3. نسخ config.example.js إلى config.js إذا لم يكن موجوداً\n4. ملء المعلومات المطلوبة في config.js';
-                console.error('SUPABASE_URL:', typeof SUPABASE_URL);
-                console.error('SUPABASE_ANON_KEY:', typeof SUPABASE_ANON_KEY);
-                console.error('مسار الصفحة:', window.location.href);
-                console.error(errorMsg);
-                alert(errorMsg);
-                throw new Error('ملف الإعدادات غير موجود');
-            }
-        })();
-        
+        const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
+        const SYSTEM_NAME = 'CallCenterApp';
         
         const dataCache = {
             calls: { data: null, timestamp: 0, ttl: 36000000 }, 
@@ -3565,8 +3555,6 @@
                 });
             }
         }
-        
-        const SYSTEM_NAME = 'customer_service';
         
         async function supabaseRequest(table, method = 'GET', data = null, filters = '', customHeaders = {}, useCache = false) {
             if (method === 'GET') {
