@@ -6150,6 +6150,27 @@
                 return;
             }
 
+            // التحقق من تكرار رقم الهاتف قبل الحفظ
+            if (editId) {
+                // عند التعديل: التحقق من أن رقم الهاتف غير مستخدم لوكيل آخر
+                const existingAgent = agents.find(a => a.id === editId);
+                if (existingAgent && existingAgent.phone !== phone) {
+                    // رقم الهاتف تغير، التحقق من عدم تكراره
+                    const phoneExists = agents.some(a => a.id !== editId && a.phone === phone);
+                    if (phoneExists) {
+                        showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل لوكيل آخر. يرجى استخدام رقم آخر.', 'error');
+                        return;
+                    }
+                }
+            } else {
+                // عند الإضافة: التحقق من عدم تكرار رقم الهاتف
+                const phoneExists = agents.some(a => a.phone === phone);
+                if (phoneExists) {
+                    showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل. يرجى استخدام رقم آخر.', 'error');
+                    return;
+                }
+            }
+
             try {
                 const agentData = {
                     name: name,
@@ -6174,6 +6195,13 @@
                 await loadAgents();
             } catch (error) {
                 console.error('Error saving agent:', error);
+                
+                // معالجة خطأ تكرار رقم الهاتف
+                if (error.message && (error.message.includes('agents_phone_key') || error.message.includes('duplicate key') || error.message.includes('23505'))) {
+                    showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل لوكيل آخر. يرجى استخدام رقم آخر.', 'error');
+                    return;
+                }
+                
                 if (error.message && error.message.includes('address')) {
                     try {
                         const agentDataWithoutAddress = {
@@ -6194,6 +6222,10 @@
                         return;
                     } catch (retryError) {
                         console.error('Error saving agent without address:', retryError);
+                        if (retryError.message && (retryError.message.includes('agents_phone_key') || retryError.message.includes('duplicate key') || retryError.message.includes('23505'))) {
+                            showAlert(alertDiv, 'رقم الهاتف مستخدم بالفعل لوكيل آخر. يرجى استخدام رقم آخر.', 'error');
+                            return;
+                        }
                     }
                 }
                 showAlert(alertDiv, `حدث خطأ: ${error.message}`, 'error');
