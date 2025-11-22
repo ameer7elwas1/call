@@ -7186,10 +7186,7 @@
         
         async function updateEmployeeOfTheWeek() {
             try {
-                    const banner = document.getElementById('employeeOfTheWeekBanner');
-                banner.style.display = 'none';
-                return;
-                
+                const banner = document.getElementById('employeeOfTheWeekBanner');
                 const now = new Date();
                 const dayOfWeek = now.getDay();
                 const currentHour = now.getHours();
