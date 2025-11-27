@@ -3648,7 +3648,7 @@
         let isOnline = navigator.onLine;
         let databaseAvailable = true;
         let lastDatabaseCheck = Date.now();
-        const DATABASE_CHECK_INTERVAL = 60000; // فحص قاعدة البيانات كل دقيقة
+        const DATABASE_CHECK_INTERVAL = 300000; // فحص قاعدة البيانات كل 5 دقائق (لتقليل الطلبات التلقائية)
         let databaseCheckInterval = null;
         
         async function checkDatabaseHealth() {
@@ -3922,7 +3922,7 @@
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 43200000);
+            }, 86400000); // تحديث الإحصائيات كل 24 ساعة (لتقليل الطلبات التلقائية)
             
             const sidebarUser = document.getElementById('sidebarUser');
             const popup = document.getElementById('userContactPopup');
