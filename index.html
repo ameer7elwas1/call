@@ -3385,46 +3385,6 @@
         </div>
     </div>
 
-    <!-- AI Chat Button -->
-    <div id="aiChatButton" onclick="toggleAIChat()" style="position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-        <span style="font-size: 28px;">🤖</span>
-    </div>
-
-    <!-- AI Chat Panel -->
-    <div id="aiChatPanel" style="position: fixed; bottom: 110px; left: 30px; width: 400px; height: 500px; background: var(--bg-primary); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999; display: none; flex-direction: column; border: 2px solid var(--border-light);">
-        <div style="padding: 20px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 14px 14px 0 0; color: white; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h3 style="margin: 0; font-size: 1.2rem;">🤖 Ameer AI
-                <p style="margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.9;"></p>
-            </div>
-            <button onclick="toggleAIChat()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                ×
-            </button>
-        </div>
-        <div id="aiFloatingChatMessages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column;">
-            <div style="margin-bottom: 12px; padding: 12px 16px; border-radius: 12px; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-light);">
-                مرحباً! 👋 أنا  Ameer AI  مساعدتك في:
-                <br>• الاستعلام عن المكالمات
-                <br>• معلومات عن المشتركين
-                <br>• إحصائيات الموظفين
-                <br>• وأي سؤال آخر عن النظام
-            </div>
-        </div>
-        <div style="padding: 15px; border-top: 2px solid var(--border-light); background: var(--card-bg);">
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="aiChatInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') sendAIMessage()" style="flex: 1; padding: 12px; border-radius: 25px; border: 2px solid var(--border-light); background: var(--bg-primary); color: var(--text-primary); font-size: 0.95rem;" />
-                <button onclick="sendAIMessage()" style="width: 45px; height: 45px; border-radius: 50%; background: var(--primary-color); color: white; border: none; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    ➤
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        #aiChatPanel.show {
-            display: flex !important;
-        }
-    </style>
 
     <script>
         const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
@@ -4330,10 +4290,7 @@
             }
         }
         
-        /**
-         * تحديث خريطة أسماء الموظفين لتوحيد الأسماء القديمة والجديدة
-         * يتم استدعاؤها عند تحميل المستخدمين
-         */
+       
         async function updateEmployeeNameMap() {
             try {
                 const users = await supabaseRequest('users', 'GET', null, `?system_name=eq.${SYSTEM_NAME}&is_active=eq.true&select=id,username,full_name`);
@@ -11875,77 +11832,6 @@ ${context}
             return context;
         }
         
-        
-        function toggleAIChat() {
-            const chatPanel = document.getElementById('aiChatPanel');
-            chatPanel.classList.toggle('show');
-            if (chatPanel.classList.contains('show')) {
-                document.getElementById('aiChatInput').focus();
-            }
-        }
-        
-        function addAIMessage(message, isUser = false) {
-            const chatMessages = document.getElementById('aiFloatingChatMessages');
-            if (!chatMessages) return;
-            
-            const welcomeMsg = chatMessages.querySelector('div[style*="text-align: center"]');
-            if (welcomeMsg) welcomeMsg.remove();
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.style.cssText = `
-                margin-bottom: 12px;
-                padding: 12px 16px;
-                border-radius: 12px;
-                max-width: 85%;
-                word-wrap: break-word;
-                ${isUser ? 
-                    'background: var(--primary-color); color: white; margin-right: auto; text-align: right;' : 
-                    'background: var(--card-bg); color: var(--text-primary); margin-left: auto; border: 1px solid var(--border-light);'
-                }
-            `;
-            messageDiv.textContent = message;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        async function sendAIMessage() {
-            const input = document.getElementById('aiChatInput');
-            if (!input) return;
-            
-            const question = input.value.trim();
-            if (!question) return;
-            
-            addAIMessage(question, true);
-            input.value = '';
-            
-            const loadingDiv = document.createElement('div');
-            loadingDiv.id = 'aiLoadingFloating';
-            loadingDiv.style.cssText = 'margin-bottom: 12px; padding: 12px; background: var(--card-bg); border-radius: 12px; max-width: 85%; margin-left: auto;';
-            loadingDiv.textContent = '⏳ جاري التفكير...';
-            const chatMessages = document.getElementById('aiFloatingChatMessages');
-            if (chatMessages) {
-                chatMessages.appendChild(loadingDiv);
-            }
-            
-            try {
-                const context = await getAIContext(question);
-                const aiResponse = await callGeminiAPI(question, context, aiChatHistory);
-                
-                const loading = document.getElementById('aiLoadingFloating');
-                if (loading) loading.remove();
-                
-                addAIMessage(aiResponse, false);
-                
-                aiChatHistory.push({ role: 'user', content: question });
-                aiChatHistory.push({ role: 'assistant', content: aiResponse });
-                
-            } catch (error) {
-                console.error('AI Error:', error);
-                const loading = document.getElementById('aiLoadingFloating');
-                if (loading) loading.remove();
-                addAIMessage('❌ عذراً، حدث خطأ في الاتصال بالمساعد الذكي. يرجى المحاولة مرة أخرى.', false);
-            }
-        }
         
         
         function addAIAssistantMessage(role, message) {
