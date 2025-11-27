@@ -501,10 +501,6 @@
                 left: 10px;
                 right: 10px;
             }
-            #employeeAwardsList {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 10px;
@@ -2374,6 +2370,10 @@
                     <span> محادثة الموظفين</span>
                     <span id="unreadMessagesBadge" class="unread-badge" style="display: none;">0</span>
                 </div>
+                <div class="nav-item" onclick="switchTab('ai-assistant')" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                    <span class="nav-item-icon"></span>
+                    <span>Ameer AI</span>
+                </div>
                 <div class="nav-item" onclick="switchTab('notes')">
                     <span class="nav-item-icon"></span>
                     <span>ملاحظاتي</span>
@@ -2426,7 +2426,6 @@
 
             <div id="dashboard" class="tab-content active">
                 <div class="card">
-                    
                     <!-- Statistics Cards -->
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -2597,7 +2596,40 @@
                         </div>
                         <div class="btn-group" style="margin-bottom: 20px;">
                             <button class="btn btn-primary" onclick="loadAllCustomers()" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-color: #28a745; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">عرض جميع المشتركين</button>
+                            <button class="btn btn-secondary" onclick="toggleCustomerFilters()" style="margin-right: 10px;"> فلتر </button>
                             <button class="btn btn-secondary" onclick="searchCustomers()">بحث متقدم</button>
+                        </div>
+                        
+                        <!-- فلترة متقدمة للمشتركين -->
+                        <div id="customerFiltersPanel" style="display: none; margin-bottom: 20px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 2px solid var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h4 style="margin: 0; color: var(--text-primary);">فلتر </h4>
+                                <button onclick="toggleCustomerFilters()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                <div class="form-group">
+                                    <label for="filterCustomerEmployee">الموظف</label>
+                                    <select id="filterCustomerEmployee" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                                        <option value="">جميع الموظفين</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="filterCustomerPhone">رقم الهاتف</label>
+                                    <input type="text" id="filterCustomerPhone" placeholder="أدخل رقم الهاتف" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                                </div>
+                                <div class="form-group">
+                                    <label for="filterCustomerDateFrom">التاريخ من</label>
+                                    <input type="date" id="filterCustomerDateFrom" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                                </div>
+                                <div class="form-group">
+                                    <label for="filterCustomerDateTo">التاريخ إلى</label>
+                                    <input type="date" id="filterCustomerDateTo" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                                </div>
+                            </div>
+                            <div class="btn-group" style="margin-top: 15px; display: flex; gap: 10px;">
+                                <button class="btn btn-primary" onclick="applyCustomerFilters()" style="flex: 1;">تطبيق الفلترة</button>
+                                <button class="btn btn-secondary" onclick="clearCustomerFilters()" style="flex: 1;">مسح الفلترة</button>
+                            </div>
                         </div>
                         <div class="table-container">
                             <table id="searchResultsTable" style="width: 100%;">
@@ -2660,7 +2692,9 @@
                     </div>
                     <div class="form-group">
                         <label for="txtIssueDetails">تفاصيل المكالمة *</label>
-                        <textarea id="txtIssueDetails" placeholder="أدخل تفاصيل المكالمة"></textarea>
+                        <div style="position: relative;">
+                            <textarea id="txtIssueDetails" placeholder="أدخل تفاصيل المكالمة"></textarea>
+                        </div>
                     </div>
                     <div class="form-group" id="departmentSection" style="background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; border: 2.5px solid #801c32; margin-top: 10px; display: none;">
                         <label for="selectDepartment" style="color: var(--text-primary);">اختر القسم (للشكاوى والمشاكل)</label>
@@ -2677,7 +2711,41 @@
                     </div>
                     <div class="btn-group" style="margin-top: 20px;">
                         <button class="btn btn-primary" onclick="loadAllCalls()" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-color: #3b82f6; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">عرض جميع المكالمات</button>
+                        <button class="btn btn-secondary" onclick="toggleCallFilters()" style="margin-right: 10px;"> فلتر </button>
                     </div>
+                    
+                    <!-- فلترة متقدمة للمكالمات -->
+                    <div id="callFiltersPanel" style="display: none; margin-top: 20px; padding: 20px; background: var(--bg-secondary); border-radius: 12px; border: 2px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; color: var(--text-primary);">فلتر</h4>
+                            <button onclick="toggleCallFilters()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            <div class="form-group">
+                                <label for="filterCallEmployee">الموظف</label>
+                                <select id="filterCallEmployee" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                                    <option value="">جميع الموظفين</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filterCallPhone">رقم الهاتف</label>
+                                <input type="text" id="filterCallPhone" placeholder="أدخل رقم الهاتف" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                            </div>
+                            <div class="form-group">
+                                <label for="filterCallDateFrom">التاريخ من</label>
+                                <input type="date" id="filterCallDateFrom" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                            </div>
+                            <div class="form-group">
+                                <label for="filterCallDateTo">التاريخ إلى</label>
+                                <input type="date" id="filterCallDateTo" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);">
+                            </div>
+                        </div>
+                        <div class="btn-group" style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="applyCallFilters()" style="flex: 1;">تطبيق الفلترة</button>
+                            <button class="btn btn-secondary" onclick="clearCallFilters()" style="flex: 1;">مسح الفلترة</button>
+                        </div>
+                    </div>
+                    
                     <div class="form-group" style="margin-top: 15px;">
                         <label for="callSearchInput">بحث في المكالمات</label>
                         <input type="text" id="callSearchInput" placeholder="ابحث في المكالمات (اسم، رقم هاتف، نوع المكالمة...)" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--border-color);" onkeyup="searchCalls()">
@@ -2942,6 +3010,71 @@
                 </div>
             </div>
 
+            <!-- AI Assistant Tab -->
+            <div id="ai-assistant" class="tab-content">
+                <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column; padding: 0;">
+                    <div style="padding: 20px; border-bottom: 2px solid var(--border-color); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="margin: 0; color: white; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.8rem;"></span>
+                                    <span></span>
+                                </h3>
+                                <p style="margin: 5px 0 0 0; color: rgba(255,255,255,0.9); font-size: 0.9rem;">
+                                </p>
+                            </div>
+                            <div id="aiAssistantStatus" style="padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 20px; color: white; font-size: 0.85rem; font-weight: 600;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="aiChatMessages" style="flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-secondary); display: flex; flex-direction: column; gap: 15px;">
+                        <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                            <div style="font-size: 4rem; margin-bottom: 15px; opacity: 0.5;"></div>
+                            <h4 style="color: var(--text-primary); margin-bottom: 10px;"></h4>
+                            <p style="margin-bottom: 20px;">يمكنني مساعدتك في:</p>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; text-align: right;">
+                                <div style="padding: 15px; background: var(--bg-primary); border-radius: 10px; border: 2px solid var(--border-light);">
+                                    <div style="font-size: 1.5rem; margin-bottom: 8px;">👤</div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">الأسئلة عن المشتركين</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">مثال: "ابحث عن مشترك برقم 0770"</div>
+                                </div>
+                                <div style="padding: 15px; background: var(--bg-primary); border-radius: 10px; border: 2px solid var(--border-light);">
+                                    <div style="font-size: 1.5rem; margin-bottom: 8px;">📞</div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">الأسئلة عن المكالمات</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">مثال: "كم مكالمة اليوم؟"</div>
+                                </div>
+                                <div style="padding: 15px; background: var(--bg-primary); border-radius: 10px; border: 2px solid var(--border-light);">
+                                    <div style="font-size: 1.5rem; margin-bottom: 8px;">👨‍💼</div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">الأسئلة عن الموظفين</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">مثال: "كم مكالمة استلم أمير اليوم؟"</div>
+                                </div>
+                                <div style="padding: 15px; background: var(--bg-primary); border-radius: 10px; border: 2px solid var(--border-light);">
+                                    <div style="font-size: 1.5rem; margin-bottom: 8px;">📊</div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">الإحصائيات والتحليلات</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">مثال: "ما هي أنواع المكالمات اليوم؟"</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 20px; border-top: 2px solid var(--border-color); background: var(--bg-primary); border-radius: 0 0 12px 12px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-end;">
+                            <div style="flex: 1; position: relative;">
+                                <input type="text" id="aiAssistantInput" placeholder="اسأل Ameer AI ..." 
+                                    style="width: 100%; padding: 15px 50px 15px 15px; border-radius: 25px; border: 2px solid var(--border-color); background: var(--input-bg); color: var(--text-primary); font-size: 1rem;" 
+                                    onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendAIAssistantMessage(); }">
+                                <button onclick="sendAIAssistantMessage()" 
+                                    style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s;">
+                                    ➤
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab (Admin Only) -->
             <div id="users" class="tab-content">
                 <div class="card" style="min-height: auto;">
                     <h3>إدارة المستخدمين</h3>
@@ -3252,21 +3385,61 @@
         </div>
     </div>
 
+    <!-- AI Chat Button -->
+    <div id="aiChatButton" onclick="toggleAIChat()" style="position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        <span style="font-size: 28px;">🤖</span>
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div id="aiChatPanel" style="position: fixed; bottom: 110px; left: 30px; width: 400px; height: 500px; background: var(--bg-primary); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999; display: none; flex-direction: column; border: 2px solid var(--border-light);">
+        <div style="padding: 20px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 14px 14px 0 0; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0; font-size: 1.2rem;">🤖 Ameer AI
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.9;"></p>
+            </div>
+            <button onclick="toggleAIChat()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                ×
+            </button>
+        </div>
+        <div id="aiFloatingChatMessages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column;">
+            <div style="margin-bottom: 12px; padding: 12px 16px; border-radius: 12px; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-light);">
+                مرحباً! 👋 أنا  Ameer AI  مساعدتك في:
+                <br>• الاستعلام عن المكالمات
+                <br>• معلومات عن المشتركين
+                <br>• إحصائيات الموظفين
+                <br>• وأي سؤال آخر عن النظام
+            </div>
+        </div>
+        <div style="padding: 15px; border-top: 2px solid var(--border-light); background: var(--card-bg);">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="aiChatInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') sendAIMessage()" style="flex: 1; padding: 12px; border-radius: 25px; border: 2px solid var(--border-light); background: var(--bg-primary); color: var(--text-primary); font-size: 0.95rem;" />
+                <button onclick="sendAIMessage()" style="width: 45px; height: 45px; border-radius: 50%; background: var(--primary-color); color: white; border: none; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #aiChatPanel.show {
+            display: flex !important;
+        }
+    </style>
+
     <script>
         const SUPABASE_URL = 'https://tvlaypjqojvsbttaprko.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2bGF5cGpxb2p2c2J0dGFwcmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NzQ1NDIsImV4cCI6MjA3ODM1MDU0Mn0.n3AwBUr5Qsq4HDSQZTjGzWFxOfmvXfhuIXmrmoKdEDc';
         
-        
         const dataCache = {
-            calls: { data: null, timestamp: 0, ttl: 14400000 }, 
-            customers: { data: null, timestamp: 0, ttl: 14400000 }, 
-            users: { data: null, timestamp: 0, ttl: 28800000 },
-            allowedUsers: { data: null, timestamp: 0, ttl: 28800000 },
-            agents: { data: null, timestamp: 0, ttl: 28800000 },
-            departments: { data: null, timestamp: 0, ttl: 28800000 },
-            sentMessages: { data: null, timestamp: 0, ttl: 7200000 }, 
+            calls: { data: null, timestamp: 0, ttl: 432000000 },
+            customers: { data: null, timestamp: 0, ttl: 432000000 },
+            users: { data: null, timestamp: 0, ttl: 864000000 },
+            allowedUsers: { data: null, timestamp: 0, ttl: 864000000 },
+            agents: { data: null, timestamp: 0, ttl: 864000000 },
+            departments: { data: null, timestamp: 0, ttl: 864000000 },
+            sentMessages: { data: null, timestamp: 0, ttl: 432000000 },
             messages: { data: null, timestamp: 0, ttl: 300000 },
-            userProfiles: { data: null, timestamp: 0, ttl: 7200000 } 
+            userProfiles: { data: null, timestamp: 0, ttl: 864000000 }
         };
         
         const EXCLUDED_EMPLOYEES = ['المدير العام', 'علي فاهم نعمة', 'حسين حيدر', 'Ameer helwas', 'Ameer Helwas'];
@@ -3281,6 +3454,24 @@
             if (cache && Date.now() - cache.timestamp < cache.ttl) {
                 return cache.data;
             }
+            
+            const persistentKeys = ['calls', 'customers', 'users', 'agents', 'departments', 'allowedUsers'];
+            if (persistentKeys.includes(key)) {
+                try {
+                    const stored = localStorage.getItem(`cache_${key}`);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (parsed.timestamp && Date.now() - parsed.timestamp < cache.ttl) {
+                            dataCache[key].data = parsed.data;
+                            dataCache[key].timestamp = parsed.timestamp;
+                            return parsed.data;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error reading from localStorage:', e);
+                }
+            }
+            
             return null;
         }
         
@@ -3288,6 +3479,18 @@
             if (dataCache[key]) {
                 dataCache[key].data = data;
                 dataCache[key].timestamp = Date.now();
+                
+                const persistentKeys = ['calls', 'customers', 'users', 'agents', 'departments', 'allowedUsers'];
+                if (persistentKeys.includes(key)) {
+                    try {
+                        localStorage.setItem(`cache_${key}`, JSON.stringify({
+                            data: data,
+                            timestamp: Date.now()
+                        }));
+                    } catch (e) {
+                        console.error('Error saving to localStorage:', e);
+                    }
+                }
             }
         }
         
@@ -3359,17 +3562,15 @@
                     const errorText = await response.text();
                     const error = new Error(`Supabase error: ${response.status} - ${errorText}`);
                     
-                    // اكتشاف أخطاء قاعدة البيانات
                     const isDatabaseError = response.status >= 500 || 
                                           response.status === 503 || 
                                           response.status === 502 || 
                                           response.status === 504 ||
-                                          response.status === 429; // Rate limiting
+                                          response.status === 429;
                     
                     if (isDatabaseError) {
                         databaseAvailable = false;
                         
-                        // حفظ العمليات الكتابية (POST, PATCH, PUT, DELETE) محلياً
                         if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                             saveToOfflineStorage({
                                 table: table,
@@ -3384,7 +3585,6 @@
                     throw error;
                 }
                 
-                // إذا نجحت العملية، قاعدة البيانات متاحة
                 if (method !== 'GET') {
                     databaseAvailable = true;
                 }
@@ -3414,7 +3614,6 @@
                 if (error.name === 'AbortError') {
                     const timeoutError = new Error('Request timeout - يرجى المحاولة مرة أخرى');
                     
-                    // حفظ العمليات الكتابية عند timeout
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         databaseAvailable = false;
                         saveToOfflineStorage({
@@ -3432,7 +3631,6 @@
                 if (error.message && error.message.includes('Failed to fetch')) {
                     const networkError = new Error('خطأ في الاتصال بالإنترنت - يرجى التحقق من الاتصال');
                     
-                    // حفظ العمليات الكتابية عند فشل الاتصال
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         databaseAvailable = false;
                         saveToOfflineStorage({
@@ -3458,7 +3656,6 @@
                 )) {
                     databaseAvailable = false;
                     
-                    // حفظ العمليات الكتابية
                     if (method !== 'GET' && (method === 'POST' || method === 'PATCH' || method === 'PUT' || method === 'DELETE')) {
                         saveToOfflineStorage({
                             table: table,
@@ -3494,7 +3691,6 @@
         const DATABASE_CHECK_INTERVAL = 60000; // فحص قاعدة البيانات كل دقيقة
         let databaseCheckInterval = null;
         
-        // فحص صحة قاعدة البيانات
         async function checkDatabaseHealth() {
             if (!isOnline) {
                 databaseAvailable = false;
@@ -3502,7 +3698,6 @@
             }
             
             try {
-                // محاولة طلب بسيط للتحقق من حالة قاعدة البيانات
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
                 
@@ -3523,7 +3718,6 @@
                     lastDatabaseCheck = Date.now();
                     return true;
                 } else {
-                    // أخطاء قاعدة البيانات (503, 500, 502, إلخ)
                     if (response.status >= 500 || response.status === 503 || response.status === 502 || response.status === 504) {
                         databaseAvailable = false;
                         return false;
@@ -3532,13 +3726,11 @@
                     return true;
                 }
             } catch (error) {
-                // أي خطأ يعني أن قاعدة البيانات غير متاحة
                 databaseAvailable = false;
                 return false;
             }
         }
         
-        // بدء الفحص الدوري لقاعدة البيانات
         function startDatabaseHealthCheck() {
             if (databaseCheckInterval) {
                 clearInterval(databaseCheckInterval);
@@ -3551,7 +3743,6 @@
                 }
             });
             
-            // فحص دوري
             databaseCheckInterval = setInterval(() => {
                 checkDatabaseHealth().then(available => {
                     if (available) {
@@ -3575,7 +3766,6 @@
                 };
                 localStorage.setItem(key, JSON.stringify(offlineData));
                 
-                // حفظ عدد العناصر المحفوظة محلياً
                 const offlineCount = getAllOfflineData().length;
                 localStorage.setItem('offline_data_count', offlineCount.toString());
                 
@@ -3597,7 +3787,6 @@
                             offlineItems.push({ key, ...item });
                         }
                     } catch (e) {
-                        // تجاهل العناصر التالفة
                     }
                 }
             }
@@ -3634,30 +3823,24 @@
                         item.customHeaders || {}
                     );
                     
-                    // حذف العنصر بعد النجاح
                     localStorage.removeItem(item.key);
                     syncedCount++;
                     
-                    // مسح الكاش للجدول المحدث
                     if (item.method !== 'GET') {
                         clearCache(item.table);
                     }
                     
                 } catch (error) {
-                    // زيادة عدد المحاولات
                     item.retryCount = (item.retryCount || 0) + 1;
                     
-                    // إذا فشلت العملية أكثر من 5 مرات، تخطيها (قد تكون بيانات غير صالحة)
                     if (item.retryCount > 5) {
                         console.warn(`Skipping offline item after ${item.retryCount} failed attempts:`, item.key);
                         localStorage.removeItem(item.key);
                         failedCount++;
                     } else {
-                        // حفظ عدد المحاولات
                         localStorage.setItem(item.key, JSON.stringify(item));
                         failedCount++;
                         
-                        // إذا كان الخطأ بسبب قاعدة البيانات غير متاحة، توقف
                         if (error.message && (
                             error.message.includes('Failed to fetch') ||
                             error.message.includes('timeout') ||
@@ -3774,11 +3957,12 @@
                 txtCallName.addEventListener('blur', () => validateInput(txtCallName, 'name'));
             }
             
+            // زيادة الفترة إلى 12 ساعة لتقليل الطلبات (43200000 = 12 ساعة)
             setInterval(async () => {
                 if (isTabActive && document.getElementById('dashboard').classList.contains('active')) {
                     await refreshStatistics();
                 }
-            }, 21600000);
+            }, 43200000);
             
             const sidebarUser = document.getElementById('sidebarUser');
             const popup = document.getElementById('userContactPopup');
@@ -3886,7 +4070,6 @@
             
             updateAdminTabsVisibility();
             
-            // عرض رسالة الترحيب إذا كان المستخدم مسجل دخول جديد
             if (loggedInUser && !localStorage.getItem('welcomeShown_' + loggedInUser)) {
                 showWelcomeMessage(loggedInUser);
             }
@@ -3908,8 +4091,8 @@
                     
                     
                     Promise.all([
-                        fetchCallsData(false),
-                        fetchCustomersData(false),
+                        fetchCallsData(true),
+                        fetchCustomersData(true),
                         fetchAgentsCount(),
                         fetchDepartmentsCount(),
                         fetchSentMessagesCount()
@@ -4067,7 +4250,6 @@
             
             tabElement.classList.add('active');
             
-            // البحث عن العنصر النشط في القائمة الجانبية
             const currentEvent = event || window.event;
             if (currentEvent && currentEvent.target && typeof currentEvent.target.closest === 'function') {
                 const navItem = currentEvent.target.closest('.nav-item');
@@ -4075,7 +4257,6 @@
                     navItem.classList.add('active');
                 }
             } else {
-                // إذا لم يكن هناك event، ابحث عن العنصر الذي يحتوي على onclick مع tabName
                 const navItems = document.querySelectorAll('.nav-item');
                 navItems.forEach(item => {
                     const onclickAttr = item.getAttribute('onclick');
@@ -5830,6 +6011,7 @@
                     displayCustomersTable(allCustomersData);
                     document.getElementById('exportSearchBtn').style.display = 'inline-block';
                     window.searchResultsData = allCustomersData;
+                    populateCustomerEmployeeFilter(); // ملء قائمة الموظفين
                     showAlert(alertDiv, `تم تحميل ${allCustomersData.length} مشترك`, 'success');
                 } else {
                     resultsList.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px; color: var(--text-secondary);">لا يوجد مشتركين</td></tr>';
@@ -6564,7 +6746,17 @@
                     if (Array.isArray(batch) && batch.length > 0) {
                         
                         const uniqueBatch = batch.filter(call => {
-                            const callId = call.id || call[6] || JSON.stringify(call);
+                            // استخدام المعرف الفريد من قاعدة البيانات
+                            const callId = call.id;
+                            if (!callId) {
+                                // إذا لم يكن هناك معرف، استخدم مزيج من الحقول لتحديد الهوية
+                                const fallbackId = `${call.phone || ''}_${call.created_at || ''}_${call.agent || ''}_${call.call_type || ''}`;
+                                if (seenIds.has(fallbackId)) {
+                                    return false;
+                                }
+                                seenIds.add(fallbackId);
+                                return true;
+                            }
                             if (seenIds.has(callId)) {
                                 return false;
                             }
@@ -6593,10 +6785,19 @@
                         const uniqueData = [];
                         const seenIds = new Set();
                         data.forEach(call => {
-                            const callId = call.id || call[6] || JSON.stringify(call);
-                            if (!seenIds.has(callId)) {
-                                seenIds.add(callId);
-                                uniqueData.push(call);
+                            const callId = call.id;
+                            if (!callId) {
+                                // إذا لم يكن هناك معرف، استخدم مزيج من الحقول لتحديد الهوية
+                                const fallbackId = `${call.phone || ''}_${call.created_at || ''}_${call.agent || ''}_${call.call_type || ''}`;
+                                if (!seenIds.has(fallbackId)) {
+                                    seenIds.add(fallbackId);
+                                    uniqueData.push(call);
+                                }
+                            } else {
+                                if (!seenIds.has(callId)) {
+                                    seenIds.add(callId);
+                                    uniqueData.push(call);
+                                }
                             }
                         });
                         callsData = uniqueData;
@@ -6720,8 +6921,8 @@
             try {
                 
                 const [callsResult, customersResult] = await Promise.all([
-                        fetchCallsData(false),
-                        fetchCustomersData(false)
+                        fetchCallsData(true),
+                        fetchCustomersData(true)
                 ]);
                 
                 if (callsResult && callsResult.length > 0) {
@@ -6870,7 +7071,6 @@
                 });
             }
         }
-        
         async function fetchSentMessagesCount() {
             try {
                 
@@ -8059,8 +8259,11 @@
                 
                 const employeeStats = {};
                 calls.forEach(call => {
-                    const emp = call.agent || 'غير محدد';
-                    employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    const oldEmpName = call.agent || 'غير محدد';
+                    const emp = getUnifiedEmployeeName(oldEmpName);
+                    if (emp && emp !== 'غير محدد' && emp !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                        employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    }
                 });
                     
                     Object.entries(employeeStats)
@@ -8348,8 +8551,11 @@
                 rows.push(['المكالمات حسب الموظف', '', '']);
                 const employeeStats = {};
                 calls.forEach(call => {
-                    const emp = call.agent || 'غير محدد';
-                    employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    const oldEmpName = call.agent || 'غير محدد';
+                    const emp = getUnifiedEmployeeName(oldEmpName);
+                    if (emp && emp !== 'غير محدد' && emp !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                        employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    }
                 });
                 Object.entries(employeeStats).sort((a, b) => b[1] - a[1]).forEach(([emp, count]) => {
                     rows.push(['', emp, count]);
@@ -8508,8 +8714,11 @@
                 
                 const employeeStats = {};
                 calls.forEach(call => {
-                    const emp = call.agent || 'غير محدد';
-                    employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    const oldEmpName = call.agent || 'غير محدد';
+                    const emp = getUnifiedEmployeeName(oldEmpName);
+                    if (emp && emp !== 'غير محدد' && emp !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                        employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+                    }
                 });
                 rows.push(['', '', '']);
                 rows.push(['المكالمات حسب الموظف', '', '']);
@@ -8619,6 +8828,7 @@
                 
                 if (allCallsData && allCallsData.length > 0) {
                     displayCallsTable(allCallsData);
+                    populateCallEmployeeFilter(); // ملء قائمة الموظفين
                     showAlert(alertDiv, `تم تحميل ${allCallsData.length} مكالمة`, 'success');
                 } else {
                     const container = document.getElementById('callsListBody');
@@ -9513,6 +9723,264 @@
             }
         }
         
+        // دوال الفلترة المتقدمة للمكالمات
+        function toggleCallFilters() {
+            const panel = document.getElementById('callFiltersPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                populateCallEmployeeFilter();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+        
+        function populateCallEmployeeFilter() {
+            const select = document.getElementById('filterCallEmployee');
+            if (!select) return;
+            
+            // مسح الخيارات القديمة (باستثناء "جميع الموظفين")
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            const employees = new Set();
+            if (allCallsData && allCallsData.length > 0) {
+                allCallsData.forEach(call => {
+                    if (call.agent) {
+                        const unifiedName = getUnifiedEmployeeName(call.agent);
+                        if (unifiedName && unifiedName !== 'غير محدد' && unifiedName !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(unifiedName)) {
+                            employees.add(unifiedName);
+                        }
+                    }
+                });
+            } else if (callsData && callsData.length > 0) {
+                callsData.forEach(call => {
+                    if (call.agent) {
+                        const unifiedName = getUnifiedEmployeeName(call.agent);
+                        if (unifiedName && unifiedName !== 'غير محدد' && unifiedName !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(unifiedName)) {
+                            employees.add(unifiedName);
+                        }
+                    }
+                });
+            }
+            
+            const sortedEmployees = Array.from(employees).sort();
+            sortedEmployees.forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp;
+                option.textContent = emp;
+                select.appendChild(option);
+            });
+        }
+        
+        function applyCallFilters() {
+            const employee = document.getElementById('filterCallEmployee').value.trim();
+            const phone = document.getElementById('filterCallPhone').value.trim();
+            const dateFrom = document.getElementById('filterCallDateFrom').value;
+            const dateTo = document.getElementById('filterCallDateTo').value;
+            
+            let dataToFilter = allCallsData.length > 0 ? allCallsData : (callsData || []);
+            
+            if (dataToFilter.length === 0) {
+                showAlert(document.getElementById('callAlert'), 'لا توجد بيانات للفلترة. يرجى تحميل المكالمات أولاً', 'warning');
+                return;
+            }
+            
+            const filtered = dataToFilter.filter(call => {
+                // فلترة الموظف
+                if (employee) {
+                    const callEmployee = getUnifiedEmployeeName(call.agent || '');
+                    if (callEmployee !== employee) {
+                        return false;
+                    }
+                }
+                
+                // فلترة رقم الهاتف
+                if (phone) {
+                    const callPhone = (call.phone || '').toString();
+                    if (!callPhone.includes(phone)) {
+                        return false;
+                    }
+                }
+                
+                // فلترة التاريخ
+                if (dateFrom || dateTo) {
+                    const callDate = call.created_at ? new Date(call.created_at) : null;
+                    if (!callDate || isNaN(callDate.getTime())) {
+                        return false;
+                    }
+                    
+                    const callDateOnly = new Date(callDate.getFullYear(), callDate.getMonth(), callDate.getDate());
+                    
+                    if (dateFrom) {
+                        const fromDate = new Date(dateFrom);
+                        fromDate.setHours(0, 0, 0, 0);
+                        if (callDateOnly < fromDate) {
+                            return false;
+                        }
+                    }
+                    
+                    if (dateTo) {
+                        const toDate = new Date(dateTo);
+                        toDate.setHours(23, 59, 59, 999);
+                        if (callDateOnly > toDate) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            });
+            
+            displayCallsTable(filtered);
+            const count = filtered.length;
+            showAlert(document.getElementById('callAlert'), `تم العثور على ${count.toLocaleString('en-US')} مكالمة`, 'success');
+        }
+        
+        function clearCallFilters() {
+            document.getElementById('filterCallEmployee').value = '';
+            document.getElementById('filterCallPhone').value = '';
+            document.getElementById('filterCallDateFrom').value = '';
+            document.getElementById('filterCallDateTo').value = '';
+            
+            if (allCallsData.length > 0) {
+                displayCallsTable(allCallsData);
+            } else if (callsData && callsData.length > 0) {
+                displayCallsTable(callsData);
+            }
+        }
+        
+        // دوال الفلترة المتقدمة للمشتركين
+        function toggleCustomerFilters() {
+            const panel = document.getElementById('customerFiltersPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                populateCustomerEmployeeFilter();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+        
+        function populateCustomerEmployeeFilter() {
+            const select = document.getElementById('filterCustomerEmployee');
+            if (!select) return;
+            
+            // مسح الخيارات القديمة (باستثناء "جميع الموظفين")
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            const employees = new Set();
+            if (allCustomersData && allCustomersData.length > 0) {
+                allCustomersData.forEach(customer => {
+                    if (customer.employee) {
+                        const unifiedName = getUnifiedEmployeeName(customer.employee);
+                        if (unifiedName && unifiedName !== 'غير محدد' && unifiedName !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(unifiedName)) {
+                            employees.add(unifiedName);
+                        }
+                    }
+                });
+            } else if (customersData && customersData.length > 0) {
+                customersData.forEach(customer => {
+                    if (customer.employee) {
+                        const unifiedName = getUnifiedEmployeeName(customer.employee);
+                        if (unifiedName && unifiedName !== 'غير محدد' && unifiedName !== 'غير معروف' && !EXCLUDED_EMPLOYEES.includes(unifiedName)) {
+                            employees.add(unifiedName);
+                        }
+                    }
+                });
+            }
+            
+            const sortedEmployees = Array.from(employees).sort();
+            sortedEmployees.forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp;
+                option.textContent = emp;
+                select.appendChild(option);
+            });
+        }
+        
+        function applyCustomerFilters() {
+            const employee = document.getElementById('filterCustomerEmployee').value.trim();
+            const phone = document.getElementById('filterCustomerPhone').value.trim();
+            const dateFrom = document.getElementById('filterCustomerDateFrom').value;
+            const dateTo = document.getElementById('filterCustomerDateTo').value;
+            
+            let dataToFilter = allCustomersData && allCustomersData.length > 0 ? allCustomersData : (customersData || []);
+            
+            if (dataToFilter.length === 0) {
+                showAlert(document.getElementById('searchAlert'), 'لا توجد بيانات للفلترة. يرجى تحميل المشتركين أولاً', 'warning');
+                return;
+            }
+            
+            const filtered = dataToFilter.filter(customer => {
+                // فلترة الموظف
+                if (employee) {
+                    const customerEmployee = getUnifiedEmployeeName(customer.employee || '');
+                    if (customerEmployee !== employee) {
+                        return false;
+                    }
+                }
+                
+                // فلترة رقم الهاتف
+                if (phone) {
+                    const customerPhone = (customer.phone || '').toString();
+                    if (!customerPhone.includes(phone)) {
+                        return false;
+                    }
+                }
+                
+                // فلترة التاريخ
+                if (dateFrom || dateTo) {
+                    const customerDate = customer.date || customer.created_at;
+                    const dateObj = customerDate ? new Date(customerDate) : null;
+                    if (!dateObj || isNaN(dateObj.getTime())) {
+                        return false;
+                    }
+                    
+                    const dateOnly = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+                    
+                    if (dateFrom) {
+                        const fromDate = new Date(dateFrom);
+                        fromDate.setHours(0, 0, 0, 0);
+                        if (dateOnly < fromDate) {
+                            return false;
+                        }
+                    }
+                    
+                    if (dateTo) {
+                        const toDate = new Date(dateTo);
+                        toDate.setHours(23, 59, 59, 999);
+                        if (dateOnly > toDate) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            });
+            
+            window.currentCustomersData = filtered;
+            displayCustomersTable(filtered);
+            const count = filtered.length;
+            showAlert(document.getElementById('searchAlert'), `تم العثور على ${count.toLocaleString('en-US')} مشترك`, 'success');
+        }
+        
+        function clearCustomerFilters() {
+            document.getElementById('filterCustomerEmployee').value = '';
+            document.getElementById('filterCustomerPhone').value = '';
+            document.getElementById('filterCustomerDateFrom').value = '';
+            document.getElementById('filterCustomerDateTo').value = '';
+            
+            if (allCustomersData && allCustomersData.length > 0) {
+                window.currentCustomersData = allCustomersData;
+                displayCustomersTable(allCustomersData);
+            } else if (customersData && customersData.length > 0) {
+                window.currentCustomersData = customersData;
+                displayCustomersTable(customersData);
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const callTab = document.getElementById('call');
             if (callTab) {
@@ -10233,23 +10701,25 @@
             updateUnreadMessagesCount();
             
             if (unreadMessagesInterval) clearInterval(unreadMessagesInterval);
+            // زيادة الفترة إلى 3 ساعات لتقليل الطلبات (10800000 = 3 ساعات)
             unreadMessagesInterval = setInterval(() => {
                 if (isTabActive && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     updateUnreadMessagesCount();
                 }
-            }, 3600000); 
+            }, 10800000); 
         }
         
         
         let chatUpdateInterval = null;
         function startChatAutoUpdate() {
             if (chatUpdateInterval) clearInterval(chatUpdateInterval);
+            // زيادة الفترة إلى 3 ساعات لتقليل الطلبات (10800000 = 3 ساعات)
             chatUpdateInterval = setInterval(async () => {
                 if (isTabActive && currentChatUserId && document.getElementById('chat') && document.getElementById('chat').classList.contains('active')) {
                     await loadChatMessages(currentChatUserId);
                     await loadChatUsers();
                 }
-            }, 3600000); 
+            }, 10800000); 
         }
         
         function stopChatAutoUpdate() {
@@ -10341,12 +10811,12 @@
                     document.getElementById('profilePicture').style.display = 'none';
                     document.getElementById('profileInitials').style.display = 'block';
                 }
+                
             } catch (error) {
                 console.error('Error loading profile:', error);
                 showToast('حدث خطأ في تحميل الملف الشخصي', 'error');
             }
         }
-        
         async function viewEmployeeProfile(employeeName) {
             if (!employeeName || employeeName.trim() === '') {
                 showToast('اسم الموظف غير صحيح', 'error');
@@ -10652,6 +11122,938 @@
                 }
             }
         });
+        
+        const GEMINI_API_KEY = 'AIzaSyAZYLAzIspEitu1QWl157er92s1P4wKw-8';
+        let aiChatHistory = [];
+        
+        async function callGeminiAPI(question, context, chatHistory = []) {
+            const isSystemQuestion = context && (
+                context.includes('إحصائيات') || 
+                context.includes('مكالمات') || 
+                context.includes('مشترك') || 
+                context.includes('موظف') ||
+                context.includes('المكالمات') || 
+                context.includes('المشتركين') ||
+                context.includes('عدد المكالمات') ||
+                context.includes('إجمالي المكالمات') ||
+                context.includes('أنواع المكالمات')
+            );
+            
+            const isGeneralQuestion = !isSystemQuestion || (context && context.includes('هذا سؤال عام'));
+            
+            let prompt = '';
+            
+            if (isGeneralQuestion) {
+                prompt = `أنت مساعد ذكي عراقي ودود. أجب باللهجة العراقية.
+
+إذا سألك "انت منو" أو "من أنت" أو "شنو اسمك" أو "من سواك"، قل: "أنا مسويني أمير حلواص من شركة عراق سيل للاتصالات"
+
+السؤال: ${question}
+
+أجب بشكل طبيعي وودود.`;
+            } else {
+                prompt = `أنت مساعد ذكي عراقي لنظام إدارة مركز المكالمات. أجب باللهجة العراقية.
+
+إذا سألك "انت منو" أو "من أنت" أو "شنو اسمك" أو "من سواك"، قل: "أنا مسويني أمير حلواص من شركة عراق سيل للاتصالات"
+
+البيانات:
+${context}
+
+السؤال: ${question}
+
+أجب بدقة بناءً على البيانات أعلاه.`;
+            }
+            
+            try {
+                const contents = [];
+                
+                if (chatHistory && chatHistory.length > 0) {
+                    chatHistory.forEach(msg => {
+                        contents.push({
+                            role: msg.role === 'user' ? 'user' : 'model',
+                            parts: [{ text: msg.content }]
+                        });
+                    });
+                }
+                
+                contents.push({
+                    role: 'user',
+                    parts: [{ text: prompt }]
+                });
+                
+                const maxRetries = 3;
+                let lastError = null;
+                
+                for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                    try {
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                contents: contents,
+                                generationConfig: {
+                                    temperature: 0.8,
+                                    maxOutputTokens: 2000,
+                                }
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+                                return data.candidates[0].content.parts[0].text;
+                            } else {
+                                throw new Error('استجابة غير صحيحة من API');
+                            }
+                        } else {
+                            const errorText = await response.text();
+                            let errorMessage = `خطأ ${response.status}`;
+                            
+                            if (response.status === 503) {
+                                errorMessage = 'الخدمة غير متاحة مؤقتاً';
+                            } else if (response.status === 429) {
+                                errorMessage = 'تم تجاوز الحد المسموح';
+                            } else if (response.status === 400) {
+                                errorMessage = 'طلب غير صحيح';
+                            } else if (response.status === 401) {
+                                errorMessage = 'مفتاح API غير صحيح أو منتهي الصلاحية';
+                            }
+                            
+                            lastError = new Error(errorMessage);
+                            
+                            // إذا لم تكن آخر محاولة وكان الخطأ قابلاً للإصلاح، انتظر ثم أعد المحاولة
+                            if (attempt < maxRetries && (response.status === 503 || response.status === 429)) {
+                                console.log(`محاولة ${attempt}/${maxRetries} فشلت. إعادة المحاولة بعد ${1000 * attempt}ms...`);
+                                await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                                continue;
+                            } else {
+                                throw lastError;
+                            }
+                        }
+                    } catch (fetchError) {
+                        lastError = fetchError;
+                        console.log(`خطأ في المحاولة ${attempt}/${maxRetries}:`, fetchError.message);
+                        
+                        if (attempt < maxRetries) {
+                            console.log(`إعادة المحاولة بعد ${1000 * attempt}ms...`);
+                            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                            continue;
+                        } else {
+                            throw fetchError;
+                        }
+                    }
+                }
+                
+                throw lastError || new Error('فشل الاتصال بعد عدة محاولات');
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                
+                let userMessage = '❌ عذراً، حدث خطأ في الاتصال بالمساعد الذكي.';
+                
+                const errorMsg = error.message || error.toString();
+                
+                if (errorMsg.includes('503') || errorMsg.includes('الخدمة غير متاحة')) {
+                    userMessage = '❌ الخدمة غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى بعد قليل.';
+                } else if (errorMsg.includes('429') || errorMsg.includes('الحد المسموح')) {
+                    userMessage = '❌ تم تجاوز الحد المسموح من الطلبات. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.';
+                } else if (errorMsg.includes('401') || errorMsg.includes('مفتاح API')) {
+                    userMessage = '❌ خطأ في مفتاح API. يرجى التحقق من الإعدادات.';
+                } else if (errorMsg.includes('400') || errorMsg.includes('طلب غير صحيح')) {
+                    userMessage = '❌ خطأ في الطلب. يرجى المحاولة مرة أخرى.';
+                } else if (errorMsg.includes('استجابة غير صحيحة')) {
+                    userMessage = '❌ استجابة غير صحيحة من الخادم. يرجى المحاولة مرة أخرى.';
+                } else if (errorMsg.includes('فشل الاتصال')) {
+                    userMessage = '❌ فشل الاتصال بالخادم. يرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى.';
+                }
+                
+                throw new Error(userMessage);
+            }
+        }
+        
+        // دالة مساعدة لاستخراج التاريخ من السؤال
+        function getDateRangeFromQuestion(question) {
+            const questionLower = question.toLowerCase();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // البحث عن عدد الأيام (مثل "آخر 3 أيام")
+            const daysMatch = questionLower.match(/(\d+)\s*يوم/);
+            if (daysMatch) {
+                const days = parseInt(daysMatch[1]);
+                const startDate = new Date(today);
+                startDate.setDate(startDate.getDate() - days + 1);
+                return {
+                    start: startDate,
+                    end: today,
+                    label: `آخر ${days} يوم`,
+                    days: days
+                };
+            }
+            
+            if (questionLower.includes('البارحة') || questionLower.includes('أمس') || questionLower.includes('امس')) {
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                return {
+                    start: yesterday,
+                    end: yesterday,
+                    label: 'البارحة',
+                    days: 1
+                };
+            }
+            
+            if (questionLower.includes('قبل البارحة') || questionLower.includes('اول امس') || questionLower.includes('أول أمس') || questionLower.includes('قبل امس') || questionLower.includes('قبل أمس')) {
+                const dayBeforeYesterday = new Date(today);
+                dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+                return {
+                    start: dayBeforeYesterday,
+                    end: dayBeforeYesterday,
+                    label: 'قبل البارحة',
+                    days: 1
+                };
+            }
+            
+            if (questionLower.includes('أسبوع') || questionLower.includes('اسبوع')) {
+                if (questionLower.includes('أسبوعين') || questionLower.includes('اسبوعين')) {
+                    const weekStart = new Date(today);
+                    weekStart.setDate(weekStart.getDate() - 14);
+                    return {
+                        start: weekStart,
+                        end: today,
+                        label: 'آخر أسبوعين',
+                        days: 14
+                    };
+                } else {
+                    const weekStart = new Date(today);
+                    weekStart.setDate(weekStart.getDate() - 7);
+                    return {
+                        start: weekStart,
+                        end: today,
+                        label: 'آخر أسبوع',
+                        days: 7
+                    };
+                }
+            }
+            
+            if (questionLower.includes('شهر')) {
+                if (questionLower.includes('شهرين')) {
+                    const monthStart = new Date(today);
+                    monthStart.setMonth(monthStart.getMonth() - 2);
+                    return {
+                        start: monthStart,
+                        end: today,
+                        label: 'آخر شهرين',
+                        days: 60
+                    };
+                } else {
+                    const monthStart = new Date(today);
+                    monthStart.setMonth(monthStart.getMonth() - 1);
+                    return {
+                        start: monthStart,
+                        end: today,
+                        label: 'آخر شهر',
+                        days: 30
+                    };
+                }
+            }
+            
+            // اليوم (افتراضي)
+            return {
+                start: today,
+                end: today,
+                label: 'اليوم',
+                days: 1
+            };
+        }
+        
+        function filterCallsByDateRange(calls, dateRange) {
+            return calls.filter(c => {
+                const dateStr = c.created_at || c.date || c.call_date || c.timestamp;
+                if (!dateStr) return false;
+                
+                try {
+                    const callDate = new Date(dateStr);
+                    if (isNaN(callDate.getTime())) return false;
+                    callDate.setHours(0, 0, 0, 0);
+                    return callDate.getTime() >= dateRange.start.getTime() && callDate.getTime() <= dateRange.end.getTime();
+                } catch (e) {
+                    return false;
+                }
+            });
+        }
+        
+        async function getAIContext(question) {
+            const questionLower = question.toLowerCase();
+            
+            const hasSystemKeywords = questionLower.includes('مكالمة') || questionLower.includes('مكالمات') || 
+                                     questionLower.includes('مشترك') || questionLower.includes('عميل') || 
+                                     questionLower.includes('موظف') || questionLower.includes('عامل') ||
+                                     questionLower.includes('إحصائيات') || questionLower.includes('احصائيات') ||
+                                     questionLower.includes('عدد') || questionLower.includes('نوع') ||
+                                     questionLower.includes('أنواع') || questionLower.includes('اليوم') ||
+                                     questionLower.includes('البارحة') || questionLower.includes('أمس') ||
+                                     questionLower.includes('أسبوع') || questionLower.includes('شهر');
+            
+            const hasGeneralKeywords = questionLower.includes('كيف حالك') || questionLower.includes('شلونك') || 
+                                      questionLower.includes('طقس') || questionLower.includes('جو') ||
+                                      questionLower.includes('مرحبا') || questionLower.includes('مرحبا') ||
+                                      questionLower.includes('هلا') || questionLower.includes('أهلا') ||
+                                      questionLower.includes('صباح') || questionLower.includes('مساء') ||
+                                      questionLower.includes('شكرا') || questionLower.includes('شكراً');
+            
+            if (!hasSystemKeywords && (hasGeneralKeywords || question.trim().length < 20)) {
+                return 'هذا سؤال عام. أجب باللهجة العراقية بطريقة ودودة ومرح.';
+            }
+            
+            const [calls, customers] = await Promise.all([
+                fetchCallsData(false),
+                fetchCustomersData(false)
+            ]);
+            
+            let agentsList = [];
+            try {
+                const cachedAgents = getCachedData('agents');
+                if (cachedAgents !== null && Array.isArray(cachedAgents) && cachedAgents.length > 0) {
+                    agentsList = cachedAgents;
+                } else {
+                    agentsList = await supabaseRequest('agents', 'GET', null, '?order=created_at.desc', {}, false);
+                    if (agentsList && Array.isArray(agentsList)) {
+                        setCachedData('agents', agentsList);
+                    } else {
+                        agentsList = [];
+                    }
+                }
+            } catch (e) {
+                console.error('Error fetching agents:', e);
+                agentsList = [];
+            }
+            
+            const employees = Array.from(new Set(calls.map(c => getUnifiedEmployeeName(c.agent || '')).filter(e => e && !EXCLUDED_EMPLOYEES.includes(e))));
+            
+            const dateRange = getDateRangeFromQuestion(question);
+            const filteredCalls = filterCallsByDateRange(calls, dateRange);
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayCalls = calls.filter(c => {
+                const dateStr = c.created_at || c.date || c.call_date || c.timestamp;
+                if (!dateStr) return false;
+                
+                try {
+                    const callDate = new Date(dateStr);
+                    if (isNaN(callDate.getTime())) return false;
+                    callDate.setHours(0, 0, 0, 0);
+                    return callDate.getTime() === today.getTime();
+                } catch (e) {
+                    return false;
+                }
+            });
+            
+            const callsByType = {};
+            filteredCalls.forEach(call => {
+                const type = (call.call_type || call.type || call.callType || call.category || 'غير محدد').trim();
+                if (type && type !== 'null' && type !== 'undefined') {
+                    callsByType[type] = (callsByType[type] || 0) + 1;
+                } else {
+                    callsByType['غير محدد'] = (callsByType['غير محدد'] || 0) + 1;
+                }
+            });
+            
+            const callsByEmployee = {};
+            filteredCalls.forEach(call => {
+                const emp = getUnifiedEmployeeName(call.agent || '');
+                if (emp && !EXCLUDED_EMPLOYEES.includes(emp)) {
+                    callsByEmployee[emp] = (callsByEmployee[emp] || 0) + 1;
+                }
+            });
+            
+            const todayStr = today.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const rangeStartStr = dateRange.start.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+            const rangeEndStr = dateRange.end.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const allCustomersByAgent = {};
+            customers.forEach(customer => {
+                const agent = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || 'غير محدد');
+                if (!allCustomersByAgent[agent]) {
+                    allCustomersByAgent[agent] = 0;
+                }
+                allCustomersByAgent[agent]++;
+            });
+            
+            let context = `📊 إحصائيات النظام (من قاعدة البيانات - Supabase):
+
+💡 ملاحظة: البيانات مستخدمة من الـ cache لضمان السرعة والأداء.
+
+إحصائيات عامة (جميع الأوقات):
+- إجمالي المكالمات: ${calls.length}
+- إجمالي المشتركين: ${customers.length}
+- عدد الموظفين: ${employees.length}
+- عدد الوكلاء المسجلين: ${agentsList.length}
+
+👥 قائمة الوكلاء في النظام (عراق سيل):
+`;
+            if (agentsList.length > 0) {
+                agentsList.forEach((agent, index) => {
+                    context += `  ${index + 1}. ${agent.name || 'غير محدد'}\n`;
+                    if (agent.phone) context += `     - رقم الهاتف: ${agent.phone}\n`;
+                    if (agent.address) context += `     - العنوان: ${agent.address}\n`;
+                });
+            } else {
+                context += `  لا توجد وكلاء مسجلين حالياً\n`;
+            }
+            
+            context += `\n📊 توزيع المشتركين حسب الوكلاء/الموظفين (جميع الأوقات):
+`;
+            Object.entries(allCustomersByAgent)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([agent, count]) => {
+                    context += `  • ${agent}: ${count} مشترك\n`;
+                });
+            
+            // حساب المشتركين الجدد المرسلين عن طريق الموظفين للفترة المحددة
+            const newCustomersByEmployee = {};
+            const filteredCustomersForPeriod = customers.filter(c => {
+                const dateStr = c.date || c.created_at || c.registration_date;
+                if (!dateStr) return false;
+                try {
+                    const customerDate = new Date(dateStr);
+                    if (isNaN(customerDate.getTime())) return false;
+                    customerDate.setHours(0, 0, 0, 0);
+                    return customerDate.getTime() >= dateRange.start.getTime() && customerDate.getTime() <= dateRange.end.getTime();
+                } catch (e) {
+                    return false;
+                }
+            });
+            
+            filteredCustomersForPeriod.forEach(customer => {
+                const sentBy = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || customer.sent_by || 'غير محدد');
+                if (!newCustomersByEmployee[sentBy]) {
+                    newCustomersByEmployee[sentBy] = [];
+                }
+                newCustomersByEmployee[sentBy].push(customer);
+            });
+            
+            context += `\n📅 إحصائيات ${dateRange.label}${dateRange.days > 1 ? ` (من ${rangeStartStr} إلى ${rangeEndStr})` : ` (${rangeStartStr})`}:
+- عدد المكالمات: ${filteredCalls.length}
+- عدد المشتركين الجدد: ${filteredCustomersForPeriod.length}
+`;
+            
+            if (Object.keys(newCustomersByEmployee).length > 0) {
+                context += `\n👥 المشتركين الجدد المرسلين عن طريق الموظفين ${dateRange.label}:\n`;
+                Object.entries(newCustomersByEmployee)
+                    .sort((a, b) => b[1].length - a[1].length)
+                    .forEach(([employee, employeeCustomers]) => {
+                        context += `  • ${employee}: ${employeeCustomers.length} مشترك جديد\n`;
+                    });
+            }
+            
+            if (Object.keys(callsByType).length > 0) {
+                context += `\n📞 أنواع المكالمات ${dateRange.label} (${filteredCalls.length} مكالمة):\n`;
+                Object.entries(callsByType).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
+                    context += `  • ${type}: ${count} مكالمة\n`;
+                });
+            } else if (filteredCalls.length === 0) {
+                context += `\n📞 أنواع المكالمات ${dateRange.label}: لا توجد مكالمات (0 مكالمة)\n`;
+            } else {
+                context += `\n📞 أنواع المكالمات ${dateRange.label}: ${filteredCalls.length} مكالمة (لم يتم تحديد الأنواع)\n`;
+            }
+            
+            if (Object.keys(callsByEmployee).length > 0) {
+                context += `\n👨‍💼 المكالمات حسب الموظف ${dateRange.label}:\n`;
+                Object.entries(callsByEmployee).sort((a, b) => b[1] - a[1]).forEach(([emp, count]) => {
+                    context += `  • ${emp}: ${count} مكالمة\n`;
+                });
+            }
+            
+            if (dateRange.label !== 'اليوم' && todayCalls.length > 0) {
+                context += `\n📊 للمقارنة - إحصائيات اليوم (${todayStr}):\n`;
+                context += `- عدد المكالمات اليوم: ${todayCalls.length}\n`;
+            }
+            
+            if (filteredCalls.length === 0) {
+                context += `\n⚠️ ملاحظة: لا توجد مكالمات مسجلة ${dateRange.label} حتى الآن.`;
+            }
+            
+            if (questionLower.includes('وكلاء') || questionLower.includes('وكيل') || questionLower.includes('وكلاء عراق سيل')) {
+                if (agentsList.length > 0) {
+                    context += `\n\n👥 قائمة الوكلاء المسجلين في النظام (عراق سيل):\n`;
+                    agentsList.forEach((agent, index) => {
+                        context += `\n  ${index + 1}. ${agent.name || 'غير محدد'}\n`;
+                        if (agent.phone) context += `     - رقم الهاتف: ${agent.phone}\n`;
+                        if (agent.address) context += `     - العنوان: ${agent.address}\n`;
+                        if (agent.created_at) context += `     - تاريخ التسجيل: ${agent.created_at}\n`;
+                    });
+                } else {
+                    context += `\n\n👥 الوكلاء:\n`;
+                    context += `- لا توجد وكلاء مسجلين حالياً في النظام\n`;
+                }
+            }
+            
+            // إذا كان السؤال عن مشتركين جدد أو وكلاء
+            if (questionLower.includes('مشتركين جدد') || questionLower.includes('مشتركين جديد') || 
+                questionLower.includes('مشترك') || questionLower.includes('عميل') || questionLower.includes('زبون')) {
+                
+                const filteredCustomers = customers.filter(c => {
+                    const dateStr = c.date || c.created_at || c.registration_date;
+                    if (!dateStr) return false;
+                    
+                    try {
+                        const customerDate = new Date(dateStr);
+                        if (isNaN(customerDate.getTime())) return false;
+                        customerDate.setHours(0, 0, 0, 0);
+                        return customerDate.getTime() >= dateRange.start.getTime() && customerDate.getTime() <= dateRange.end.getTime();
+                    } catch (e) {
+                        return false;
+                    }
+                });
+                
+                const customersByAgent = {};
+                filteredCustomers.forEach(customer => {
+                    const agent = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || 'غير محدد');
+                    if (!customersByAgent[agent]) {
+                        customersByAgent[agent] = [];
+                    }
+                    customersByAgent[agent].push(customer);
+                });
+                
+                if (Object.keys(customersByAgent).length > 0) {
+                    context += `\n\n👥 المشتركين الجدد ${dateRange.label} حسب الوكلاء:\n`;
+                    context += `- إجمالي المشتركين الجدد: ${filteredCustomers.length}\n\n`;
+                    
+                    Object.entries(customersByAgent)
+                        .sort((a, b) => b[1].length - a[1].length)
+                        .forEach(([agent, agentCustomers]) => {
+                            context += `\n👤 الوكيل/الموظف: ${agent}\n`;
+                            context += `   - عدد المشتركين: ${agentCustomers.length}\n`;
+                            
+                            const shouldShowDetails = questionLower.includes('تفاصيل') || 
+                                                     questionLower.includes('تفاصيل كاملة') ||
+                                                     questionLower.includes('كل التفاصيل') ||
+                                                     filteredCustomers.length <= 10;
+                            
+                            if (shouldShowDetails) {
+                                context += `   - تفاصيل المشتركين المرسلين عن طريق هذا الموظف:\n`;
+                                const maxDetails = Math.min(10, agentCustomers.length);
+                                agentCustomers.slice(0, maxDetails).forEach((customer, index) => {
+                                    const sentBy = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || customer.sent_by || 'غير محدد');
+                                    context += `\n     ${index + 1}. ${customer.username || 'غير محدد'}\n`;
+                                    context += `        - رقم الهاتف: ${customer.phone || 'غير محدد'}\n`;
+                                    context += `        - المنطقة: ${customer.region || 'غير محدد'}\n`;
+                                    context += `        - التاريخ: ${customer.date || customer.created_at || 'غير محدد'}\n`;
+                                    context += `        - أرسله الموظف: ${sentBy}\n`;
+                                    if (customer.address) context += `        - العنوان: ${customer.address}\n`;
+                                    if (customer.notes) context += `        - ملاحظات: ${customer.notes}\n`;
+                                });
+                                if (agentCustomers.length > maxDetails) {
+                                    context += `\n     ... و ${agentCustomers.length - maxDetails} مشترك آخر\n`;
+                                }
+                            } else {
+                                context += `   - المشتركين المرسلين عن طريق هذا الموظف:\n`;
+                                agentCustomers.slice(0, 5).forEach((customer, index) => {
+                                    const sentBy = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || customer.sent_by || 'غير محدد');
+                                    context += `     ${index + 1}. ${customer.username || 'غير محدد'} (أرسله: ${sentBy})\n`;
+                                });
+                                if (agentCustomers.length > 5) {
+                                    context += `     ... و ${agentCustomers.length - 5} مشترك آخر\n`;
+                                }
+                            }
+                        });
+                } else {
+                    context += `\n\n👥 المشتركين الجدد ${dateRange.label}:\n`;
+                    context += `- لا توجد مشتركين جدد في هذه الفترة\n`;
+                }
+                
+                const phoneMatch = question.match(/\d+/);
+                if (phoneMatch) {
+                    const phone = phoneMatch[0];
+                    const customer = customers.find(c => (c.phone || '').includes(phone));
+                    if (customer) {
+                        context += `\n\n👤 معلومات المشترك الكاملة:\n`;
+                        context += `- الاسم: ${customer.username || 'غير محدد'}\n`;
+                        context += `- رقم الهاتف: ${customer.phone || 'غير محدد'}\n`;
+                        context += `- المنطقة: ${customer.region || 'غير محدد'}\n`;
+                        context += `- التاريخ: ${customer.date || customer.created_at || 'غير محدد'}\n`;
+                        const sentByEmployee = getUnifiedEmployeeName(customer.employee || customer.agent || customer.registered_by || customer.sent_by || 'غير محدد');
+                        context += `- الوكيل/الموظف المسؤول: ${sentByEmployee}\n`;
+                        context += `- الموظف الذي أرسل المشترك: ${sentByEmployee}\n`;
+                        if (customer.address) context += `- العنوان: ${customer.address}\n`;
+                        if (customer.notes) context += `- ملاحظات: ${customer.notes}\n`;
+                        
+                        const customerCalls = calls.filter(c => {
+                            const callPhone = (c.phone || c.caller_phone || '').toString();
+                            const customerPhone = (customer.phone || '').toString();
+                            return callPhone.includes(phone) || customerPhone.includes(phone) || 
+                                   (c.caller_name && customer.username && c.caller_name.includes(customer.username));
+                        });
+                        
+                        if (customerCalls.length > 0) {
+                            context += `\n📞 المكالمات المتعلقة بهذا المشترك (${customerCalls.length} مكالمة):\n`;
+                            customerCalls.slice(0, 10).forEach((call, index) => {
+                                const callDate = call.created_at || call.date || call.call_date || 'غير محدد';
+                                const callType = call.call_type || call.type || 'غير محدد';
+                                const callDetails = call.details || call.call_details || call.description || 'لا توجد تفاصيل';
+                                const callAgent = getUnifiedEmployeeName(call.agent || '');
+                                context += `\n  ${index + 1}. مكالمة ${callType}:\n`;
+                                context += `     - التاريخ: ${callDate}\n`;
+                                context += `     - الموظف: ${callAgent || 'غير محدد'}\n`;
+                                context += `     - التفاصيل: ${callDetails}\n`;
+                            });
+                            if (customerCalls.length > 10) {
+                                context += `\n  ... و ${customerCalls.length - 10} مكالمة أخرى\n`;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (questionLower.includes('موظف') || questionLower.includes('عامل')) {
+                const employeeNames = Array.from(new Set(calls.map(c => getUnifiedEmployeeName(c.agent || '')).filter(e => e && !EXCLUDED_EMPLOYEES.includes(e))));
+                for (const emp of employeeNames) {
+                    if (questionLower.includes(emp.toLowerCase()) || emp.toLowerCase().includes(questionLower)) {
+                        const employeeCalls = filteredCalls.filter(c => {
+                            const callEmployee = getUnifiedEmployeeName(c.agent || '');
+                            return callEmployee === emp;
+                        });
+                        
+                        const employeeCallsByType = {};
+                        employeeCalls.forEach(call => {
+                            const type = (call.call_type || call.type || call.callType || call.category || 'غير محدد').trim();
+                            employeeCallsByType[type] = (employeeCallsByType[type] || 0) + 1;
+                        });
+                        
+                        context += `\n\n👨‍💼 معلومات الموظف "${emp}" ${dateRange.label}:\n`;
+                        context += `- عدد المكالمات: ${employeeCalls.length}\n`;
+                        if (Object.keys(employeeCallsByType).length > 0) {
+                            context += `- أنواع المكالمات:\n`;
+                            Object.entries(employeeCallsByType).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
+                                context += `  • ${type}: ${count} مكالمة\n`;
+                            });
+                        }
+                        
+                        if (questionLower.includes('تفاصيل') || questionLower.includes('تفاصيل') || questionLower.includes('مكالمات')) {
+                            if (employeeCalls.length > 0) {
+                                context += `\n📞 تفاصيل المكالمات:\n`;
+                                employeeCalls.slice(0, 15).forEach((call, index) => {
+                                    const callDate = call.created_at || call.date || call.call_date || 'غير محدد';
+                                    const callType = call.call_type || call.type || 'غير محدد';
+                                    const callerName = call.caller_name || call.name || call.customer_name || 'غير محدد';
+                                    const callPhone = call.phone || call.caller_phone || 'غير محدد';
+                                    const callDetails = call.details || call.call_details || call.description || 'لا توجد تفاصيل';
+                                    const department = call.department || 'غير محدد';
+                                    const shiftTime = call.shift_time || call.shift || 'غير محدد';
+                                    
+                                    context += `\n  ${index + 1}. مكالمة ${callType}:\n`;
+                                    context += `     - التاريخ والوقت: ${callDate}\n`;
+                                    context += `     - اسم المتصل: ${callerName}\n`;
+                                    context += `     - رقم الهاتف: ${callPhone}\n`;
+                                    context += `     - القسم: ${department}\n`;
+                                    context += `     - وقت الشفت: ${shiftTime}\n`;
+                                    context += `     - التفاصيل: ${callDetails}\n`;
+                                });
+                                if (employeeCalls.length > 15) {
+                                    context += `\n  ... و ${employeeCalls.length - 15} مكالمة أخرى\n`;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            const phoneMatchInQuestion = question.match(/\d+/);
+            if (questionLower.includes('مكالمة') && (questionLower.includes('رقم') || questionLower.includes('هاتف') || questionLower.includes('تفاصيل') || questionLower.includes('اسم'))) {
+                if (phoneMatchInQuestion) {
+                    const phone = phoneMatchInQuestion[0];
+                    const specificCalls = calls.filter(c => {
+                        const callPhone = (c.phone || c.caller_phone || '').toString();
+                        return callPhone.includes(phone);
+                    });
+                    
+                    if (specificCalls.length > 0) {
+                        context += `\n\n📞 تفاصيل المكالمات المتعلقة بالرقم ${phone}:\n`;
+                        context += `- عدد المكالمات: ${specificCalls.length}\n\n`;
+                        specificCalls.slice(0, 10).forEach((call, index) => {
+                            const callDate = call.created_at || call.date || call.call_date || 'غير محدد';
+                            const callType = call.call_type || call.type || 'غير محدد';
+                            const callerName = call.caller_name || call.name || call.customer_name || 'غير محدد';
+                            const callPhone = call.phone || call.caller_phone || 'غير محدد';
+                            const callDetails = call.details || call.call_details || call.description || 'لا توجد تفاصيل';
+                            const callAgent = getUnifiedEmployeeName(call.agent || '');
+                            const department = call.department || 'غير محدد';
+                            const shiftTime = call.shift_time || call.shift || 'غير محدد';
+                            
+                            context += `\n  ${index + 1}. مكالمة ${callType}:\n`;
+                            context += `     - التاريخ والوقت: ${callDate}\n`;
+                            context += `     - اسم المتصل: ${callerName}\n`;
+                            context += `     - رقم الهاتف: ${callPhone}\n`;
+                            context += `     - الموظف: ${callAgent || 'غير محدد'}\n`;
+                            context += `     - القسم: ${department}\n`;
+                            context += `     - وقت الشفت: ${shiftTime}\n`;
+                            context += `     - التفاصيل: ${callDetails}\n`;
+                        });
+                        if (specificCalls.length > 10) {
+                            context += `\n  ... و ${specificCalls.length - 10} مكالمة أخرى\n`;
+                        }
+                    }
+                } else {
+                    // البحث باسم المتصل (إذا لم يكن هناك رقم)
+                    const nameKeywords = question.split(' ').filter(word => 
+                        word.length > 2 && 
+                        !['مكالمة', 'مكالمات', 'تفاصيل', 'عن', 'في', 'من', 'إلى', 'على', 'مع'].includes(word.toLowerCase())
+                    );
+                    
+                    if (nameKeywords.length > 0) {
+                        const nameSearch = nameKeywords.join(' ');
+                        const specificCalls = calls.filter(c => {
+                            const callerName = (c.caller_name || c.name || c.customer_name || '').toString().toLowerCase();
+                            return callerName.includes(nameSearch.toLowerCase());
+                        });
+                        
+                        if (specificCalls.length > 0) {
+                            context += `\n\n📞 تفاصيل المكالمات المتعلقة بالاسم "${nameSearch}":\n`;
+                            context += `- عدد المكالمات: ${specificCalls.length}\n\n`;
+                            specificCalls.slice(0, 10).forEach((call, index) => {
+                                const callDate = call.created_at || call.date || call.call_date || 'غير محدد';
+                                const callType = call.call_type || call.type || 'غير محدد';
+                                const callerName = call.caller_name || call.name || call.customer_name || 'غير محدد';
+                                const callPhone = call.phone || call.caller_phone || 'غير محدد';
+                                const callDetails = call.details || call.call_details || call.description || 'لا توجد تفاصيل';
+                                const callAgent = getUnifiedEmployeeName(call.agent || '');
+                                const department = call.department || 'غير محدد';
+                                const shiftTime = call.shift_time || call.shift || 'غير محدد';
+                                
+                                context += `\n  ${index + 1}. مكالمة ${callType}:\n`;
+                                context += `     - التاريخ والوقت: ${callDate}\n`;
+                                context += `     - اسم المتصل: ${callerName}\n`;
+                                context += `     - رقم الهاتف: ${callPhone}\n`;
+                                context += `     - الموظف: ${callAgent || 'غير محدد'}\n`;
+                                context += `     - القسم: ${department}\n`;
+                                context += `     - وقت الشفت: ${shiftTime}\n`;
+                                context += `     - التفاصيل: ${callDetails}\n`;
+                            });
+                            if (specificCalls.length > 10) {
+                                context += `\n  ... و ${specificCalls.length - 10} مكالمة أخرى\n`;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // إذا كان السؤال عن تفاصيل مكالمات معينة (بدون رقم محدد)
+            if (questionLower.includes('تفاصيل') && questionLower.includes('مكالمات') && !phoneMatchInQuestion) {
+                if (filteredCalls.length > 0) {
+                    context += `\n\n📞 تفاصيل المكالمات ${dateRange.label}:\n`;
+                    filteredCalls.slice(0, 10).forEach((call, index) => {
+                        const callDate = call.created_at || call.date || call.call_date || 'غير محدد';
+                        const callType = call.call_type || call.type || 'غير محدد';
+                        const callerName = call.caller_name || call.name || call.customer_name || 'غير محدد';
+                        const callPhone = call.phone || call.caller_phone || 'غير محدد';
+                        const callDetails = call.details || call.call_details || call.description || 'لا توجد تفاصيل';
+                        const callAgent = getUnifiedEmployeeName(call.agent || '');
+                        const department = call.department || 'غير محدد';
+                        const shiftTime = call.shift_time || call.shift || 'غير محدد';
+                        
+                        context += `\n  ${index + 1}. مكالمة ${callType}:\n`;
+                        context += `     - التاريخ والوقت: ${callDate}\n`;
+                        context += `     - اسم المتصل: ${callerName}\n`;
+                        context += `     - رقم الهاتف: ${callPhone}\n`;
+                        context += `     - الموظف: ${callAgent || 'غير محدد'}\n`;
+                        context += `     - القسم: ${department}\n`;
+                        context += `     - وقت الشفت: ${shiftTime}\n`;
+                        context += `     - التفاصيل: ${callDetails}\n`;
+                    });
+                    if (filteredCalls.length > 10) {
+                        context += `\n  ... و ${filteredCalls.length - 10} مكالمة أخرى\n`;
+                    }
+                }
+            }
+            
+            if (questionLower.includes('أنواع') || questionLower.includes('نوع') || questionLower.includes('اليوم') || questionLower.includes('مكالمات')) {
+            }
+            
+            return context;
+        }
+        
+        
+        function toggleAIChat() {
+            const chatPanel = document.getElementById('aiChatPanel');
+            chatPanel.classList.toggle('show');
+            if (chatPanel.classList.contains('show')) {
+                document.getElementById('aiChatInput').focus();
+            }
+        }
+        
+        function addAIMessage(message, isUser = false) {
+            const chatMessages = document.getElementById('aiFloatingChatMessages');
+            if (!chatMessages) return;
+            
+            const welcomeMsg = chatMessages.querySelector('div[style*="text-align: center"]');
+            if (welcomeMsg) welcomeMsg.remove();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                margin-bottom: 12px;
+                padding: 12px 16px;
+                border-radius: 12px;
+                max-width: 85%;
+                word-wrap: break-word;
+                ${isUser ? 
+                    'background: var(--primary-color); color: white; margin-right: auto; text-align: right;' : 
+                    'background: var(--card-bg); color: var(--text-primary); margin-left: auto; border: 1px solid var(--border-light);'
+                }
+            `;
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        async function sendAIMessage() {
+            const input = document.getElementById('aiChatInput');
+            if (!input) return;
+            
+            const question = input.value.trim();
+            if (!question) return;
+            
+            addAIMessage(question, true);
+            input.value = '';
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'aiLoadingFloating';
+            loadingDiv.style.cssText = 'margin-bottom: 12px; padding: 12px; background: var(--card-bg); border-radius: 12px; max-width: 85%; margin-left: auto;';
+            loadingDiv.textContent = '⏳ جاري التفكير...';
+            const chatMessages = document.getElementById('aiFloatingChatMessages');
+            if (chatMessages) {
+                chatMessages.appendChild(loadingDiv);
+            }
+            
+            try {
+                const context = await getAIContext(question);
+                const aiResponse = await callGeminiAPI(question, context, aiChatHistory);
+                
+                const loading = document.getElementById('aiLoadingFloating');
+                if (loading) loading.remove();
+                
+                addAIMessage(aiResponse, false);
+                
+                aiChatHistory.push({ role: 'user', content: question });
+                aiChatHistory.push({ role: 'assistant', content: aiResponse });
+                
+            } catch (error) {
+                console.error('AI Error:', error);
+                const loading = document.getElementById('aiLoadingFloating');
+                if (loading) loading.remove();
+                addAIMessage('❌ عذراً، حدث خطأ في الاتصال بالمساعد الذكي. يرجى المحاولة مرة أخرى.', false);
+            }
+        }
+        
+        
+        function addAIAssistantMessage(role, message) {
+            const messagesDiv = document.getElementById('aiChatMessages');
+            if (!messagesDiv) return;
+            
+            // إزالة رسالة الترحيب إذا كانت موجودة
+            const welcomeMsg = messagesDiv.querySelector('div[style*="text-align: center"]');
+            if (welcomeMsg) welcomeMsg.remove();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                display: flex;
+                gap: 12px;
+                margin-bottom: 15px;
+                align-items: flex-start;
+                flex-direction: ${role === 'user' ? 'row-reverse' : 'row'};
+            `;
+            
+            const avatar = document.createElement('div');
+            avatar.style.cssText = `
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: ${role === 'user' ? 'var(--primary-color)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'};
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                flex-shrink: 0;
+            `;
+            avatar.textContent = role === 'user' ? '👤' : '🤖';
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                flex: 1;
+                padding: 12px 16px;
+                border-radius: 12px;
+                background: ${role === 'user' ? 'var(--primary-color)' : 'var(--bg-primary)'};
+                color: ${role === 'user' ? 'white' : 'var(--text-primary)'};
+                border: ${role === 'user' ? 'none' : '2px solid var(--border-light)'};
+                max-width: 80%;
+                line-height: 1.6;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            `;
+            content.textContent = message;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        async function sendAIAssistantMessage() {
+            const input = document.getElementById('aiAssistantInput');
+            if (!input) return;
+            
+            const question = input.value.trim();
+            if (!question) return;
+            
+            addAIAssistantMessage('user', question);
+            input.value = '';
+            
+            const loadingId = 'aiLoadingTab' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = loadingId;
+            loadingDiv.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--bg-primary); border-radius: 12px; border: 2px solid var(--border-light);';
+            loadingDiv.innerHTML = '<div style="width: 20px; height: 20px; border: 3px solid var(--border-light); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite;"></div><span style="color: var(--text-secondary);">جاري التفكير...</span>';
+            const messagesDiv = document.getElementById('aiChatMessages');
+            if (messagesDiv) {
+                messagesDiv.appendChild(loadingDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+            
+            try {
+                const context = await getAIContext(question);
+                const response = await callGeminiAPI(question, context, aiChatHistory);
+                
+                const loading = document.getElementById(loadingId);
+                if (loading) loading.remove();
+                
+                addAIAssistantMessage('assistant', response);
+                
+                // حفظ المحادثة
+                aiChatHistory.push({ role: 'user', content: question });
+                aiChatHistory.push({ role: 'assistant', content: response });
+            } catch (error) {
+                const loading = document.getElementById(loadingId);
+                if (loading) loading.remove();
+                addAIAssistantMessage('system', `❌ خطأ: ${error.message}`);
+                console.error('AI Error:', error);
+            }
+        }
+        
+        if (!document.getElementById('aiLoadingStyle')) {
+            const style = document.createElement('style');
+            style.id = 'aiLoadingStyle';
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         
     </script>
 </body>
